@@ -1,8 +1,8 @@
 import pygame
-from Score import Player, Match
-import Ralley
-import Ball
-import Bot
+from score import Player, Match
+import ralley
+import ball
+import bot
 
 pygame.init()
 
@@ -98,6 +98,8 @@ def handle_player_movement(keys, bottom_player):
         bottom_player.move_horizontal(left=False)
 
 def handle_ball_movement(keys, ball):
+    # ToDo: change player movement from wasd to ball position dependent
+    # User is only allowed to move the ball
     if keys[pygame.K_UP] and ball.y - ball.VELOCITY >= 0:
         ball.move_vertical(up=True)
     if keys[pygame.K_DOWN] and ball.y + ball.VELOCITY + ball.radius <= HEIGHT:
@@ -108,17 +110,67 @@ def handle_ball_movement(keys, ball):
         ball.move_horizontal(left=False)
     #print(str(ball.get_X()) + " " + str(ball.get_Y()))
 
+def encode_serve(ball, serve_position):
+
+    ball_x = ball.get_X()
+    ball_y = ball.get_Y()
+    
+    # the ball has to be above the net (2D View) adn aslo below the T-Line of 
+    # the top half of the court
+    if (ball_y <= HEIGHT//2 - BALL_RADIUS
+        and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS):
+        if serve_position == "right":
+            # when the ball is in the right 30% of the opponents left service field, 
+            # its encoding it to "down the T" -> 6
+            if (ball_x <= WIDTH//2 + BALL_RADIUS 
+                and ball_x >= WIDTH//2 - 0.3*(SINGLES_LINES_WIDTH//2)):
+                return 6
+            # when the ball is in the middle 40% of the left service field of the opponent
+            # its encoded as a "body serve" -> 5
+            elif (ball_x < WIDTH//2 - 0.3*(SINGLES_LINES_WIDTH//2)
+                  and ball_x >= WIDTH//2 - 0.7*(SINGLES_LINES_WIDTH//2)):
+                return 5
+            # when the ball is in the left 30% of the left service field of the opponent
+            # its encoded as a "wide serve" -> 4
+            elif (ball_x < WIDTH//2 - 0.7*(SINGLES_LINES_WIDTH//2)
+                  and ball_x >= WIDTH//2 - (SINGLES_LINES_WIDTH//2) - BALL_RADIUS):
+                return 4
+        elif serve_position == "left":
+            # when the ball is in the left 30% of the opponents right service field, 
+            # its encoding it to "down the T" -> 6
+            if (ball_x >= WIDTH//2 - BALL_RADIUS 
+                and ball_x <= WIDTH//2 + 0.3*(SINGLES_LINES_WIDTH//2)):
+                return 6
+            # when the ball is in the middle 40% of the right service field of the opponent
+            # its encoded as a "body serve" -> 5
+            elif (ball_x > WIDTH//2 + 0.3*(SINGLES_LINES_WIDTH//2)
+                  and ball_x <= WIDTH//2 + 0.7*(SINGLES_LINES_WIDTH//2)):
+                return 5
+            # when the ball is in the right 30% of the right service field of the opponent
+            # its encoded as a "wide serve" -> 4
+            elif (ball_x > WIDTH//2 + 0.7*(SINGLES_LINES_WIDTH//2)
+                  and ball_x <= WIDTH//2 + (SINGLES_LINES_WIDTH//2) + BALL_RADIUS):
+                return 4
+    else: print("Serve is not valid")
+
+
 
 def encode_shot_selection(keys, ball, ralley):
-    ball_x = 0
-    ball_y = 0
+    
     current_shot = None
+    old_ralley = ralley
+    serve_position = None
 
     if keys[pygame.K_SPACE]:
-        ball_x = ball.get_X()
-        ball_y = ball.get_Y()
-        current_shot = str(ball_x)
-        ralley.update_ralley(current_shot)
+        # when there was no stroke in the ralley yet, it has to be a serve
+        if old_ralley.get_shot_count() == 0:
+            # ToDo switch serve_position according to score
+            serve_position = "right"
+            current_shot = encode_serve(ball, serve_position)
+            ralley.add_shot_to_ralley(current_shot)
+        # ToDo encode the other shots after the serve and add them to the ralley
+        else:
+            ...  
         print(ralley.get_ralley())
     
 def main():
@@ -127,25 +179,33 @@ def main():
 
     bottom_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, HEIGHT - PLAYER_HEIGHT - 10, PLAYER_WIDTH, PLAYER_HEIGHT)
     top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 10, PLAYER_WIDTH, PLAYER_HEIGHT)
-    ball = Ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
-    ralley = Ralley.Ralley()
+    new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
+    new_ralley = ralley.Ralley()
 
-    Bot.Bot.import_data()
+    # bot.Bot.import_data()
+
+    # ToDo: making players take turns in shot selection until ralley is over
+    
+
 
     while run:
-        draw(WIN, [bottom_player, top_player], ball)
+        draw(WIN, [bottom_player, top_player], new_ball)
         clock.tick(FPS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
-        
+            
         keys = pygame.key.get_pressed()
         handle_player_movement(keys, bottom_player)
-        handle_ball_movement(keys, ball)
-        encode_shot_selection(keys, ball, ralley)
+        handle_ball_movement(keys, new_ball)
+        encode_shot_selection(keys, new_ball, new_ralley)
+        # ToDo: take turns in getting shots from the bot and from the user
+        # Could be based on the ralley length (even and odd) get_shot_count() on ralley
         
+
+
     pygame.quit()
 
 if __name__ == "__main__":

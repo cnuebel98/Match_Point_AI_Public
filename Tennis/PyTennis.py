@@ -2,6 +2,8 @@ import pygame
 from Score import Player, Match
 import Ralley
 import Ball
+import Bot
+
 pygame.init()
 
 nadal = Player("Rafael Nadal", 2000)
@@ -119,8 +121,6 @@ def encode_shot_selection(keys, ball, ralley):
         ralley.update_ralley(current_shot)
         print(ralley.get_ralley())
     
-
-
 def main():
     run = True
     clock = pygame.time.Clock()
@@ -130,6 +130,8 @@ def main():
     ball = Ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     ralley = Ralley.Ralley()
 
+    Bot.Bot.import_data()
+
     while run:
         draw(WIN, [bottom_player, top_player], ball)
         clock.tick(FPS)
@@ -137,7 +139,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                break 
+                break
         
         keys = pygame.key.get_pressed()
         handle_player_movement(keys, bottom_player)

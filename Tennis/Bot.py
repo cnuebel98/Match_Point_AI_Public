@@ -2,6 +2,8 @@
 # und dann soll der nächste Schlag basierend auf echten Daten
 # zurückgegeben werden
 
+import pandas as pd
+
 class Bot:
     def __init__(self, name=""):
         self.name = name
@@ -13,6 +15,6 @@ class Bot:
     def import_data():
         # ToDo get the dataset and make it into a pandas dataframe 
         # that can be operated on
-        ...
-
-    
+        df = pd.read_csv(r"C:\Users\carlo\TrainingsTool\Tennis\Datasets\charting-m-points-from-2017-new.csv", low_memory=False, encoding= 'unicode_escape')
+        print("Hi")
+        #df.head(10)

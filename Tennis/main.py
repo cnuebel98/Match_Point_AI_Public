@@ -115,10 +115,11 @@ def encode_serve(ball, serve_position):
     ball_x = ball.get_X()
     ball_y = ball.get_Y()
     
-    # the ball has to be above the net (2D View) adn aslo below the T-Line of 
+    # the ball has to be above the net (2D View) and also below the T-Line of 
     # the top half of the court
     if (ball_y <= HEIGHT//2 - BALL_RADIUS
         and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS):
+        # Depending on the serve position, the service field switches
         if serve_position == "right":
             # when the ball is in the right 30% of the opponents left service field, 
             # its encoding it to "down the T" -> 6
@@ -153,7 +154,28 @@ def encode_serve(ball, serve_position):
                 return 4
     else: print("Serve is not valid")
 
+def encode_shot_direction(ball):
+    ball_x = ball.get_X()
+    ball_y = ball.get_Y()
 
+    # The ball has to be above the net (2D view) and also below the baseline of the 
+    # opponents field
+    if (ball_y <= HEIGHT//2 - BALL_RADIUS
+       and ball_y >= HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS):
+        # If the ball is to the right of the left singles line and if it is in the left 
+        # 30% of the court, then the encoding is 1
+        if (ball_x <= WIDTH//2 - 0.2*SINGLES_LINES_WIDTH
+            and ball_x >= WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS):
+            return 1
+        # If the ball is in the middle 40% of the opponents court, encoding is a 2 
+        elif (ball_x > WIDTH//2 - 0.2*SINGLES_LINES_WIDTH
+            and ball_x < WIDTH//2 + 0.2*SINGLES_LINES_WIDTH):
+            return 2
+        # If the shot is in the right 30% of the court, encoding is a 3
+        elif (ball_x >= WIDTH//2 + 0.2*SINGLES_LINES_WIDTH
+              and ball_x <= WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS):
+            return 3
+    else: print("Shot is not valid")
 
 def encode_shot_selection(keys, ball, ralley):
     
@@ -169,8 +191,10 @@ def encode_shot_selection(keys, ball, ralley):
             current_shot = encode_serve(ball, serve_position)
             ralley.add_shot_to_ralley(current_shot)
         # ToDo encode the other shots after the serve and add them to the ralley
-        else:
-            ...  
+        # but only for every second shot depending on who is serving
+        elif old_ralley.get_shot_count() > 0:
+            current_shot= encode_shot_direction(ball)
+            ralley.add_shot_to_ralley(current_shot)
         print(ralley.get_ralley())
     
 def main():

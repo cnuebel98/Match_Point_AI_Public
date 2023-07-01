@@ -13,11 +13,13 @@ class Bot:
         ...
 
     def import_data():
-        # ToDo get the dataset and make it into a pandas dataframe 
+        # get the dataset and make it into a pandas dataframe 
         # that can be operated on
         df = pd.read_csv(r"C:\Users\carlo\TrainingsTool\Tennis\Datasets\charting-m-points-from-2017-new.csv", 
                          low_memory=False, 
                          encoding= 'unicode_escape')
+        
+        # 14 and 15 are the columns that have the ralley sequences in them
         df_new = df.iloc[:,14:16]
         print(df_new.head(10))
         print(len(df_new))

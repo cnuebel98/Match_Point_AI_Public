@@ -8,6 +8,7 @@ class Ralley:
         self.shot_count += 1
 
     def clear_ralley(self):
+        self.shot_count = 0
         self.ralley.clear()
 
     def get_ralley(self):
@@ -18,3 +19,4 @@ class Ralley:
     
     def get_shot_count(self):
         return self.shot_count
+    

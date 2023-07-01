@@ -177,7 +177,7 @@ def encode_shot_direction(ball):
             return 3
     else: print("Shot is not valid")
 
-def encode_shot_selection(keys, ball, ralley):
+def encode_shot_selection(ball, ralley):
     print("Player")
     current_shot = None
     old_ralley = ralley
@@ -207,10 +207,7 @@ def main():
     new_ralley = ralley.Ralley()
     new_bot = bot.Bot("NumberOne")
     
-
     # bot.Bot.import_data()
-    
-    
 
     while run:
         draw(WIN, [bottom_player, top_player], new_ball)
@@ -221,25 +218,20 @@ def main():
                 run = False
                 break
             if event.type == pygame.MOUSEBUTTONDOWN:
-                
+                # ToDo: take turns in getting shots from the bot and from the user
                 if new_bot.get_turn() == False:
-                    encode_shot_selection(keys, new_ball, new_ralley)
+                    encode_shot_selection(new_ball, new_ralley)
                     new_bot.set_turn(True)
                 elif new_bot.get_turn() == True:
-                    print("Bot")
-                    new_bot.add_shot(new_ralley)
+                    new_bot.add_random_shot(new_ralley)
                     new_bot.set_turn(False)
-                
-        
         
         # handle_player_movement(keys, bottom_player)
+        # Ball movement for the player is done by arrow keys
         handle_ball_movement(keys, new_ball)
-        
-        # ToDo: take turns in getting shots from the bot and from the user
-        # Could be based on the ralley length (even and odd) get_shot_count() on ralley
-        
 
-
+        #ToDo: Ball Movement for the Bot must be done automatically
+        
     pygame.quit()
 
 if __name__ == "__main__":

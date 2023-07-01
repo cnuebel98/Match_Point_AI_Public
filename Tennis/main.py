@@ -178,24 +178,24 @@ def encode_shot_direction(ball):
     else: print("Shot is not valid")
 
 def encode_shot_selection(keys, ball, ralley):
-    
+    print("Player")
     current_shot = None
     old_ralley = ralley
     serve_position = None
 
-    if keys[pygame.K_SPACE]:
+    #if keys[pygame.MOUSEBUTTONDOWN]:
         # when there was no stroke in the ralley yet, it has to be a serve
-        if old_ralley.get_shot_count() == 0:
-            # ToDo switch serve_position according to score
-            serve_position = "right"
-            current_shot = encode_serve(ball, serve_position)
-            ralley.add_shot_to_ralley(current_shot)
-        # ToDo encode the other shots after the serve and add them to the ralley
-        # but only for every second shot depending on who is serving
-        elif old_ralley.get_shot_count() > 0:
-            current_shot= encode_shot_direction(ball)
-            ralley.add_shot_to_ralley(current_shot)
-        print(ralley.get_ralley())
+    if old_ralley.get_shot_count() == 0:
+        # ToDo switch serve_position according to score
+        serve_position = "right"
+        current_shot = encode_serve(ball, serve_position)
+        ralley.add_shot_to_ralley(current_shot)
+    # ToDo encode the other shots after the serve and add them to the ralley
+    # but only for every second shot depending on who is serving
+    elif old_ralley.get_shot_count() > 0:
+        current_shot= encode_shot_direction(ball)
+        ralley.add_shot_to_ralley(current_shot)
+    print(ralley.get_ralley())
     
 def main():
     run = True
@@ -205,26 +205,36 @@ def main():
     top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 10, PLAYER_WIDTH, PLAYER_HEIGHT)
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
-
-    # bot.Bot.import_data()
-
-    # ToDo: making players take turns in shot selection until ralley is over
+    new_bot = bot.Bot("NumberOne")
     
 
+    # bot.Bot.import_data()
+    
+    
 
     while run:
         draw(WIN, [bottom_player, top_player], new_ball)
         clock.tick(FPS)
-
+        keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
-            
-        keys = pygame.key.get_pressed()
-        handle_player_movement(keys, bottom_player)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                
+                if new_bot.get_turn() == False:
+                    encode_shot_selection(keys, new_ball, new_ralley)
+                    new_bot.set_turn(True)
+                elif new_bot.get_turn() == True:
+                    print("Bot")
+                    new_bot.add_shot(new_ralley)
+                    new_bot.set_turn(False)
+                
+        
+        
+        # handle_player_movement(keys, bottom_player)
         handle_ball_movement(keys, new_ball)
-        encode_shot_selection(keys, new_ball, new_ralley)
+        
         # ToDo: take turns in getting shots from the bot and from the user
         # Could be based on the ralley length (even and odd) get_shot_count() on ralley
         

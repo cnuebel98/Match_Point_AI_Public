@@ -4,13 +4,12 @@
 
 import pandas as pd
 
-class Bot:
-    def __init__(self, name=""):
-        self.name = name
 
-    def get_next_shot(ralley):
-        # ToDo return the next shot based on the ralley and the data
-        ...
+class Bot:
+    def __init__(self, name="", turn=False):
+        self.name = name
+        self.turn = turn
+
 
     def import_data():
         # get the dataset and make it into a pandas dataframe 
@@ -23,3 +22,16 @@ class Bot:
         df_new = df.iloc[:,14:16]
         print(df_new.head(10))
         print(len(df_new))
+
+    def add_shot(self, ralley):
+        # ToDo return the next shot based on the ralley and the data
+        
+        shot = 42
+        ralley.add_shot_to_ralley(shot)
+        print(ralley.get_ralley())
+
+    def set_turn(self, bool_var):
+        self.turn = bool_var
+
+    def get_turn(self):
+        return self.turn

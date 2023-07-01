@@ -15,6 +15,8 @@ class Bot:
     RALLEY_ERROR = ["n", "w", "d", "x"]
     ERROR_TYPE = ["@", "#"]
     WINNER = "*"
+    WINNER_PROBA = 15
+    ERROR_PROBA = 15
 
     def __init__(self, name="", turn=False):
         self.name = name
@@ -42,6 +44,14 @@ class Bot:
         # We will have a 30% Chance of finishing a point,
         # 15% cahnce of a winner and 15% Chance of a Error
         i = random.randint(0, 99)
+        randomReturnType = self.RETURN_SHOT_TYPES[random.randint(0, len(self.RETURN_SHOT_TYPES)-1)]
+        randomReturnDirection = self.DIRECTIONS[random.randint(0, len(self.DIRECTIONS)-1)]
+        randomReturnDepth = self.RETURN_DEPTH[random.randint(0, len(self.RETURN_DEPTH)-1)]
+        randomRalleyError = self.RALLEY_ERROR[random.randint(0, len(self.RALLEY_ERROR)-1)]
+        randomErrorType = self.ERROR_TYPE[random.randint(0, len(self.ERROR_TYPE)-1)]
+        randomShotType = self.EVERY_SHOT_TYPE[random.randint(0, len(self.EVERY_SHOT_TYPE)-1)]
+        randomShotDirection = self.DIRECTIONS[random.randint(0, len(self.DIRECTIONS)-1)]
+
         # When ralley is empty, add a random serve
         if ralley.get_shot_count() == 0:
             # Add random serve direction
@@ -50,21 +60,28 @@ class Bot:
             # ToDo: add Ace/Error probabilities
             # ToDo: Handle second serves
 
+        # If shot count in that ralley is 1, add a return
         elif ralley.get_shot_count() == 1:
-            # ToDo: Add valid return stroke including depth encoding
-            randomReturnType = self.RETURN_SHOT_TYPES[random.randint(0, len(self.RETURN_SHOT_TYPES)-1)]
-            randomReturnDirection = self.DIRECTIONS[random.randint(0, len(self.DIRECTIONS)-1)]
-            randomReturnDepth = self.RETURN_DEPTH[random.randint(0, len(self.RETURN_DEPTH)-1)]
-            shot = randomReturnType + randomReturnDirection + randomReturnDepth
-            # ToDo: Add winner and error probabilities
+            # Add valid return stroke including depth encoding
+            shot = randomReturnType + randomReturnDirection
+            # Add winner and error probabilities on return
+            if i < self.WINNER_PROBA:
+                shot = shot + randomReturnDepth + self.WINNER
+            elif i > 99 - self.ERROR_PROBA:
+                shot = shot + randomRalleyError + randomErrorType
+            else: shot = shot + randomReturnDepth
 
+        # Otherwise just add random shots
         else:
             # Add any shot after the return shot
-            randomShotType = self.EVERY_SHOT_TYPE[random.randint(0, len(self.EVERY_SHOT_TYPE)-1)]
-            randomShotDirection = self.DIRECTIONS[random.randint(0, len(self.DIRECTIONS)-1)]
             shot = randomShotType + randomShotDirection
-            # ToDo: Add winner and error probabilities
+            # Add winner and error probabilities
+            if i < self.WINNER_PROBA:
+                shot = shot + self.WINNER
+            elif i > 99 - self.ERROR_PROBA:
+                shot = shot + randomRalleyError + randomErrorType
         
+        # Add that shot to the ralley
         ralley.add_shot_to_ralley(shot)
         print(ralley.get_ralley())
 

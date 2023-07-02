@@ -30,3 +30,12 @@ class Button:
 
     def get_button_height(self):
         return self.height
+    
+    def check_button_collision(self, mouse_pos):
+        if (mouse_pos[0] >= self.x
+            and mouse_pos[0] <= self.x + self.width
+            and mouse_pos[1] >= self.y
+            and mouse_pos[1] <= self.y + self.height):
+            return True
+        else: return False
+        

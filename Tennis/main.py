@@ -222,13 +222,9 @@ def main():
                 break
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Take turns in getting shots 
-                # from the bot and from the user
-                
+                # from the bot and from the users
                 # If mouse button is pressed on the Next Button a turn is taken
-                if (mouse_pos[0] >= next_button.get_x()
-                    and mouse_pos[0] <= next_button.get_x() + next_button.get_button_width()
-                    and mouse_pos[1] >= next_button.get_y()
-                    and mouse_pos[1] <= next_button.get_y() + next_button.get_button_height()):
+                if next_button.check_button_collision(mouse_pos):
                     if new_bot.get_turn() == False:
                         encode_shot_selection(new_ball, new_ralley)
                         new_bot.set_turn(True)

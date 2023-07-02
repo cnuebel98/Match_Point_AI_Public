@@ -8,8 +8,8 @@ class Ball:
         self.y = y
         self.radius = radius
 
-    def draw(self, win):
-        pygame.draw.circle(win, self.COLOR, (self.x, self.y), self.radius)    
+    def draw(self, win, color):
+        pygame.draw.circle(win, color, (self.x, self.y), self.radius)    
 
     def move_vertical(self, up=True):
         if up:

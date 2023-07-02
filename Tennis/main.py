@@ -3,6 +3,7 @@ from score import Player, Match
 import ralley
 import ball
 import bot
+import button
 
 pygame.init()
 
@@ -11,7 +12,7 @@ djokovic = Player("Novak Djokovic", 2000)
 test_match = Match(nadal, djokovic)
 #test_match.play_match()
 
-WIDTH, HEIGHT = 800, 800
+WIDTH, HEIGHT = 720, 720
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyTennis")
 
@@ -60,9 +61,8 @@ class PlayerRect:
             self.x -= self.VELOCITY
         else:
             self.x += self.VELOCITY
-
         
-def draw(win, players, ball):
+def draw(win, players, ball, button):
     win.fill(DARK_GREEN)
     
     # Outer Lines
@@ -83,7 +83,8 @@ def draw(win, players, ball):
     for player in players:
         player.draw(win)
 
-    ball.draw(win)
+    button.draw(win, GREY)
+    ball.draw(win, YELLOW)
 
     pygame.display.update()
 
@@ -206,26 +207,35 @@ def main():
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
     new_bot = bot.Bot("NumberOne")
-    
+    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.15, HEIGHT*0.05, "NEXT", WHITE)
+
     # bot.Bot.import_data()
 
     while run:
-        draw(WIN, [bottom_player, top_player], new_ball)
+        draw(WIN, [bottom_player, top_player], new_ball, next_button)
         clock.tick(FPS)
         keys = pygame.key.get_pressed()
+        mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # ToDo: take turns in getting shots from the bot and from the user
-                if new_bot.get_turn() == False:
-                    encode_shot_selection(new_ball, new_ralley)
-                    new_bot.set_turn(True)
-                elif new_bot.get_turn() == True:
-                    new_bot.add_random_shot(new_ralley)
-                    new_bot.set_turn(False)
-        
+                # Take turns in getting shots 
+                # from the bot and from the user
+                
+                # If mouse button is pressed on the Next Button a turn is taken
+                if (mouse_pos[0] >= next_button.get_x()
+                    and mouse_pos[0] <= next_button.get_x() + next_button.get_button_width()
+                    and mouse_pos[1] >= next_button.get_y()
+                    and mouse_pos[1] <= next_button.get_y() + next_button.get_button_height()):
+                    if new_bot.get_turn() == False:
+                        encode_shot_selection(new_ball, new_ralley)
+                        new_bot.set_turn(True)
+                    elif new_bot.get_turn() == True:
+                        new_bot.add_random_shot(new_ralley)
+                        new_bot.set_turn(False)
+    
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys
         handle_ball_movement(keys, new_ball)

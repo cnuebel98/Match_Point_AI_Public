@@ -161,6 +161,7 @@ def encode_shot_direction(ball):
 
     # The ball has to be above the net (2D view) and also below the baseline of the 
     # opponents field
+
     if (ball_y <= HEIGHT//2 - BALL_RADIUS
        and ball_y >= HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS):
         # If the ball is to the right of the left singles line and if it is in the left 
@@ -176,16 +177,37 @@ def encode_shot_direction(ball):
         elif (ball_x >= WIDTH//2 + 0.2*SINGLES_LINES_WIDTH
               and ball_x <= WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS):
             return 3
-    else: print("Shot is not valid")
+    else: print("Ball is Long")
+
+def encode_shot_depth(ball):
+    ball_x = ball.get_X()
+    ball_y = ball.get_Y()
+    # If the ball is between both single lines left and right, we can start encoding
+    # the Ball depth
+    if (ball_x <= WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2
+        and ball_x >= WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS):
+        # if the ball is in the Service field (Above the net and below the T-Line)
+        if (ball_y <= HEIGHT//2
+            and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS):
+            return 7
+        # if the ball is between Base and T Line, but closer to T-Line
+        elif (ball_y < HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS
+              and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 - ((COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)):
+            return 8
+        # If the ball is between T and Baseline, but closer to the baseline
+        elif (ball_y < HEIGHT//2 - TLINE_HEIGHT//2 - ((COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
+              and ball_y >= HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS):
+            return 9
+    else: print("Ball is Wide (left or right)")
+
 
 def encode_shot_selection(ball, ralley):
     print("Player")
-    current_shot = None
+    current_shot = ""
     old_ralley = ralley
     serve_position = None
 
-    #if keys[pygame.MOUSEBUTTONDOWN]:
-        # when there was no stroke in the ralley yet, it has to be a serve
+    # when there was no stroke in the ralley yet, it has to be a serve
     if old_ralley.get_shot_count() == 0:
         # ToDo switch serve_position according to score
         serve_position = "right"
@@ -194,7 +216,7 @@ def encode_shot_selection(ball, ralley):
     # ToDo encode the other shots after the serve and add them to the ralley
     # but only for every second shot depending on who is serving
     elif old_ralley.get_shot_count() > 0:
-        current_shot= encode_shot_direction(ball)
+        current_shot = current_shot + str(encode_shot_direction(ball)) + str(encode_shot_depth(ball))
         ralley.add_shot_to_ralley(current_shot)
     print(ralley.get_ralley())
     
@@ -209,7 +231,7 @@ def main():
     new_bot = bot.Bot("NumberOne")
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.15, HEIGHT*0.05, "NEXT", WHITE)
 
-    new_bot.import_data()
+    #new_bot.import_data()
 
     while run:
         draw(WIN, [bottom_player, top_player], new_ball, next_button)

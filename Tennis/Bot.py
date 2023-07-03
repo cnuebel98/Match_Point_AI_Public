@@ -110,54 +110,66 @@ class Bot:
         
         if r != "nan":
             for i in range(0, len(r)):
-                # If char of ralley is in serve Direction, its added to the shot
+                # If the char is the last char in the ralley, its added to the shot
+                # and the shot is added to the shot list
                 if i == len(r)-1:
                     shot = shot + r[i]
                     shot_list.append(shot)
                     shot = ""
+
+                # If char of ralley is in serve Direction, its added to the shot
                 elif r[i] in self.SERVE_DIRECTION:
                     shot = shot + r[i]
                     if r[i+1] in self.EVERY_SHOT_TYPE:
                         shot_list.append(shot)
                         shot = ""
                 
+                # If the charstand for one of the normal shot types, its added here 
+                # and if the next char also is a normal shot type, shot is over and gets added
                 elif r[i] in self.EVERY_SHOT_TYPE:
                     shot = shot + r[i]
                     if r[i+1] in self.EVERY_SHOT_TYPE:
                         shot_list.append(shot)
                         shot = ""
                 
+                # if char is error type or winner, ralley is over
                 elif r[i] in self.ERROR_TYPE or r[i] in self.WINNER:
                     shot = shot + r[i]
                     shot_list.append(shot)
                     shot = ""
 
+                # If char is a direction encoding
                 elif r[i] in self.DIRECTIONS:
                     shot = shot + r[i]
                     if r[i+1] in self.EVERY_SHOT_TYPE:
                         shot_list.append(shot)
                         shot = ""
 
+                # If char is a depth encoding
                 elif r[i] in self.RETURN_DEPTH:
                     shot = shot + r[i]
                     if r[i+1] in self.EVERY_SHOT_TYPE:
                         shot_list.append(shot)
                         shot = ""
                 
+                # If Char is a Ralley Error (not a type)
                 elif r[i] in self.RALLEY_ERROR:
                     shot = shot + r[i]
                     if r[i+1] not in self.ERROR_TYPE:
                         shot_list.append(shot)
                         shot = ""
-
+                
+                # if Char is one of the extra encodings for special cases
                 elif r[i] in self.EXTRA_STUFF:
                     shot = shot + r[i]
                     if r[i+1] in self.EVERY_SHOT_TYPE:
                         shot_list.append(shot)
                         shot = ""
 
+                # This gets printed when there is a ralley, that is not covered by those if statements
                 else: print("Unknown Ralley was given in " + r + " of the Dataset")
             return shot_list
+        # when the ralley is NaN a percent sign gets returned
         else: return "%"
 
     def set_turn(self, bool_var):

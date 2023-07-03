@@ -8,13 +8,14 @@ import random
 class Bot:
 
     SERVE_DIRECTION = ["4", "5", "6"]
-    EVERY_SHOT_TYPE = ["f", "b", "r", "s", "v", "z", "o", "p", "y", "l", "m", "h", "i", "j", "k", "t"]
-    RETURN_SHOT_TYPES = ["f", "b", "r", "s", "y", "l", "m", "h", "i", "t"]
+    EVERY_SHOT_TYPE = ["f", "b", "r", "s", "v", "z", "o", "p", "y", "l", "m", "h", "i", "j", "k", "t", "u"]
+    RETURN_SHOT_TYPES = ["f", "b", "r", "s", "y", "l", "m", "h", "i", "t", "u"]
     RETURN_DEPTH = ["7", "8", "9"]
     DIRECTIONS = ["1", "2", "3"]
     RALLEY_ERROR = ["n", "w", "d", "x"]
     ERROR_TYPE = ["@", "#"]
     WINNER = "*"
+    EXTRA_STUFF = ["+", ";", "^", "S", "R", "C", "!", "0", "-", "=", "P", "Q", "c", "q", "e", "N"]
     WINNER_PROBA = 15
     ERROR_PROBA = 15
 
@@ -22,18 +23,34 @@ class Bot:
         self.name = name
         self.turn = turn
 
-    def import_data():
+    def import_data(self):
         # get the dataset and make it into a pandas dataframe 
         # that can be operated on
-        df = pd.read_csv(r"C:\Users\carlo\TrainingsTool\Tennis\Datasets\charting-m-points-from-2017-new.csv", 
-                         low_memory=False, 
-                         encoding= 'unicode_escape')
-        
         # 14 and 15 are the columns that have the ralley sequences in them
-        df_new = df.iloc[:,14:16]
-        print(df_new.head(10))
-        print(len(df_new))
+        #df_new = df.iloc[:,14:16]
+        #df_new.to_csv(r"C:\Users\carlo\TrainingsTool\Tennis\Datasets\ralleys_only_m_from_2017", index = False)
+        #print(df_new.head(10))
+        #print(len(df_new))
 
+        df = pd.read_csv(r"C:\Users\carlo\TrainingsTool\Tennis\Datasets\ralleys_only_m_from_2017.csv")
+        
+        test_df = df.head(10000)
+        
+        shot_list_of_lists = []
+        shot_list = []
+
+        #shot_list = self.turn_ralley_into_shot_list(str(test_df.iloc[0,0]))
+
+        for i in range(0, len(test_df)):
+            for j in range(0, 2):
+                shot_list = self.turn_ralley_into_shot_list(str(test_df.iloc[i, j]))
+                shot_list_of_lists.append(shot_list)
+              
+        new_df = pd.DataFrame(shot_list_of_lists)
+        new_df.rename(columns={new_df.columns[0]: "One"}, inplace = True)
+        new_df = new_df.drop(new_df[new_df["One"] == "%"].index)
+        print(new_df)
+       
     def add_shot(self, ralley):
         # ToDo return the next shot based on the ralley and the data
         shot = 42
@@ -77,13 +94,71 @@ class Bot:
             shot = randomShotType + randomShotDirection
             # Add winner and error probabilities
             if i < self.WINNER_PROBA:
-                shot = shot + self.WINNER
+                shot = shot + randomReturnDepth + self.WINNER
             elif i > 99 - self.ERROR_PROBA:
                 shot = shot + randomRalleyError + randomErrorType
         
         # Add that shot to the ralley
         ralley.add_shot_to_ralley(shot)
         print(ralley.get_ralley())
+
+    def turn_ralley_into_shot_list(self, ralley):
+        
+        r = ralley
+        shot_list = []
+        shot = ""
+        
+        if r != "nan":
+            for i in range(0, len(r)):
+                # If char of ralley is in serve Direction, its added to the shot
+                if i == len(r)-1:
+                    shot = shot + r[i]
+                    shot_list.append(shot)
+                    shot = ""
+                elif r[i] in self.SERVE_DIRECTION:
+                    shot = shot + r[i]
+                    if r[i+1] in self.EVERY_SHOT_TYPE:
+                        shot_list.append(shot)
+                        shot = ""
+                
+                elif r[i] in self.EVERY_SHOT_TYPE:
+                    shot = shot + r[i]
+                    if r[i+1] in self.EVERY_SHOT_TYPE:
+                        shot_list.append(shot)
+                        shot = ""
+                
+                elif r[i] in self.ERROR_TYPE or r[i] in self.WINNER:
+                    shot = shot + r[i]
+                    shot_list.append(shot)
+                    shot = ""
+
+                elif r[i] in self.DIRECTIONS:
+                    shot = shot + r[i]
+                    if r[i+1] in self.EVERY_SHOT_TYPE:
+                        shot_list.append(shot)
+                        shot = ""
+
+                elif r[i] in self.RETURN_DEPTH:
+                    shot = shot + r[i]
+                    if r[i+1] in self.EVERY_SHOT_TYPE:
+                        shot_list.append(shot)
+                        shot = ""
+                
+                elif r[i] in self.RALLEY_ERROR:
+                    shot = shot + r[i]
+                    if r[i+1] not in self.ERROR_TYPE:
+                        shot_list.append(shot)
+                        shot = ""
+
+                elif r[i] in self.EXTRA_STUFF:
+                    shot = shot + r[i]
+                    if r[i+1] in self.EVERY_SHOT_TYPE:
+                        shot_list.append(shot)
+                        shot = ""
+
+                else: print("Unknown Ralley was given in " + r + " of the Dataset")
+            return shot_list
+        else: return "%"
 
     def set_turn(self, bool_var):
         self.turn = bool_var

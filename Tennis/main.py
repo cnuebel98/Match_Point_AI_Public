@@ -209,7 +209,7 @@ def main():
     new_bot = bot.Bot("NumberOne")
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.15, HEIGHT*0.05, "NEXT", WHITE)
 
-    # bot.Bot.import_data()
+    new_bot.import_data()
 
     while run:
         draw(WIN, [bottom_player, top_player], new_ball, next_button)

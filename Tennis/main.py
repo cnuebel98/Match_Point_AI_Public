@@ -4,6 +4,8 @@ import ralley
 import ball
 import bot
 import button
+import pandas as pd
+import random
 
 pygame.init()
 
@@ -83,7 +85,7 @@ def draw(win, players, ball, button):
     for player in players:
         player.draw(win)
 
-    button.draw(win, GREY)
+    button.draw(win, WHITE)
     ball.draw(win, YELLOW)
 
     pygame.display.update()
@@ -110,6 +112,53 @@ def handle_ball_movement(keys, ball):
     if keys[pygame.K_RIGHT] and ball.x + ball.VELOCITY + ball.radius <= WIDTH:
         ball.move_horizontal(left=False)
     #print(str(ball.get_X()) + " " + str(ball.get_Y()))
+
+def move_ball_to_pos(ball, ralley):
+    # makes the ball go to the position, that the bot shot made
+    r = ralley.get_ralley()
+    series = pd.Series(r)
+    NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    RETURN_DEPTH = ["7", "8", "9"]
+    DIRECTIONS = ["1", "2", "3"]
+    x_pos = 10
+    y_pos = 10
+
+    current_shot = ""
+    current_shot = series[len(series)-1]
+
+    for c in current_shot:
+        #if c in NUMBERS:
+            if c in RETURN_DEPTH:
+                if c == "7":
+                    print("y Pos because of 7")
+                    y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2)
+                elif c == "8":
+                    print("y Pos because of 8")
+                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
+                elif c == "9":
+                    print("y Pos because of 9")
+                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, COURT_HEIGHT//2 + BALL_RADIUS)
+                
+            if c in DIRECTIONS:
+                if c == "1":
+                    print("x Pos because of 1")
+                    x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                elif c == "2":
+                    print("x Pos because of 2")
+                    x_pos = random.randint(WIDTH//2 - BALL_RADIUS - int(0.2*SINGLES_LINES_WIDTH//2), WIDTH//2 + BALL_RADIUS + int(0.2*SINGLES_LINES_WIDTH//2))
+                elif c == "3":
+                    print("x Pos because of 3")
+                    x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
+                
+            if (y_pos == 10):
+                print("y Pos because of random")
+                y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
+            if (x_pos == 10):
+                print("x Pos because of random")
+                x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
+            
+    ball.set_X(x_pos)
+    ball.set_Y(y_pos)
 
 def encode_serve(ball, serve_position):
 
@@ -200,9 +249,8 @@ def encode_shot_depth(ball):
             return 9
     else: print("Ball is Wide (left or right)")
 
-
 def encode_shot_selection(ball, ralley):
-    print("Player")
+    #print("Player")
     current_shot = ""
     old_ralley = ralley
     serve_position = None
@@ -211,9 +259,9 @@ def encode_shot_selection(ball, ralley):
     if old_ralley.get_shot_count() == 0:
         # ToDo switch serve_position according to score
         serve_position = "right"
-        current_shot = encode_serve(ball, serve_position)
+        current_shot = str(encode_serve(ball, serve_position))
         ralley.add_shot_to_ralley(current_shot)
-    # ToDo encode the other shots after the serve and add them to the ralley
+    # Encode the other shots after the serve and add them to the ralley
     # but only for every second shot depending on who is serving
     elif old_ralley.get_shot_count() > 0:
         current_shot = current_shot + str(encode_shot_direction(ball)) + str(encode_shot_depth(ball))
@@ -229,7 +277,7 @@ def main():
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
     new_bot = bot.Bot("NumberOne")
-    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.15, HEIGHT*0.05, "NEXT", WHITE)
+    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.119, HEIGHT*0.05, "NEXT", BLACK)
 
     #new_bot.import_data()
 
@@ -252,13 +300,16 @@ def main():
                         new_bot.set_turn(True)
                     elif new_bot.get_turn() == True:
                         new_bot.add_random_shot(new_ralley)
+                        #ToDo: Ball Movement for the Bot must be done automatically
+                        move_ball_to_pos(new_ball, new_ralley)
                         new_bot.set_turn(False)
     
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys
         handle_ball_movement(keys, new_ball)
+        
 
-        #ToDo: Ball Movement for the Bot must be done automatically
+        
         
     pygame.quit()
 

@@ -27,10 +27,10 @@ class Ball:
         return self.x
     
     def set_X(self, x):
-        self._x = x
+        self.x = x
 
     def get_Y(self):
         return self.y
     
     def set_Y(self, y):
-        self._y = y
+        self.y = y

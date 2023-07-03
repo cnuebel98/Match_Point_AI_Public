@@ -4,6 +4,7 @@
 
 import pandas as pd
 import random
+import ball
 
 class Bot:
 
@@ -91,7 +92,7 @@ class Bot:
         # Otherwise just add random shots
         else:
             # Add any shot after the return shot
-            shot = randomShotType + randomShotDirection
+            shot = randomShotType + randomShotDirection + randomReturnDepth
             # Add winner and error probabilities
             if i < self.WINNER_PROBA:
                 shot = shot + randomReturnDepth + self.WINNER

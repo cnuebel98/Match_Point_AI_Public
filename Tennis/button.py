@@ -12,12 +12,9 @@ class Button:
 
     def draw(self, win, color):
         pygame.draw.rect(win, color, (self.x, self.y, self.width, self.height))
-        smallfont = pygame.font.SysFont('Arial', 20) 
+        smallfont = pygame.font.SysFont('Arial', 30, bold=True, italic=False) 
         text = smallfont.render(self.buttonText, True , self.color)
         win.blit(text , (self.x , self.y))
-
-    def click(self, event):
-        ...
 
     def get_x(self):
         return self.x

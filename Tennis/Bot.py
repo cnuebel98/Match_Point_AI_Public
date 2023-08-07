@@ -4,7 +4,6 @@
 
 import pandas as pd
 import random
-import ball
 
 class Bot:
 
@@ -78,7 +77,8 @@ class Bot:
             # ToDo: add Ace/Error probabilities
             # ToDo: Handle second serves
 
-        # If shot count in that ralley is 1, add a return
+        # If shot count in that ralley is 1, add a return: Return cant be a volley for example, 
+        # thats why this has to be different
         elif ralley.get_shot_count() == 1:
             # Add valid return stroke including depth encoding
             shot = randomReturnType + randomReturnDirection
@@ -89,7 +89,8 @@ class Bot:
                 shot = shot + randomRalleyError + randomErrorType
             else: shot = shot + randomReturnDepth
 
-        # Otherwise just add random shots
+        # Just add random shots consisting of lenght and direction and 
+        # 15% Chance of a winner and 15% Chance of a 
         else:
             # Add any shot after the return shot
             shot = randomShotType + randomShotDirection + randomReturnDepth

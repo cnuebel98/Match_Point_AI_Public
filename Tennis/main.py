@@ -1,5 +1,5 @@
 import pygame
-from score import Player, Match
+from score import Player, Match, Set, Game, Tiebreak
 import ralley
 import ball
 import bot
@@ -39,8 +39,9 @@ TLINE_HEIGHT = int(0.5385*COURT_HEIGHT)
 NET_WIDTH = int(1.2*COURT_WIDTH)
 
 class PlayerRect:
+    # ToDo: Make Players circles instead of squares
     COLOR = BLUE
-    # make velocity dependent on the player
+    # ToDo: Make velocity dependent on the player
     VELOCITY = 4
 
     def __init__(self, x, y, width, height):
@@ -91,6 +92,7 @@ def draw(win, players, ball, button):
     pygame.display.update()
 
 def handle_player_movement(keys, bottom_player):
+    # ToDo: change player movement from wasd to ball position dependent
     if keys[pygame.K_w] and bottom_player.y - bottom_player.VELOCITY >= 0:
         bottom_player.move_vertical(up=True)
     if keys[pygame.K_s] and bottom_player.y + bottom_player.VELOCITY + bottom_player.height <= HEIGHT:
@@ -101,7 +103,6 @@ def handle_player_movement(keys, bottom_player):
         bottom_player.move_horizontal(left=False)
 
 def handle_ball_movement(keys, ball):
-    # ToDo: change player movement from wasd to ball position dependent
     # User is only allowed to move the ball
     if keys[pygame.K_UP] and ball.y - ball.VELOCITY >= 0:
         ball.move_vertical(up=True)
@@ -117,7 +118,6 @@ def move_ball_to_pos(ball, ralley):
     # makes the ball go to the position, based on the bot shot
     r = ralley.get_ralley()
     series = pd.Series(r)
-    NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     RETURN_DEPTH = ["7", "8", "9"]
     DIRECTIONS = ["1", "2", "3"]
     x_pos = 10
@@ -127,35 +127,34 @@ def move_ball_to_pos(ball, ralley):
     current_shot = series[len(series)-1]
 
     for c in current_shot:
-        
-            if c in RETURN_DEPTH:
-                if c == "7":
-                    #print("y Pos because of 7")
-                    y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2)
-                elif c == "8":
-                    #print("y Pos because of 8")
-                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
-                elif c == "9":
-                    #print("y Pos because of 9")
-                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
+        if c in RETURN_DEPTH:
+            if c == "7":
+                #print("y Pos because of 7")
+                y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2)
+            elif c == "8":
+                #print("y Pos because of 8")
+                y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
+            elif c == "9":
+                #print("y Pos because of 9")
+                y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
                 
-            if c in DIRECTIONS:
-                if c == "1":
-                    #print("x Pos because of 1")
-                    x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
-                elif c == "2":
-                    #print("x Pos because of 2")
-                    x_pos = random.randint(WIDTH//2 - BALL_RADIUS - int(0.2*SINGLES_LINES_WIDTH//2), WIDTH//2 + BALL_RADIUS + int(0.2*SINGLES_LINES_WIDTH//2))
-                elif c == "3":
-                    #print("x Pos because of 3")
-                    x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
+        if c in DIRECTIONS:
+            if c == "1":
+                #print("x Pos because of 1")
+                x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+            elif c == "2":
+                #print("x Pos because of 2")
+                x_pos = random.randint(WIDTH//2 - BALL_RADIUS - int(0.2*SINGLES_LINES_WIDTH//2), WIDTH//2 + BALL_RADIUS + int(0.2*SINGLES_LINES_WIDTH//2))
+            elif c == "3":
+                #print("x Pos because of 3")
+                x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
                 
-            if (y_pos == 10):
-                #print("y Pos because of random")
-                y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
-            if (x_pos == 10):
-                #print("x Pos because of random")
-                x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
+        if (y_pos == 10):
+            #print("y Pos because of random")
+            y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
+        if (x_pos == 10):
+            #print("x Pos because of random")
+            x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
             
     ball.set_X(x_pos)
     ball.set_Y(y_pos)
@@ -296,14 +295,19 @@ def main():
                 # from the bot and from the users
                 # If mouse button is pressed on the Next Button a turn is taken
                 if next_button.check_button_collision(mouse_pos):
+                    # If its not the bots turn, take the ball position as shot b the user
                     if new_bot.get_turn() == False:
                         encode_shot_selection(new_ball, new_ralley)
                         new_bot.set_turn(True)
+                    # If its the bots turn, call function that gets the shot from the bot
                     elif new_bot.get_turn() == True:
                         new_bot.add_random_shot(new_ralley)
-                        #ToDo: Ball Movement for the Bot must be done automatically
+                        #ToDo: Ball Movement should be an animated transition
                         move_ball_to_pos(new_ball, new_ralley)
                         new_bot.set_turn(False)
+                    
+                    # Here the score is updated, depending on the ralley and the shot count and the turn
+                    new_ralley.score_update()
     
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys

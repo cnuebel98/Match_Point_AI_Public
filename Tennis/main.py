@@ -14,7 +14,7 @@ djokovic = Player("Novak Djokovic", 2000)
 test_match = Match(nadal, djokovic)
 #test_match.play_match()
 
-WIDTH, HEIGHT = 720, 720
+WIDTH, HEIGHT = 1200, 720
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyTennis")
 
@@ -114,7 +114,7 @@ def handle_ball_movement(keys, ball):
     #print(str(ball.get_X()) + " " + str(ball.get_Y()))
 
 def move_ball_to_pos(ball, ralley):
-    # makes the ball go to the position, that the bot shot made
+    # makes the ball go to the position, based on the bot shot
     r = ralley.get_ralley()
     series = pd.Series(r)
     NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
@@ -127,34 +127,34 @@ def move_ball_to_pos(ball, ralley):
     current_shot = series[len(series)-1]
 
     for c in current_shot:
-        #if c in NUMBERS:
+        
             if c in RETURN_DEPTH:
                 if c == "7":
-                    print("y Pos because of 7")
+                    #print("y Pos because of 7")
                     y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2)
                 elif c == "8":
-                    print("y Pos because of 8")
+                    #print("y Pos because of 8")
                     y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
                 elif c == "9":
-                    print("y Pos because of 9")
-                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, COURT_HEIGHT//2 + BALL_RADIUS)
+                    #print("y Pos because of 9")
+                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
                 
             if c in DIRECTIONS:
                 if c == "1":
-                    print("x Pos because of 1")
+                    #print("x Pos because of 1")
                     x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
                 elif c == "2":
-                    print("x Pos because of 2")
+                    #print("x Pos because of 2")
                     x_pos = random.randint(WIDTH//2 - BALL_RADIUS - int(0.2*SINGLES_LINES_WIDTH//2), WIDTH//2 + BALL_RADIUS + int(0.2*SINGLES_LINES_WIDTH//2))
                 elif c == "3":
-                    print("x Pos because of 3")
+                    #print("x Pos because of 3")
                     x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
                 
             if (y_pos == 10):
-                print("y Pos because of random")
+                #print("y Pos because of random")
                 y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
             if (x_pos == 10):
-                print("x Pos because of random")
+                #print("x Pos because of random")
                 x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
             
     ball.set_X(x_pos)
@@ -280,6 +280,7 @@ def main():
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.119, HEIGHT*0.05, "NEXT", BLACK)
 
     #new_bot.import_data()
+    #new_bot.turn_ralley_into_shot_list("6s39f!3x@")
 
     while run:
         draw(WIN, [bottom_player, top_player], new_ball, next_button)
@@ -307,9 +308,6 @@ def main():
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys
         handle_ball_movement(keys, new_ball)
-        
-
-        
         
     pygame.quit()
 

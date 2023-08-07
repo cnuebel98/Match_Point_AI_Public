@@ -50,7 +50,7 @@ class Bot:
         new_df = pd.DataFrame(shot_list_of_lists)
         new_df.rename(columns={new_df.columns[0]: "One"}, inplace = True)
         new_df = new_df.drop(new_df[new_df["One"] == "%"].index)
-        print(new_df)
+        #print(new_df)
        
     def add_shot(self, ralley):
         # ToDo return the next shot based on the ralley and the data
@@ -108,7 +108,8 @@ class Bot:
         r = ralley
         shot_list = []
         shot = ""
-        
+        #r = "6s39f!3x@"
+
         if r != "nan":
             for i in range(0, len(r)):
                 # If the char is the last char in the ralley, its added to the shot
@@ -169,6 +170,7 @@ class Bot:
 
                 # This gets printed when there is a ralley, that is not covered by those if statements
                 else: print("Unknown Ralley was given in " + r + " of the Dataset")
+            #print(len(shot_list)) gives back 3 -> because there are 3 shots in the ralley
             return shot_list
         # when the ralley is NaN a percent sign gets returned
         else: return "%"

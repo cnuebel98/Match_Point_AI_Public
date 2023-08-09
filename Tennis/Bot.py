@@ -96,7 +96,7 @@ class Bot:
             shot = randomShotType + randomShotDirection + randomReturnDepth
             # Add winner and error probabilities
             if i < self.WINNER_PROBA:
-                shot = shot + randomReturnDepth + self.WINNER
+                shot = shot + self.WINNER
             elif i > 99 - self.ERROR_PROBA:
                 shot = shot + randomRalleyError + randomErrorType
         

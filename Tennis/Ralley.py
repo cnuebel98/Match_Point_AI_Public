@@ -52,11 +52,11 @@ class Ralley:
         #print(c)
 
         if c in self.RALLEY_ERROR or c in self.ERROR_TYPE:
-            print("yes, bot error")
-            # ToDo: update Score
+            print("Bot Error")
+            # ToDo: update Score, dependent on who is serving
             self.clear_ralley()
         elif c in self.WINNER:
-            print("BotWinner")
-            # ToDo: Update Score
+            print("Bot Winner")
+            # ToDo: Update Score dependent on who is serving
             self.clear_ralley()
     

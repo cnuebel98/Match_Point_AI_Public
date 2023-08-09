@@ -6,6 +6,7 @@ import bot
 import button
 import pandas as pd
 import random
+import time
 
 pygame.init()
 
@@ -37,6 +38,8 @@ LINE_WIDTH = 6
 SINGLES_LINES_WIDTH = int(0.75*COURT_WIDTH)
 TLINE_HEIGHT = int(0.5385*COURT_HEIGHT)
 NET_WIDTH = int(1.2*COURT_WIDTH)
+
+TRANSITION_ANIMATION = True
 
 class PlayerRect:
     # ToDo: Make Players circles instead of squares
@@ -114,7 +117,7 @@ def handle_ball_movement(keys, ball):
         ball.move_horizontal(left=False)
     #print(str(ball.get_X()) + " " + str(ball.get_Y()))
 
-def move_ball_to_pos(ball, ralley):
+def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION):
     # makes the ball go to the position, based on the bot shot
     r = ralley.get_ralley()
     series = pd.Series(r)
@@ -126,6 +129,9 @@ def move_ball_to_pos(ball, ralley):
     current_shot = ""
     current_shot = series[len(series)-1]
 
+    # Takes the last shot in the ralley and iterates through the characters in that shot
+    # looks at depth of shot first and finds a fitting y position and then the same for 
+    # direction and x posititon
     for c in current_shot:
         if c in RETURN_DEPTH:
             if c == "7":
@@ -155,9 +161,22 @@ def move_ball_to_pos(ball, ralley):
         if (x_pos == 10):
             #print("x Pos because of random")
             x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
-            
-    ball.set_X(x_pos)
-    ball.set_Y(y_pos)
+    
+    if TRANSITION_ANIMATION:
+        # Here the ball transitions to the new position
+        x_diff = x_pos - ball.get_X()
+        y_diff = y_pos - ball.get_Y()
+        x = ball.get_X()
+        y = ball.get_Y()
+        for i in range(0, 11, 1):
+            ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
+            ball.draw(win, YELLOW)
+            pygame.display.update()
+            time.sleep(0.05)
+    else:
+        # Here the ball jumps instantly to the new positions
+        ball.set_X(x_pos)
+        ball.set_Y(y_pos)
 
 def encode_serve(ball, serve_position):
 
@@ -295,15 +314,16 @@ def main():
                 # from the bot and from the users
                 # If mouse button is pressed on the Next Button a turn is taken
                 if next_button.check_button_collision(mouse_pos):
-                    # If its not the bots turn, take the ball position as shot b the user
+                    # If its not the bots turn, take the ball position as shot by the user
                     if new_bot.get_turn() == False:
                         encode_shot_selection(new_ball, new_ralley)
                         new_bot.set_turn(True)
+
                     # If its the bots turn, call function that gets the shot from the bot
                     elif new_bot.get_turn() == True:
                         new_bot.add_random_shot(new_ralley)
-                        #ToDo: Ball Movement should be an animated transition
-                        move_ball_to_pos(new_ball, new_ralley)
+                        # Ball Movement can be an animated transition
+                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION = True)
                         new_bot.set_turn(False)
                     
                     # Here the score is updated, depending on the ralley and the shot count and the turn

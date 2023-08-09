@@ -34,3 +34,12 @@ class Ball:
     
     def set_Y(self, y):
         self.y = y
+
+    def move_animation_from_A_to_B(self, x_diff, y_diff, i, x, y):
+        # The ball moves from the curretn location to the next location 
+        # for that animation the x and y values along the way are calculated here
+        
+        new_x = x + x_diff*(i/10)
+        new_y = y + y_diff*(i/10)
+        self.set_X(new_x)
+        self.set_Y(new_y)

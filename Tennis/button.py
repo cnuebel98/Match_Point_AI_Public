@@ -14,7 +14,14 @@ class Button:
         pygame.draw.rect(win, color, (self.x, self.y, self.width, self.height))
         smallfont = pygame.font.SysFont('Arial', 30, bold=True, italic=False) 
         text = smallfont.render(self.buttonText, True , self.color)
-        win.blit(text , (self.x , self.y))
+        win.blit(text, (self.x, self.y))
+
+    def update_text(self, text, win, color):
+        pygame.draw.rect(win, color, (self.x, self.y, self.width, self.height))
+        self.buttonText = text
+        smallfont = pygame.font.SysFont('Arial', 30, bold=True, italic=False)
+        text = smallfont.render(self.buttonText, True , self.color)
+        win.blit(text, (self.x, self.y))
 
     def get_x(self):
         return self.x

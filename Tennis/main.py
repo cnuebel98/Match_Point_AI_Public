@@ -68,7 +68,7 @@ class PlayerRect:
         else:
             self.x += self.VELOCITY
         
-def draw(win, players, ball, button):
+def draw(win, players, ball, buttons):
     win.fill(DARK_GREEN)
     
     # Outer Lines
@@ -89,7 +89,9 @@ def draw(win, players, ball, button):
     for player in players:
         player.draw(win)
 
-    button.draw(win, WHITE)
+    for button in buttons:
+        button.draw(win, WHITE)
+
     ball.draw(win, YELLOW)
 
     pygame.display.update()
@@ -295,13 +297,14 @@ def main():
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
     new_bot = bot.Bot("NumberOne")
-    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.119, HEIGHT*0.05, "NEXT", BLACK)
+    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", BLACK)
+    score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0:0", BLACK)
 
     #new_bot.import_data()
     #new_bot.turn_ralley_into_shot_list("6s39f!3x@")
 
     while run:
-        draw(WIN, [bottom_player, top_player], new_ball, next_button)
+        draw(WIN, [bottom_player, top_player], new_ball, [next_button, score_text_field])
         clock.tick(FPS)
         keys = pygame.key.get_pressed()
         mouse_pos = pygame.mouse.get_pos()
@@ -328,6 +331,7 @@ def main():
                     
                     # Here the score is updated, depending on the ralley and the shot count and the turn
                     new_ralley.score_update()
+                    score_text_field.update_text(str(new_ralley.get_ralley()), WIN, BLACK)
     
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys

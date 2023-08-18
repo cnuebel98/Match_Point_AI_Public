@@ -36,7 +36,7 @@ class Ball:
         self.y = y
 
     def move_animation_from_A_to_B(self, x_diff, y_diff, i, x, y):
-        # The ball moves from the curretn location to the next location 
+        # The ball moves from the current location to the next location 
         # for that animation the x and y values along the way are calculated here
         
         new_x = x + x_diff*(i/10)

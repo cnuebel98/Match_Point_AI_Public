@@ -1,4 +1,4 @@
-import pygame
+import scoring
 
 class Ralley:
     
@@ -44,7 +44,7 @@ class Ralley:
         last_char = last_shot[len(last_shot)-1]
         return last_char
 
-    def score_update(self):
+    def score_update_old(self):
         # If the last char in ralley is a terminal shot, 
         # add a point to the score accordingly
         
@@ -59,4 +59,18 @@ class Ralley:
         elif c in self.WINNER:
             print("Bot Winner")
             # ToDo: Update Score dependent on who is serving
+            self.clear_ralley()
+
+    def score_update(self, score):
+        # If the last char in ralley is a terminal shot, 
+        # add a point to the score accordingly
+        
+        #print(self.get_shot_count())
+        c = self.get_last_char_of_last_shot()
+        #print(c)
+
+        if c in self.RALLEY_ERROR or c in self.ERROR_TYPE or c in self.WINNER:
+            #print("Ralley Terminated")
+            score.update_points(self.ralley, c, self.get_shot_count())
+            # ToDo: update Score, dependent on who is serving
             self.clear_ralley()

@@ -55,7 +55,7 @@ class Bot:
         # ToDo return the next shot based on the ralley and the data
         shot = 42
         ralley.add_shot_to_ralley(shot)
-        print(ralley.get_ralley())
+        #print(ralley.get_ralley())
 
     def add_random_shot(self, ralley):
         # We will have a 30% Chance of finishing a point,

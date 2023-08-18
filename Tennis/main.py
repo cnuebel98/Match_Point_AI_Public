@@ -7,13 +7,9 @@ import button
 import pandas as pd
 import random
 import time
+import scoring
 
 pygame.init()
-
-nadal = Player("Rafael Nadal", 2000)
-djokovic = Player("Novak Djokovic", 2000)
-test_match = Match(nadal, djokovic)
-#test_match.play_match()
 
 WIDTH, HEIGHT = 1200, 720
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -150,13 +146,13 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn):
 
             if c in DIRECTIONS:
                 if c == "1":
-                    print("1")
+                    #print("1")
                     x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
                 elif c == "2":
-                    print("2")
+                    #print("2")
                     x_pos = random.randint(WIDTH//2 - BALL_RADIUS - int(0.2*SINGLES_LINES_WIDTH//2), WIDTH//2 + BALL_RADIUS + int(0.2*SINGLES_LINES_WIDTH//2))
                 elif c == "3":
-                    print("3")
+                    #print("3")
                     x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
 
             if (y_pos == 10):
@@ -317,7 +313,7 @@ def encode_shot_selection(ball, ralley):
     elif old_ralley.get_shot_count() > 0:
         current_shot = current_shot + str(encode_shot_direction(ball)) + str(encode_shot_depth(ball))
         ralley.add_shot_to_ralley(current_shot)
-    print(ralley.get_ralley())
+    #print(ralley.get_ralley())
     
 def main():
     run = True
@@ -335,7 +331,8 @@ def main():
     bottom_bot = bot.Bot("Bottom")
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", BLACK)
     score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0:0", BLACK)
-    
+    new_score = scoring.Scoring(0, 0, 0, 0, 0, 0, "bottom_player")
+    new_score.set_serving_player(1) # 1 for Bottom player, 2 for top player
     #new_bot.import_data()
     #new_bot.turn_ralley_into_shot_list("6s39f!3x@")
 
@@ -371,8 +368,8 @@ def main():
                         top_bot.set_turn(False)
                     
                     # Here the score is updated, depending on the ralley and the shot count and the turn
-                    new_ralley.score_update()
-                    score_text_field.update_text(str(new_ralley.get_ralley()), WIN, BLACK)
+                    new_ralley.score_update(new_score)
+                    score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
     
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys

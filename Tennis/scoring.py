@@ -5,6 +5,8 @@ class Scoring:
     RALLEY_ERROR = ["n", "w", "d", "x"]
     ERROR_TYPE = ["@", "#"]
     WINNER = ["*"]
+    set_scores = []
+    sets_count = 0
 
     def __init__(self, points_A, games_A, sets_A, points_B, games_B, sets_B, score, serving_player="bottom_player"):
         self.points_A = points_A
@@ -15,11 +17,19 @@ class Scoring:
         self.sets_B = sets_B
         self.score = score
         self.serving_player = serving_player
+
+        self.points_A = 0
+        self.points_B = 0
     
     def get_score(self):
         
+        score = str(self.points_A) + "-" + str(self.points_B) 
         
-        score = str(self.points_A) + "-" + str(self.points_B) #+ ", " + str(self.games_A) + "-" + str(self.games_B)
+        if self.games_A != 0 or self.games_B != 0:
+            score =  str(self.games_A) + "-" + str(self.games_B) + ", " + score
+
+        if self.sets_count > 0:  
+            score =  str(self.set_scores) + score
         
         return score
     
@@ -68,12 +78,112 @@ class Scoring:
                     self.give_point(2)
 
     def give_point(self, player):
+
+        if self.games_A == 6 and self.games_B == 6:
+            if player == 1:
+                self.points_A += 1
+                if self.points_A > 6 and self.points_A - self.points_B >= 2:
+                    self.give_game(1)
+                    self.points_A = 0
+                    self.points_B = 0
+            elif player == 2:
+                self.points_B += 1
+                if self.points_B > 6 and self.points_B - self.points_A >= 2:
+                    self.give_game(2)
+                    self.points_A = 0
+                    self.points_B = 0
+            
+        else:
+            if player == 1:
+                # depending on the own points and the opponents points, the score in a gme is updated
+                if self.points_A == 0:
+                    self.points_A = 15
+                elif self.points_A == 15:
+                    self.points_A = 30
+                elif self.points_A == 30:
+                    self.points_A = 40
+                elif self.points_A == 40 and self.points_B == "AD":
+                    self.points_B = 40
+                elif self.points_A == 40 and self.points_B == 40:
+                    self.points_A = "AD"
+                else:
+                    self.give_game(1)
+                    self.points_A = 0
+                    self.points_B = 0
+
+            if player == 2:
+                # depending on the own points and the opponents points, the score in a gme is updated
+                if self.points_B == 0:
+                    self.points_B = 15
+                elif self.points_B == 15:
+                    self.points_B = 30
+                elif self.points_B == 30:
+                    self.points_B = 40
+                elif self.points_B == 40 and self.points_A == "AD":
+                    self.points_A = 40
+                elif self.points_B == 40 and self.points_A == 40:
+                    self.points_B = "AD"
+                else:
+                    self.give_game(2)
+                    self.points_A = 0
+                    self.points_B = 0
+
+    def give_game(self, player):
+        # updates the score in a set
         if player == 1:
-            self.points_A += 1
-            print("bottom player won the point")
-        if player == 2:
-            self.points_B += 1
-            print("top player won the point")
+            # if player a leads by 2 games in a set and both players game count in a set is 5 or smaller, 
+            # just add a game to the player who won the game
+            if self.games_A < 6: 
+                self.games_A += 1
+                # When a player gets his 6th game in a set and has a lead by 2 games with that, he wins the set
+                if self.games_A == 6 and self.games_A - self.games_B >= 2:
+                    self.give_set(1, self.games_A, self.games_B)
+                    self.games_A = 0
+                    self.games_B = 0
+
+            elif self.games_A == 6 and self.games_B == 5:
+                self.games_A += 1
+                self.give_set(1, self.games_A, self.games_B)
+                self.games_A = 0
+                self.games_B = 0
+
+            elif self.games_A == 6 and self.games_B == 6:
+                self.games_A += 1
+                self.give_set(1, self.games_A, self.games_B)
+                self.games_A = 0
+                self.games_B = 0
+        
+        elif player == 2:
+            # if player a leads by 2 games in a set and both players game count in a set is 5 or smaller, 
+            # just add a game to the player who won the game
+            if self.games_B < 6: 
+                self.games_B += 1
+                # When a player gets his 6th game in a set and has a lead by 2 games with that, he wins the set
+                if self.games_B == 6 and self.games_B - self.games_A >= 2:
+                    self.give_set(2, self.games_A, self.games_B)
+                    self.games_A = 0
+                    self.games_B = 0
+              
+            elif self.games_B == 6 and self.games_A == 5:
+                self.games_B += 1
+                self.give_set(2, self.games_A, self.games_B)
+                self.games_A = 0
+                self.games_B = 0
+            
+            elif self.games_B == 6 and self.games_A == 6:
+                self.games_B += 1
+                self.give_set(2, self.games_A, self.games_B)
+                self.games_A = 0
+                self.games_B = 0
+
+    def give_set(self, player, games_A, games_B):
+        
+        self.sets_count += 1
+        self.set_scores.append(str(games_A) + "-" + str(games_B) + " ")
+        if player == 1:
+            self.sets_A += 1
+        elif player == 2:
+            self.sets_B += 1
 
     def set_serving_player(self, player):
         self.serving_player = player

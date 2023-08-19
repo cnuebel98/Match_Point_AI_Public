@@ -1,5 +1,5 @@
 import pygame
-from score import Player, Match, Set, Game, Tiebreak
+#from score import Player, Match, Set, Game, Tiebreak
 import ralley
 import ball
 import bot
@@ -35,7 +35,7 @@ SINGLES_LINES_WIDTH = int(0.75*COURT_WIDTH)
 TLINE_HEIGHT = int(0.5385*COURT_HEIGHT)
 NET_WIDTH = int(1.2*COURT_WIDTH)
 
-TRANSITION_ANIMATION = True
+TRANSITION_ANIMATION = False
 
 class PlayerRect:
     # ToDo: Make Players circles instead of squares
@@ -191,7 +191,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn):
                 #print("x Pos because of random")
                 x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
     
-    if TRANSITION_ANIMATION:
+    if TRANSITION_ANIMATION == True:
         # Here the ball transitions to the new position
         x_diff = x_pos - ball.get_X()
         y_diff = y_pos - ball.get_Y()

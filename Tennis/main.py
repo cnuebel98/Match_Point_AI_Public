@@ -132,12 +132,13 @@ def handle_ball_movement(keys, ball):
         ball.move_horizontal(left=False)
     #print(str(ball.get_X()) + " " + str(ball.get_Y()))
 
-def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn):
+def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_score):
     # makes the ball go to the position, based on the bot shot
     r = ralley.get_ralley()
     series = pd.Series(r)
     RETURN_DEPTH = ["7", "8", "9"]
     DIRECTIONS = ["1", "2", "3"]
+    SERVE_DIRECTION = ["4", "5", "6"]
     x_pos = 10
     y_pos = 10
 
@@ -148,11 +149,41 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn):
     # looks at depth of shot first and finds a fitting y position and then the same for 
     # direction and x posititon
     for c in current_shot:
-        # ToDo: Ball Movement for Serve encoding
-
         # The first if statement checks, whose turn in the ralley it is (of top or bottom player)
         # accordingly, the ball is moved to the right side of the court into the correct space
+        
         if turn == "bottom":
+            # Ball placement for Serve encoding dependet on shot count, and serving player
+            if c in SERVE_DIRECTION:
+                point_count = scoring.Scoring.get_point_count_per_game(current_score)
+                y_pos = random.randint(HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS, HEIGHT//2 - 0.3*TLINE_HEIGHT//2)
+                # Serve to the outside
+                if c == "4":
+                    if point_count % 2 == 0:
+                        # bottom player serves from deuce side
+                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
+                    elif point_count % 2 == 1:
+                        # bottom player serves from the Ad side
+                        x_pos = random.randint(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+
+                # Serve to the body    
+                elif c == "5":
+                    if point_count % 2 == 0:
+                        # bottom player serves from deuce side
+                        x_pos = random.randint(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
+                    elif point_count % 2 == 1:
+                        # bottom player serves from the Ad side
+                        x_pos = random.randint(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
+                
+                # Serve down the T            
+                elif c == "6":
+                    if point_count % 2 == 0:
+                        # bottom player serves from deuce side
+                        x_pos = random.randint(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS)
+                    elif point_count % 2 == 1:
+                        # bottom player serves from the Ad side
+                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS, WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
+                    
             if c in RETURN_DEPTH:
                 if c == "7":
                     y_pos = random.randint(HEIGHT//2 - TLINE_HEIGHT//2, HEIGHT//2 - BALL_RADIUS//2)
@@ -173,11 +204,43 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn):
                     x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
 
             if (y_pos == 10):
+                #print("Error in Ball Positioning on y position from bottom player")
                 y_pos = random.randint(HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS, HEIGHT//2 - BALL_RADIUS)
             if (x_pos == 10):
+                #print("Error in Ball Positioning on x position from bottom player")
                 x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
 
         elif turn == "top":
+            # Ball placement for Serve encoding dependet on shot count, and serving player
+            if c in SERVE_DIRECTION:
+                point_count = scoring.Scoring.get_point_count_per_game(current_score)
+                y_pos = random.randint(HEIGHT//2 + 0.3*TLINE_HEIGHT//2, HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS)
+                # Serve to the outside
+                if c == "4":
+                    if point_count % 2 == 0:
+                        # top player serves from deuce side
+                        x_pos = random.randint(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                    elif point_count % 2 == 1:
+                        # top player serves from the Ad side
+                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
+
+                # Serve to the body    
+                elif c == "5":
+                    if point_count % 2 == 0:
+                        # top player serves from deuce side
+                        x_pos = random.randint(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
+                    elif point_count % 2 == 1:
+                        # top player serves from the Ad side
+                        x_pos = random.randint(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
+                
+                # Serve down the T            
+                elif c == "6":
+                    if point_count % 2 == 0:
+                        # top player serves from deuce side
+                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS, WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
+                    elif point_count % 2 == 1:
+                        # top player serves from the Ad side
+                        x_pos = random.randint(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS)
 
             if c in RETURN_DEPTH:
                 if c == "7":
@@ -202,10 +265,10 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn):
                     x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
                     
             if (y_pos == 10):
-                #print("y Pos because of random")
+                #print("Error in Ball Positioning on y position from top player")
                 y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
             if (x_pos == 10):
-                #print("x Pos because of random")
+                #print("Error in Ball Positioning on x position from top player")
                 x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
     
     if TRANSITION_ANIMATION == True:
@@ -386,14 +449,14 @@ def main():
                             encode_shot_selection(new_ball, new_ralley)
                         else:
                             bottom_bot.add_random_shot(new_ralley)
-                            move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom")
+                            move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom", new_score)
                         top_bot.set_turn(True)
 
                     # If its the bots turn, call function that gets the shot from the bot
                     elif top_bot.get_turn() == True:
                         top_bot.add_random_shot(new_ralley)
                         # Ball Movement is an animated transition
-                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top")
+                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top", new_score)
                         top_bot.set_turn(False)
                     
                     # Here the score is updated, depending on the ralley and the shot count and the turn

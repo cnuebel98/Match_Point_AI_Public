@@ -43,3 +43,25 @@ class Ball:
         new_y = y + y_diff*(i/10)
         self.set_X(new_x)
         self.set_Y(new_y)
+
+    def reset_ball(self, serving_p, point_count):
+        # ball is put behind the baseline of the serving player to the ad or deuce side according to the points in a game
+        #print(HEIGHT)
+        if serving_p == 1:
+            if point_count % 2 == 0:
+                # ball is put to bottom players deuce side
+                self.set_X(650)
+                self.set_Y(648)
+            elif point_count % 2 == 1:
+                # ball is put to bottom players ad side
+                self.set_X(550)
+                self.set_Y(648)
+        elif serving_p == 2:
+            if point_count % 2 == 0:
+                # ball is put to top players deuce side
+                self.set_X(550)
+                self.set_Y(72)
+            elif point_count % 2 == 1:
+                # ball is put to top players ad side
+                self.set_X(650)
+                self.set_Y(72)

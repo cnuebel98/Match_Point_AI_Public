@@ -1,4 +1,5 @@
 import scoring
+import ball
 
 class Ralley:
     
@@ -61,7 +62,7 @@ class Ralley:
             # ToDo: Update Score dependent on who is serving
             self.clear_ralley()
 
-    def score_update(self, score):
+    def score_update(self, score, current_ball):
         # If the last char in ralley is a terminal shot, 
         # add a point to the score accordingly
         
@@ -73,4 +74,11 @@ class Ralley:
             #print("Ralley Terminated")
             score.update_points(self.ralley, c, self.get_shot_count())
             # ToDo: update Score, dependent on who is serving
+
             self.clear_ralley()
+            # After every ralley, the ball is put to the position, where the next player has to serve from
+            # This is the player who is serving during the ongoing game
+            serving_player = scoring.Scoring.get_serving_player(score)
+            # This is the amount of points in that game, even: next serve from Deuce side, odd: next serve from Ad Side
+            point_count_in_game = scoring.Scoring.get_point_count_per_game(score)
+            ball.Ball.reset_ball(current_ball, serving_player, point_count_in_game)

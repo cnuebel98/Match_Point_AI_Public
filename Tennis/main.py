@@ -10,6 +10,8 @@ import scoring
 
 pygame.init()
 
+# ToDo: create a class with all Colors and other variables to be able to get to them from every other class
+
 WIDTH, HEIGHT = 1200, 720
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyTennis")
@@ -148,7 +150,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn):
     for c in current_shot:
         # ToDo: Ball Movement for Serve encoding
 
-        # The first if statement checks, whose turn it is (of top or bottom player)
+        # The first if statement checks, whose turn in the ralley it is (of top or bottom player)
         # accordingly, the ball is moved to the right side of the court into the correct space
         if turn == "bottom":
             if c in RETURN_DEPTH:
@@ -347,7 +349,10 @@ def main():
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", BLACK)
     score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0:0", BLACK)
     new_score = scoring.Scoring(0, 0, 0, 0, 0, 0, "bottom_player")
+
+    # the bottom player always starts the first game in the first set of the match
     new_score.set_serving_player(1) # 1 for Bottom player, 2 for top player
+    new_ball.reset_ball(new_score.get_serving_player(), new_ralley.get_shot_count())
     #new_bot.import_data()
     #new_bot.turn_ralley_into_shot_list("6s39f!3x@")
 
@@ -365,6 +370,15 @@ def main():
                 # from the bot and from the users
                 # If mouse button is pressed on the Next Button a turn is taken
                 if next_button.check_button_collision(mouse_pos):
+                    # This if elif statement looks at which player is serving in the game and sets the turn accordingly
+                    # before each new ralley, so always the correct player starts the ralley
+                    # ToDo: set turn for service for tiebreak
+                    if new_score.get_serving_player() == 1 and new_ralley.get_shot_count() == 0:
+                        top_bot.set_turn(False)
+                    elif new_score.get_serving_player() == 2 and new_ralley.get_shot_count() == 0:
+                        top_bot.set_turn(True)
+                    #print(new_score.get_serving_player())
+                    #print(new_ralley.get_shot_count())
                     # If its not the bots turn, take the ball position as shot by the user/by the bottom player
                     if top_bot.get_turn() == False:
                         # This is the manual shot encoding, taking the ball position set by arrow keys into account
@@ -383,9 +397,8 @@ def main():
                         top_bot.set_turn(False)
                     
                     # Here the score is updated, depending on the ralley and the shot count and the turn
-                    new_ralley.score_update(new_score)
+                    new_ralley.score_update(new_score, new_ball)
                     score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
-    
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys
         handle_ball_movement(keys, new_ball)

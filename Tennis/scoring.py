@@ -1,5 +1,4 @@
 
-
 class Scoring:
 
     RALLEY_ERROR = ["n", "w", "d", "x"]
@@ -7,8 +6,9 @@ class Scoring:
     WINNER = ["*"]
     set_scores = []
     sets_count = 0
+    point_count_per_game = 0
 
-    def __init__(self, points_A, games_A, sets_A, points_B, games_B, sets_B, score, serving_player="bottom_player"):
+    def __init__(self, points_A, games_A, sets_A, points_B, games_B, sets_B, score, serving_player=1):
         self.points_A = points_A
         self.games_A = games_A
         self.sets_A = sets_A
@@ -20,9 +20,11 @@ class Scoring:
 
         self.points_A = 0
         self.points_B = 0
+        self.point_count_per_game = 0
     
     def get_score(self):
-        
+        # Score is returned in a string, depending on how far we are in the set 
+        # (only exising points, games and sets are displayed)
         score = str(self.points_A) + "-" + str(self.points_B) 
         
         if self.games_A != 0 or self.games_B != 0:
@@ -34,11 +36,7 @@ class Scoring:
         return score
     
     def update_points(self, ralley, last_char, shot_count):
-        #print(ralley)
-        #print(shot_count)
-        #print(self.get_serving_player())
-        #print(last_char)
-
+        
         # if bottom player (1) was serving
         if self.get_serving_player() == 1:
             # Modulo of shotcount = 0 means that the terminal shot was done by player 2
@@ -78,7 +76,10 @@ class Scoring:
                     self.give_point(2)
 
     def give_point(self, player):
+        # Point is given so point count per game is updated
+        self.point_count_per_game += 1
 
+        # When there is a tiebreak, points are added according to tiebreak rules
         if self.games_A == 6 and self.games_B == 6:
             if player == 1:
                 self.points_A += 1
@@ -92,7 +93,8 @@ class Scoring:
                     self.give_game(2)
                     self.points_A = 0
                     self.points_B = 0
-            
+
+        # If there is no tiebreak, points are given according to 15, 30, 40, game rules    
         else:
             if player == 1:
                 # depending on the own points and the opponents points, the score in a gme is updated
@@ -129,7 +131,11 @@ class Scoring:
                     self.points_B = 0
 
     def give_game(self, player):
-        # updates the score in a set
+        # When this is called, the server has to be switched
+        self.switch_serving_player()
+        # When a game is finished, the points per game count has to be reset
+        self.point_count_per_game = 0
+        # Updates the score in a set
         if player == 1:
             # if player a leads by 2 games in a set and both players game count in a set is 5 or smaller, 
             # just add a game to the player who won the game
@@ -177,7 +183,8 @@ class Scoring:
                 self.games_B = 0
 
     def give_set(self, player, games_A, games_B):
-        
+        # The set score is appended to the score list and set_count is updated
+        # and set per player is updated for the player who won the point
         self.sets_count += 1
         self.set_scores.append(str(games_A) + "-" + str(games_B) + " ")
         if player == 1:
@@ -185,8 +192,18 @@ class Scoring:
         elif player == 2:
             self.sets_B += 1
 
+    def switch_serving_player(self):
+        # The serving player changes, because they switch after each game
+        if self.get_serving_player() == 1:
+            self.set_serving_player(2)
+        else:
+            self.set_serving_player(1)
+
     def set_serving_player(self, player):
         self.serving_player = player
 
     def get_serving_player(self):
         return self.serving_player
+    
+    def get_point_count_per_game(self):
+        return self.point_count_per_game

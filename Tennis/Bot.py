@@ -1,9 +1,6 @@
-# hier soll eine ralley reingegeben werden 
-# und dann soll der nächste Schlag basierend auf echten Daten
-# zurückgegeben werden
-
 import pandas as pd
 import random
+import ralley
 
 class Bot:
 
@@ -55,12 +52,13 @@ class Bot:
         # ToDo return the next shot based on the ralley and the data
         shot = 42
         ralley.add_shot_to_ralley(shot)
-        #print(ralley.get_ralley())
+        
+    def add_random_shot(self, current_ralley):
+        # We will have a 30% Chance of terminating a point,
+        # 15% chance of a winner and 15% Chance of an Error
 
-    def add_random_shot(self, ralley):
-        # We will have a 30% Chance of finishing a point,
-        # 15% cahnce of a winner and 15% Chance of a Error
         i = random.randint(0, 99)
+
         randomReturnType = self.RETURN_SHOT_TYPES[random.randint(0, len(self.RETURN_SHOT_TYPES)-1)]
         randomReturnDirection = self.DIRECTIONS[random.randint(0, len(self.DIRECTIONS)-1)]
         randomReturnDepth = self.RETURN_DEPTH[random.randint(0, len(self.RETURN_DEPTH)-1)]
@@ -70,16 +68,24 @@ class Bot:
         randomShotDirection = self.DIRECTIONS[random.randint(0, len(self.DIRECTIONS)-1)]
 
         # When ralley is empty, add a random serve
-        if ralley.get_shot_count() == 0:
+        if current_ralley.get_shot_count() == 0:
             # Add random serve direction
             randomServeDirection = self.SERVE_DIRECTION[random.randint(0, len(self.SERVE_DIRECTION)-1)]
             shot = randomServeDirection
-            # ToDo: add Ace/Error probabilities
-            # ToDo: Handle second serves
+            # This is Ace probability, same as winner probability for now
+            if i < self.WINNER_PROBA:
+                # this is an ace
+                shot = shot + self.WINNER
+            elif i > 99 - self.ERROR_PROBA:
+                # this is a fault on service (can be either first or second serve, 
+                # first fault -> "," is added to shot encoding)
+                shot = shot + randomRalleyError
+                if ralley.Ralley.get_len_ralley(current_ralley) == 0:
+                    shot = shot + ","
 
         # If shot count in that ralley is 1, add a return: Return cant be a volley for example, 
         # thats why this has to be different
-        elif ralley.get_shot_count() == 1:
+        elif current_ralley.get_shot_count() == 1:
             # Add valid return stroke including depth encoding
             shot = randomReturnType + randomReturnDirection
             # Add winner and error probabilities on return
@@ -90,22 +96,21 @@ class Bot:
             else: shot = shot + randomReturnDepth
 
         # Just add random shots consisting of lenght and direction and 
-        # 15% Chance of a winner and 15% Chance of a 
+        # 15% Chance of a winner and 15% Chance of an error
         else:
             # Add any shot after the return shot
             shot = randomShotType + randomShotDirection + randomReturnDepth
-            # Add winner and error probabilities
+            # THis adds winner and error encoding to shot with given probabilities
             if i < self.WINNER_PROBA:
                 shot = shot + self.WINNER
             elif i > 99 - self.ERROR_PROBA:
                 shot = shot + randomRalleyError + randomErrorType
         
         # Add that shot to the ralley
-        ralley.add_shot_to_ralley(shot)
-        print(ralley.get_ralley())
+        current_ralley.add_shot_to_ralley(shot)
+        print(current_ralley.get_ralley())
 
     def turn_ralley_into_shot_list(self, ralley):
-        
         r = ralley
         shot_list = []
         shot = ""

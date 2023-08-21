@@ -281,7 +281,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_scor
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
             ball.draw(win, YELLOW)
             pygame.display.update()
-            time.sleep(0.05)
+            time.sleep(0.01)
     else:
         # Here the ball jumps instantly to the new positions
         ball.set_X(x_pos)
@@ -377,14 +377,12 @@ def encode_shot_depth(ball):
     else: print("Ball is Wide (left or right)")
 
 def encode_shot_selection(ball, ralley):
-    #print("Player")
     current_shot = ""
     old_ralley = ralley
     serve_position = None
 
     # when there was no stroke in the ralley yet, it has to be a serve
     if old_ralley.get_shot_count() == 0:
-        # ToDo switch serve_position according to score
         serve_position = "right"
         current_shot = str(encode_serve(ball, serve_position))
         ralley.add_shot_to_ralley(current_shot)
@@ -393,7 +391,6 @@ def encode_shot_selection(ball, ralley):
     elif old_ralley.get_shot_count() > 0:
         current_shot = current_shot + str(encode_shot_direction(ball)) + str(encode_shot_depth(ball))
         ralley.add_shot_to_ralley(current_shot)
-    #print(ralley.get_ralley())
     
 def main():
     run = True
@@ -429,8 +426,7 @@ def main():
                 run = False
                 break
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # Take turns in getting shots 
-                # from the bot and from the users
+                # Take turns in getting shots from the bot and from the users
                 # If mouse button is pressed on the Next Button a turn is taken
                 if next_button.check_button_collision(mouse_pos):
                     # This if elif statement looks at which player is serving in the game and sets the turn accordingly

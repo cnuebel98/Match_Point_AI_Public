@@ -100,7 +100,7 @@ class Bot:
         else:
             # Add any shot after the return shot
             shot = randomShotType + randomShotDirection + randomReturnDepth
-            # THis adds winner and error encoding to shot with given probabilities
+            # This adds winner and error encoding to shot with given probabilities
             if i < self.WINNER_PROBA:
                 shot = shot + self.WINNER
             elif i > 99 - self.ERROR_PROBA:

@@ -21,6 +21,8 @@ class Scoring:
         self.points_A = 0
         self.points_B = 0
         self.point_count_per_game = 0
+        self.games_A = 6
+        self.games_B = 6
     
     def get_score(self):
         # Score is returned in a string, depending on how far we are in the set 
@@ -83,16 +85,26 @@ class Scoring:
         if self.games_A == 6 and self.games_B == 6:
             if player == 1:
                 self.points_A += 1
+                # When a player has more than 6 points and is leading by two points, he won the tiebreak
                 if self.points_A > 6 and self.points_A - self.points_B >= 2:
                     self.give_game(1)
                     self.points_A = 0
                     self.points_B = 0
+                # The serving player switches after every 2 points when the sum of the score in the tiebreak is odd
+                elif (self.points_A + self.points_B) % 2 == 1:
+                    self.switch_serving_player()
             elif player == 2:
                 self.points_B += 1
+                # When a player has more than 6 points and is leading by two points, he won the tiebreak
                 if self.points_B > 6 and self.points_B - self.points_A >= 2:
                     self.give_game(2)
                     self.points_A = 0
                     self.points_B = 0
+                elif (self.points_A + self.points_B) % 2 == 1:
+                    self.switch_serving_player()
+        
+        # ToDo: When it's the third set the titebreak is played until 10 and not until 7
+        # Could write that 
 
         # If there is no tiebreak, points are given according to 15, 30, 40, game rules    
         else:

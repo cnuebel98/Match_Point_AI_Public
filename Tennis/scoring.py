@@ -21,8 +21,8 @@ class Scoring:
         self.points_A = 0
         self.points_B = 0
         self.point_count_per_game = 0
-        self.games_A = 6
-        self.games_B = 6
+        self.games_A = 0
+        self.games_B = 0
     
     def get_score(self):
         # Score is returned in a string, depending on how far we are in the set 

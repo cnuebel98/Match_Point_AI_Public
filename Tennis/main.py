@@ -281,7 +281,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_scor
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
             ball.draw(win, YELLOW)
             pygame.display.update()
-            time.sleep(0.01)
+            time.sleep(0.05)
     else:
         # Here the ball jumps instantly to the new positions
         ball.set_X(x_pos)

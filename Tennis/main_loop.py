@@ -8,8 +8,9 @@ import random
 import time
 import scoring
 import constants as const
+import game
 
-pygame.init()
+#pygame.init()
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -461,13 +462,21 @@ def main_loop():
                     score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    ...
+                    g = game.Game()
+                    game.Game.__init__(g)
+                    g.curr_menu.display_menu()
+                    g.game_loop()
+                    print(g.playing)
 
+                    run = False
+                    break
+                    
+                    
         # handle_player_movement(keys, bottom_player)
         # Ball movement for the player is done by arrow keys
         handle_ball_movement(keys, new_ball)
         
-    pygame.quit()
+    pygame.QUIT
 
 if __name__ == "__main__":
         main_loop()

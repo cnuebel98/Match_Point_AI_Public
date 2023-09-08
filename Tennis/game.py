@@ -19,11 +19,13 @@ class Game():
         self.curr_menu = self.main_menu
 
     def game_loop(self):
+        
         while self.playing:
-            main_loop.main_loop()
             self.check_events()
             if self.START_KEY:
                 self.playing = False
+                if self.main_menu.state == "Start":
+                    main_loop.main_loop()
             self.window.blit(self.display, (0,0))
             pygame.display.update()
             self.reset_keys()

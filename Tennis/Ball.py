@@ -1,8 +1,10 @@
 import pygame
+import constants as const
 
 class Ball:
-    COLOR = (255, 255, 0)
-    VELOCITY = 3
+    COLOR = const.Colors.YELLOW
+    VELOCITY = const.Dims.BALL_VELOCITY
+    
     def __init__(self, x , y, radius):
         self.x = x
         self.y = y

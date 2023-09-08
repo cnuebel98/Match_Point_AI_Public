@@ -1,13 +1,14 @@
 import scoring
 import ball
+import constants as const
 
 class Ralley:
-    
+    '''This class keeps track of the ralley and aslo calls the scoring class, when a ralley is finished'''
     # Initializing the encodings for the shots, so we can see if a shot terminates a ralley
-    RALLEY_ERROR = ["n", "w", "d", "x"]
-    ERROR_TYPE = ["@", "#"]
-    WINNER = ["*"]
-    SECOND_SERVE = [","]
+    RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
+    ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
+    WINNER = const.ShotEncodings.WINNER
+    SECOND_SERVE = const.ShotEncodings.SECOND_SERVE
 
     def __init__(self, ralley=[], shot_count=0):
         self.ralley = ralley

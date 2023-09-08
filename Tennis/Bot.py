@@ -1,18 +1,19 @@
 import pandas as pd
 import random
 import ralley
+import constants as const
 
 class Bot:
 
-    SERVE_DIRECTION = ["4", "5", "6"]
-    EVERY_SHOT_TYPE = ["f", "b", "r", "s", "v", "z", "o", "p", "y", "l", "m", "h", "i", "j", "k", "t", "u"]
-    RETURN_SHOT_TYPES = ["f", "b", "r", "s", "y", "l", "m", "h", "i", "t", "u"]
-    RETURN_DEPTH = ["7", "8", "9"]
-    DIRECTIONS = ["1", "2", "3"]
-    RALLEY_ERROR = ["n", "w", "d", "x"]
-    ERROR_TYPE = ["@", "#"]
-    WINNER = "*"
-    EXTRA_STUFF = ["+", ";", "^", "S", "R", "C", "!", "0", "-", "=", "P", "Q", "c", "q", "e", "N"]
+    SERVE_DIRECTION = const.ShotEncodings.SERVE_DIRECTION
+    EVERY_SHOT_TYPE = const.ShotEncodings.EVERY_SHOT_TYPE
+    RETURN_SHOT_TYPES = const.ShotEncodings.RETURN_SHOT_TYPES
+    RETURN_DEPTH = const.ShotEncodings.RETURN_DEPTH
+    DIRECTIONS = const.ShotEncodings.DIRECTIONS
+    RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
+    ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
+    WINNER = const.ShotEncodings.WINNER
+    EXTRA_STUFF = const.ShotEncodings.EXTRA_STUFF
     WINNER_PROBA = 15
     ERROR_PROBA = 15
 

@@ -7,50 +7,51 @@ import pandas as pd
 import random
 import time
 import scoring
+import constants as const
 
 pygame.init()
 
-# ToDo: create a class with all Colors and other variables to be able to get to them from every other class
+WIDTH  = const.Dims.WIDTH
+HEIGHT = const.Dims.HEIGHT
 
-WIDTH, HEIGHT = 1200, 720
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyTennis")
 
-FPS = 60
+FPS = const.Dims.FPS
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-GREEN = (0, 136, 0)
-DARK_GREEN = (0, 80, 0)
-BLUE = (0, 164, 255)
-YELLOW = (255, 255, 0)
-GREY = (47, 79, 79)
+WHITE = const.Colors.WHITE
+BLACK = const.Colors.BLACK
+GREEN = const.Colors.GREEN
+DARK_GREEN = const.Colors.DARK_GREEN
+BLUE = const.Colors.BLUE
+YELLOW = const.Colors.YELLOW
+GREY = const.Colors.GREY
 
 # US Open Color Scheme:
-US_OPEN_GREEN = (108, 147, 92)
-US_OPEN_BLUE = (60, 99, 142)
+US_OPEN_GREEN = const.Colors.US_OPEN_GREEN
+US_OPEN_BLUE = const.Colors.US_OPEN_BLUE
 
 # Australien Open Color Scheme:
-AUSOPEN_COURT_BLUE = (55, 125, 184)
-AUSOPEN_COURT_LIGHTBLUE = (30, 143, 213)
-AUSOPEN_LINECOLOR = (232, 247, 255)
+AUSOPEN_COURT_BLUE = const.Colors.AUSOPEN_COURT_BLUE
+AUSOPEN_COURT_LIGHTBLUE = const.Colors.AUSOPEN_COURT_LIGHTBLUE
+AUSOPEN_LINECOLOR = const.Colors.AUSOPEN_LINECOLOR
 
 # French Open Color Scheme:
-CLAY_COURT_COLOR = (194, 69, 45)
+CLAY_COURT_COLOR = const.Colors.CLAY_COURT_COLOR
 
-# Wimbledon Gras Color Scheme
-WIMBLEDON_GREEN = (0, 123, 34)
+# Wimbledon Grass Color Scheme
+WIMBLEDON_GREEN = const.Colors.WIMBLEDON_GREEN
 
+PLAYER_WIDTH = const.Dims.PLAYER_WIDTH
+PLAYER_HEIGHT = const.Dims.PLAYER_HEIGHT
+BALL_RADIUS = const.Dims.BALL_RADIUS
 
-PLAYER_WIDTH, PLAYER_HEIGHT = 40, 40
-BALL_RADIUS = 10
-
-COURT_HEIGHT = int(0.8*HEIGHT)
-COURT_WIDTH = int(0.4615*COURT_HEIGHT)
-LINE_WIDTH = 6
-SINGLES_LINES_WIDTH = int(0.75*COURT_WIDTH)
-TLINE_HEIGHT = int(0.5385*COURT_HEIGHT)
-NET_WIDTH = int(1.2*COURT_WIDTH)
+COURT_HEIGHT = const.Dims.COURT_HEIGHT
+COURT_WIDTH = const.Dims.COURT_WIDTH
+LINE_WIDTH = const.Dims.LINE_WIDTH
+SINGLES_LINES_WIDTH = const.Dims.SINGLES_LINES_WIDTH
+TLINE_HEIGHT = const.Dims.TLINE_HEIGHT
+NET_WIDTH = const.Dims.NET_WIDTH
 
 TRANSITION_ANIMATION = False
 
@@ -281,7 +282,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_scor
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
             ball.draw(win, YELLOW)
             pygame.display.update()
-            time.sleep(0.05)
+            time.sleep(const.Dims.ANIMATION_TIME)
     else:
         # Here the ball jumps instantly to the new positions
         ball.set_X(x_pos)

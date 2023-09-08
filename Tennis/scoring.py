@@ -1,9 +1,10 @@
+import constants as const
 
 class Scoring:
-
-    RALLEY_ERROR = ["n", "w", "d", "x"]
-    ERROR_TYPE = ["@", "#"]
-    WINNER = ["*"]
+    '''In this class the whole scoring process for points, games and sets is implemented'''
+    RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
+    ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
+    WINNER = const.ShotEncodings.WINNER
     set_scores = []
     sets_count = 0
     point_count_per_game = 0

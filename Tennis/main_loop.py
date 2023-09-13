@@ -409,7 +409,7 @@ def main_loop():
     top_bot = bot.Bot("Top")
     bottom_bot = bot.Bot("Bottom")
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", BLACK)
-    score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0:0", BLACK)
+    score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0-0", BLACK)
     new_score = scoring.Scoring(0, 0, 0, 0, 0, 0, "bottom_player")
 
     # the bottom player always starts the first game in the first set of the match
@@ -427,6 +427,10 @@ def main_loop():
             if event.type == pygame.QUIT:
                 run = False
                 break
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
+                    break
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Take turns in getting shots from the bot and from the users
                 # If mouse button is pressed on the Next Button a turn is taken
@@ -460,22 +464,10 @@ def main_loop():
                     # Here the score is updated, depending on the ralley and the shot count and the turn
                     new_ralley.score_update(new_score, new_ball)
                     score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    g = game.Game()
-                    game.Game.__init__(g)
-                    g.curr_menu.display_menu()
-                    g.game_loop()
-                    print(g.playing)
-
-                    run = False
-                    break
-                    
-                    
-        # handle_player_movement(keys, bottom_player)
+             
+        # ToDo: make player move to the ball (low Priority)
         # Ball movement for the player is done by arrow keys
         handle_ball_movement(keys, new_ball)
-        
     pygame.QUIT
 
 if __name__ == "__main__":

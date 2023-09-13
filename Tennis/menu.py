@@ -1,4 +1,5 @@
 import pygame
+import main_loop
 
 class Menu():
     def __init__(self, game):
@@ -64,7 +65,8 @@ class MainMenu(Menu):
         self.move_cursor()
         if self.game.START_KEY:
             if self.state == 'Start':
-                self.game.playing = True
+                self.game.playing = False
+                main_loop.main_loop()
             elif self.state == 'Options':
                 self.game.curr_menu = self.game.options
             elif self.state == 'Credits':

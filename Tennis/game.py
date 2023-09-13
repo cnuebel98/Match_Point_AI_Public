@@ -1,7 +1,6 @@
 import pygame
 from menu import *
 import constants as const
-import main_loop
 
 class Game():
     def __init__(self):
@@ -19,13 +18,10 @@ class Game():
         self.curr_menu = self.main_menu
 
     def game_loop(self):
-        
         while self.playing:
             self.check_events()
             if self.START_KEY:
                 self.playing = False
-                if self.main_menu.state == "Start":
-                    main_loop.main_loop()
             self.window.blit(self.display, (0,0))
             pygame.display.update()
             self.reset_keys()

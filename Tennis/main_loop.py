@@ -8,7 +8,6 @@ import random
 import time
 import scoring
 import constants as const
-import game
 
 #pygame.init()
 

@@ -42,4 +42,3 @@ class Button:
             and mouse_pos[1] <= self.y + self.height):
             return True
         else: return False
-        

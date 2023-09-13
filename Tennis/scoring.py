@@ -1,4 +1,5 @@
 import constants as const
+import test_menu
 
 class Scoring:
     '''In this class the whole scoring process for points, games and sets is implemented'''
@@ -8,6 +9,7 @@ class Scoring:
     set_scores = []
     sets_count = 0
     point_count_per_game = 0
+    sets_to_play = test_menu.get_sets_to_play()
 
     def __init__(self, points_A, games_A, sets_A, points_B, games_B, sets_B, score, serving_player=1):
         self.points_A = points_A
@@ -24,6 +26,8 @@ class Scoring:
         self.point_count_per_game = 0
         self.games_A = 0
         self.games_B = 0
+        self.sets_A = 0
+        self.sets_B = 0
     
     def get_score(self):
         # Score is returned in a string, depending on how far we are in the set 
@@ -204,6 +208,21 @@ class Scoring:
             self.sets_A += 1
         elif player == 2:
             self.sets_B += 1
+        
+        if self.sets_to_play == 3:
+            if self.sets_A == 2:
+                print("Player A wins!")
+                self.reset_score()
+            elif self.sets_B == 2:
+                print("Player B wins!")
+                self.reset_score()
+        elif self.sets_to_play == 5:
+            if self.sets_A == 3:
+                print("Player A wins!")
+                self.reset_score()
+            elif self.sets_B == 3:
+                print("Player B wins!")
+                self.reset_score()
 
     def switch_serving_player(self):
         # The serving player changes, because they switch after each game
@@ -220,3 +239,14 @@ class Scoring:
     
     def get_point_count_per_game(self):
         return self.point_count_per_game
+    
+    def reset_score(self):
+        self.score = ""
+        self.sets_count = 0
+        self.set_scores = []
+        self.points_A = 0
+        self.points_B = 0
+        self.games_A = 0
+        self.games_B = 0
+        self.sets_A = 0
+        self.sets_B = 0

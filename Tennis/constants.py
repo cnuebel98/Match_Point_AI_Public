@@ -24,7 +24,6 @@ class Dims:
 
 class Colors:
     '''This class stores the colors as RGB Values'''
-
     # Some Colors
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)

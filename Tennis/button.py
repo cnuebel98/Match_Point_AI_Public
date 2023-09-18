@@ -1,7 +1,8 @@
 import pygame
 
 class Button:
-    
+    '''This class can create a button object for the main loop with width height and 
+    test as well as button collision with the curser'''
     def __init__(self, x, y, width, height, buttonText="", color=""):
         self.x = x
         self.y = y

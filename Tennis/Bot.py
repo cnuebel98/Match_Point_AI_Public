@@ -4,7 +4,7 @@ import ralley
 import constants as const
 
 class Bot:
-
+    '''The Bot class has the functions for return random shot and some DE stuff'''
     SERVE_DIRECTION = const.ShotEncodings.SERVE_DIRECTION
     EVERY_SHOT_TYPE = const.ShotEncodings.EVERY_SHOT_TYPE
     RETURN_SHOT_TYPES = const.ShotEncodings.RETURN_SHOT_TYPES

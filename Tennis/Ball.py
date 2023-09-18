@@ -2,6 +2,7 @@ import pygame
 import constants as const
 
 class Ball:
+    '''This is the ball class where most of the ball movement is done and the reset as well as the transition'''
     COLOR = const.Colors.YELLOW
     VELOCITY = const.Dims.BALL_VELOCITY
     

@@ -3,7 +3,7 @@ import ball
 import constants as const
 
 class Ralley:
-    '''This class keeps track of the ralley and aslo calls the scoring class, when a ralley is finished'''
+    '''This class keeps track of the ralley and also calls the scoring class, when a ralley is finished'''
     # Initializing the encodings for the shots, so we can see if a shot terminates a ralley
     RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
     ERROR_TYPE = const.ShotEncodings.ERROR_TYPE

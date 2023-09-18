@@ -49,15 +49,14 @@ class Bot:
         new_df = new_df.drop(new_df[new_df["One"] == "%"].index)
         #print(new_df)
        
-    def add_shot(self, ralley):
+    def add_shot_unused(self, ralley):
         # ToDo return the next shot based on the ralley and the data
         shot = 42
         ralley.add_shot_to_ralley(shot)
         
-    def add_random_shot(self, current_ralley):
+    def add_shot(self, current_ralley):
         # We will have a 30% Chance of terminating a point,
         # 15% chance of a winner and 15% Chance of an Error
-
         i = random.randint(0, 99)
 
         randomReturnType = self.RETURN_SHOT_TYPES[random.randint(0, len(self.RETURN_SHOT_TYPES)-1)]

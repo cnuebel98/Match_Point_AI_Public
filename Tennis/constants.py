@@ -9,9 +9,8 @@ class Dims:
     PLAYER_WIDTH = 40
     PLAYER_HEIGHT = 40
 
-    # Some timting related stuff
+    # Some timing related stuff
     FPS = 60
-    ANIMATION_TIME = 0.00
     BALL_VELOCITY = 3
 
     # Court dimensions
@@ -60,3 +59,11 @@ class ShotEncodings:
     DIRECTIONS = ["1", "2", "3"]
     EXTRA_STUFF = ["+", ";", "^", "S", "R", "C", "!", "0", "-", "=", "P", "Q", "c", "q", "e", "N"]
     SECOND_SERVE = [","]
+
+class MenuVariables:
+    '''The Options from the menu are initialized here and set when the game is started'''
+    sets_to_play = 0
+    animation = True
+    top_bot = 0
+    bottom_bot = 0
+    animation_time = 0.00

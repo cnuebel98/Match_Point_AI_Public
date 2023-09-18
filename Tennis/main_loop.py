@@ -2,14 +2,13 @@ import pygame
 import ralley
 import ball
 import bot
+import stat_bot_djokovic
 import button
 import pandas as pd
 import random
 import time
 import scoring
 import constants as const
-
-#pygame.init()
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -282,7 +281,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_scor
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
             ball.draw(win, YELLOW)
             pygame.display.update()
-            time.sleep(const.Dims.ANIMATION_TIME)
+            time.sleep(const.MenuVariables.animation_time)
     else:
         # Here the ball jumps instantly to the new positions
         ball.set_X(x_pos)
@@ -405,8 +404,27 @@ def main_loop():
     top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 10, PLAYER_WIDTH, PLAYER_HEIGHT)
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
-    top_bot = bot.Bot("Top")
-    bottom_bot = bot.Bot("Bottom")
+    
+    # Here the options are displayed to see what kind of game is displayed
+    print("Top Bot " + str(const.MenuVariables.top_bot))
+    print("Bottom Bot " + str(const.MenuVariables.bottom_bot))
+    print("Animation " + str(const.MenuVariables.animation))
+    print("Sets to play " + str(const.MenuVariables.sets_to_play))
+
+    # Different classes for Top Bot are initialized depending on the choice in the main menu
+    if const.MenuVariables.top_bot == 1:
+        top_bot = bot.Bot("Random")
+    elif const.MenuVariables.top_bot == 2:
+        top_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
+    else: top_bot = bot.Bot("Random")
+
+    # Different classes for Bottom Bot are initialized depending on the choice in the main menu
+    if const.MenuVariables.bottom_bot == 1:
+        bottom_bot = bot.Bot("Random")
+    elif const.MenuVariables.bottom_bot == 2:
+        bottom_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
+    else: bottom_bot = bot.Bot("Random")
+
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", BLACK)
     score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0-0", BLACK)
     new_score = scoring.Scoring(0, 0, 0, 0, 0, 0, "bottom_player")
@@ -414,9 +432,7 @@ def main_loop():
     # the bottom player always starts the first game in the first set of the match
     new_score.set_serving_player(1) # 1 for Bottom player, 2 for top player
     new_ball.reset_ball(new_score.get_serving_player(), new_ralley.get_shot_count())
-    #new_bot.import_data()
-    #new_bot.turn_ralley_into_shot_list("6s39f!3x@")
-
+   
     while run:
         draw(WIN, [bottom_player, top_player], new_ball, [next_button, score_text_field])
         clock.tick(FPS)
@@ -449,13 +465,13 @@ def main_loop():
                         if MANUAL:
                             encode_shot_selection(new_ball, new_ralley)
                         else:
-                            bottom_bot.add_random_shot(new_ralley)
+                            bottom_bot.add_shot(new_ralley)
                             move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom", new_score)
                         top_bot.set_turn(True)
 
                     # If its the bots turn, call function that gets the shot from the bot
                     elif top_bot.get_turn() == True:
-                        top_bot.add_random_shot(new_ralley)
+                        top_bot.add_shot(new_ralley)
                         # Ball Movement is an animated transition
                         move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top", new_score)
                         top_bot.set_turn(False)
@@ -463,10 +479,10 @@ def main_loop():
                     # Here the score is updated, depending on the ralley and the shot count and the turn
                     new_ralley.score_update(new_score, new_ball)
                     score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
-             
+
         # ToDo: make player move to the ball (low Priority)
         # Ball movement for the player is done by arrow keys
-        handle_ball_movement(keys, new_ball)
+        # handle_ball_movement(keys, new_ball)
     pygame.QUIT
 
 if __name__ == "__main__":

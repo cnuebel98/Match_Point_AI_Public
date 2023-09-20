@@ -207,15 +207,16 @@ class Scoring:
             self.sets_A += 1
         elif player == 2:
             self.sets_B += 1
-        
-        if self.sets_to_play == 3:
+        print(self.sets_A)
+        print(self.sets_B)
+        if const.MenuVariables.sets_to_play == 3:
             if self.sets_A == 2:
                 print("Player A wins!")
                 self.reset_score()
             elif self.sets_B == 2:
                 print("Player B wins!")
                 self.reset_score()
-        elif self.sets_to_play == 5:
+        elif const.MenuVariables.sets_to_play == 5:
             if self.sets_A == 3:
                 print("Player A wins!")
                 self.reset_score()
@@ -242,7 +243,7 @@ class Scoring:
     def reset_score(self):
         self.score = ""
         self.sets_count = 0
-        self.set_scores = []
+        self.set_scores.clear()
         self.points_A = 0
         self.points_B = 0
         self.games_A = 0

@@ -62,8 +62,10 @@ class ShotEncodings:
 
 class MenuVariables:
     '''The Options from the menu are initialized here and set when the game is started'''
-    sets_to_play = 0
+    sets_to_play = 3
     animation = True
-    top_bot = 0
-    bottom_bot = 0
+    top_bot = 1
+    bottom_bot = 1
     animation_time = 0.00
+    simu_matches = 1
+    simulation = True

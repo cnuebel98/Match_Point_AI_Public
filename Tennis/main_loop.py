@@ -406,10 +406,12 @@ def main_loop():
     new_ralley = ralley.Ralley()
     
     # Here the options are displayed to see what kind of game is displayed
-    print("Top Bot " + str(const.MenuVariables.top_bot))
-    print("Bottom Bot " + str(const.MenuVariables.bottom_bot))
-    print("Animation " + str(const.MenuVariables.animation))
-    print("Sets to play " + str(const.MenuVariables.sets_to_play))
+    print("Simulation: " + str(const.MenuVariables.simulation))
+    print("No of Games: " + str(const.MenuVariables.simu_matches))
+    print("Top Bot: " + str(const.MenuVariables.top_bot))
+    print("Bottom Bot: " + str(const.MenuVariables.bottom_bot))
+    print("Animation time: " + str(const.MenuVariables.animation_time))
+    print("Sets to play: " + str(const.MenuVariables.sets_to_play))
 
     # Different classes for Top Bot are initialized depending on the choice in the main menu
     if const.MenuVariables.top_bot == 1:
@@ -446,43 +448,72 @@ def main_loop():
                 if event.key == pygame.K_ESCAPE:
                     run = False
                     break
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if (event.type == pygame.MOUSEBUTTONDOWN 
+                and next_button.check_button_collision(mouse_pos) 
+                and const.MenuVariables.simulation == False):
                 # Take turns in getting shots from the bot and from the users
                 # If mouse button is pressed on the Next Button a turn is taken
-                if next_button.check_button_collision(mouse_pos):
-                    # This if elif statement looks at which player is serving in the game and sets the turn accordingly
-                    # before each new ralley, so always the correct player starts the ralley
-                    # ToDo: set turn for service for tiebreak
-                    if new_score.get_serving_player() == 1 and new_ralley.get_shot_count() == 0:
-                        top_bot.set_turn(False)
-                    elif new_score.get_serving_player() == 2 and new_ralley.get_shot_count() == 0:
-                        top_bot.set_turn(True)
-                    #print(new_score.get_serving_player())
-                    #print(new_ralley.get_shot_count())
-                    # If its not the bots turn, take the ball position as shot by the user/by the bottom player
-                    if top_bot.get_turn() == False:
-                        # This is the manual shot encoding, taking the ball position set by arrow keys into account
-                        if MANUAL:
-                            encode_shot_selection(new_ball, new_ralley)
-                        else:
-                            bottom_bot.add_shot(new_ralley)
-                            move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom", new_score)
-                        top_bot.set_turn(True)
+                
+                # This if elif statement looks at which player is serving in the game and sets the turn accordingly
+                # before each new ralley, so always the correct player starts the ralley
+                # ToDo: set turn for service for tiebreak
+                if new_score.get_serving_player() == 1 and new_ralley.get_shot_count() == 0:
+                    top_bot.set_turn(False)
+                elif new_score.get_serving_player() == 2 and new_ralley.get_shot_count() == 0:
+                    top_bot.set_turn(True)
+                #print(new_score.get_serving_player())
+                #print(new_ralley.get_shot_count())
+                # If its not the bots turn, take the ball position as shot by the user/by the bottom player
+                if top_bot.get_turn() == False:
+                    # This is the manual shot encoding, taking the ball position set by arrow keys into account
+                    if MANUAL:
+                        encode_shot_selection(new_ball, new_ralley)
+                    else:
+                        bottom_bot.add_shot(new_ralley)
+                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom", new_score)
+                    top_bot.set_turn(True)
 
                     # If its the bots turn, call function that gets the shot from the bot
-                    elif top_bot.get_turn() == True:
-                        top_bot.add_shot(new_ralley)
-                        # Ball Movement is an animated transition
-                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top", new_score)
-                        top_bot.set_turn(False)
+                elif top_bot.get_turn() == True:
+                    top_bot.add_shot(new_ralley)
+                    # Ball Movement is an animated transition
+                    move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top", new_score)
+                    top_bot.set_turn(False)
                     
-                    # Here the score is updated, depending on the ralley and the shot count and the turn
-                    new_ralley.score_update(new_score, new_ball)
-                    score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
+                # Here the score is updated, depending on the ralley and the shot count and the turn
+                new_ralley.score_update(new_score, new_ball)
+                score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
+        
+        
+        if const.MenuVariables.simulation == True:
+            while new_score.matches_played < const.MenuVariables.simu_matches:
+                
+                if new_score.get_serving_player() == 1 and new_ralley.get_shot_count() == 0:
+                    top_bot.set_turn(False)
+                elif new_score.get_serving_player() == 2 and new_ralley.get_shot_count() == 0:
+                    top_bot.set_turn(True)
+                # If its not the bots turn, take the ball position as shot by the user/by the bottom player
+                if top_bot.get_turn() == False:
+                    # This is the manual shot encoding, taking the ball position set by arrow keys into account
+                    if MANUAL:
+                        encode_shot_selection(new_ball, new_ralley)
+                    else:
+                        bottom_bot.add_shot(new_ralley)
+                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom", new_score)
+                    top_bot.set_turn(True)
 
-        # ToDo: make player move to the ball (low Priority)
-        # Ball movement for the player is done by arrow keys
-        # handle_ball_movement(keys, new_ball)
+                    # If its the bots turn, call function that gets the shot from the bot
+                elif top_bot.get_turn() == True:
+                    top_bot.add_shot(new_ralley)
+                    # Ball Movement is an animated transition
+                    move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top", new_score)
+                    top_bot.set_turn(False)
+                    
+                # Here the score is updated, depending on the ralley and the shot count and the turn
+                new_ralley.score_update(new_score, new_ball)
+                score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
+                draw(WIN, [bottom_player, top_player], new_ball, [next_button, score_text_field])
+
     pygame.QUIT
 
 if __name__ == "__main__":

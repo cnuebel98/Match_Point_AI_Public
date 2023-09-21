@@ -48,7 +48,18 @@ def set_bottom_player(selected:tuple, value: any):
     elif value == 2:
         const.MenuVariables.bottom_bot = 2
 
+def set_simu_game_no(value: any):
+    x = int(value)
+    const.MenuVariables.simu_matches = x
+
+def simulation_bool(selected:tuple, value: any):
+    if value == 1:
+        const.MenuVariables.simulation = True
+    else: const.MenuVariables.simulation = False
+
 # Menu options are being added
+menu.add.selector('Mode: ', [('Simulation', 1), ('Manual', 2)], onchange=simulation_bool)
+menu.add.range_slider('Number of Matches: ', default=1, range_values=[1,10], increment=int(1), range_text_value_enabled = False, slider_text_value_enabled=True , onchange=set_simu_game_no)
 menu.add.selector('Top Player: ', [('Random', 1), ('Djokovic', 2)], onchange=set_top_player)
 menu.add.selector('Bottom Player: ', [('Random', 1), ('Djokovic', 2)], onchange=set_bottom_player)
 menu.add.selector('Animation time ', [('Fast', 1), ('Medium', 2), ('Slow', 3)], onchange=set_animation)

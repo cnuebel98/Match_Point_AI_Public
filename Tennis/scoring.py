@@ -10,6 +10,7 @@ class Scoring:
     sets_count = 0
     point_count_per_game = 0
     sets_to_play = const.MenuVariables.sets_to_play
+    matches_played = 0
 
     def __init__(self, points_A, games_A, sets_A, points_B, games_B, sets_B, score, serving_player=1):
         self.points_A = points_A
@@ -212,16 +213,20 @@ class Scoring:
         if const.MenuVariables.sets_to_play == 3:
             if self.sets_A == 2:
                 print("Player A wins!")
+                self.matches_played += 1
                 self.reset_score()
             elif self.sets_B == 2:
                 print("Player B wins!")
+                self.matches_played += 1
                 self.reset_score()
         elif const.MenuVariables.sets_to_play == 5:
             if self.sets_A == 3:
                 print("Player A wins!")
+                self.matches_played += 1
                 self.reset_score()
             elif self.sets_B == 3:
                 print("Player B wins!")
+                self.matches_played += 1
                 self.reset_score()
 
     def switch_serving_player(self):

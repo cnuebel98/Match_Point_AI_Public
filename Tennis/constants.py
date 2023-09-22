@@ -1,5 +1,6 @@
 class Dims:
-    '''This class stores the dimensions of the GUI and the elements in the GUI'''
+    '''This class stores the dimensions of the GUI and the elements in 
+    the GUI'''
     # Window size
     WIDTH = 1200
     HEIGHT = 720
@@ -48,20 +49,25 @@ class Colors:
     AUSOPEN_LINECOLOR = (232, 247, 255)
 
 class ShotEncodings:
-    '''This class stores all the Shot encodings in their respective categories'''
+    '''This class stores all the Shot encodings in their respective 
+    categories'''
     WINNER = "*"
     RALLEY_ERROR = ["n", "w", "d", "x"]
     ERROR_TYPE = ["@", "#"]
     SERVE_DIRECTION = ["4", "5", "6"]
-    EVERY_SHOT_TYPE = ["f", "b", "r", "s", "v", "z", "o", "p", "y", "l", "m", "h", "i", "j", "k", "t", "u"]
-    RETURN_SHOT_TYPES = ["f", "b", "r", "s", "y", "l", "m", "h", "i", "t", "u"]
+    EVERY_SHOT_TYPE = ["f", "b", "r", "s", "v", "z", "o", "p", "y", "l",
+                        "m", "h", "i", "j", "k", "t", "u"]
+    RETURN_SHOT_TYPES = ["f", "b", "r", "s", "y", "l", "m", "h", "i", 
+                         "t", "u"]
     RETURN_DEPTH = ["7", "8", "9"]
     DIRECTIONS = ["1", "2", "3"]
-    EXTRA_STUFF = ["+", ";", "^", "S", "R", "C", "!", "0", "-", "=", "P", "Q", "c", "q", "e", "N"]
+    EXTRA_STUFF = ["+", ";", "^", "S", "R", "C", "!", "0", "-", "=", 
+                   "P", "Q", "c", "q", "e", "N"]
     SECOND_SERVE = [","]
 
 class MenuVariables:
-    '''The Options from the menu are initialized here and set when the game is started'''
+    '''The Options from the menu are initialized here and set when the 
+    game is started'''
     sets_to_play = 3
     animation = True
     top_bot = 1

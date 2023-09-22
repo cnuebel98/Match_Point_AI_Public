@@ -44,7 +44,9 @@ class PlayerRect:
         self.height = height
 
     def draw(self, win):
-        pygame.draw.rect(win, self.COLOR, (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(win, 
+                         self.COLOR, 
+                         (self.x, self.y, self.width, self.height))
 
     def move_vertical(self, up=True):
         if up:
@@ -80,23 +82,58 @@ def draw(win, players, ball, buttons):
         court_color_outside = const.Colors.WIMBLEDON_GREEN
         line_color = const.Colors.WHITE
 
-    
     win.fill(court_color_outside)
     
     # Outer Lines
-    pygame.draw.rect(win, line_color, (WIDTH//2 - COURT_WIDTH//2, HEIGHT//2 - COURT_HEIGHT//2, COURT_WIDTH, COURT_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - COURT_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, COURT_WIDTH-2*LINE_WIDTH, COURT_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, 
+                     (WIDTH//2 - COURT_WIDTH//2, 
+                      HEIGHT//2 - COURT_HEIGHT//2, 
+                      COURT_WIDTH, 
+                      COURT_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, 
+                     (WIDTH//2 - COURT_WIDTH//2 + LINE_WIDTH, 
+                      HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, 
+                      COURT_WIDTH-2*LINE_WIDTH, 
+                      COURT_HEIGHT-2*LINE_WIDTH))
     # Single Lines
-    pygame.draw.rect(win, line_color, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - COURT_HEIGHT//2, SINGLES_LINES_WIDTH, COURT_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH-2*LINE_WIDTH, COURT_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, 
+                     (WIDTH//2 - SINGLES_LINES_WIDTH//2, 
+                      HEIGHT//2 - COURT_HEIGHT//2, 
+                      SINGLES_LINES_WIDTH, 
+                      COURT_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, 
+                     (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, 
+                      HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, 
+                      SINGLES_LINES_WIDTH-2*LINE_WIDTH, 
+                      COURT_HEIGHT-2*LINE_WIDTH))
     # T Lines horizontal
-    pygame.draw.rect(win, line_color, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - TLINE_HEIGHT//2, SINGLES_LINES_WIDTH, TLINE_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH-2*LINE_WIDTH, TLINE_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, 
+                     (WIDTH//2 - SINGLES_LINES_WIDTH//2, 
+                      HEIGHT//2 - TLINE_HEIGHT//2, 
+                      SINGLES_LINES_WIDTH,
+                      TLINE_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, 
+                     (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, 
+                      HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, 
+                      SINGLES_LINES_WIDTH-2*LINE_WIDTH, 
+                      TLINE_HEIGHT-2*LINE_WIDTH))
     # Middle T Line vertical
-    pygame.draw.rect(win, line_color, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - TLINE_HEIGHT//2, SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2, TLINE_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2 - LINE_WIDTH*2, TLINE_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, 
+                     (WIDTH//2 - SINGLES_LINES_WIDTH//2, 
+                      HEIGHT//2 - TLINE_HEIGHT//2, 
+                      SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2, 
+                      TLINE_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, 
+                     (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, 
+                      HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, 
+                      SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2 - LINE_WIDTH*2, 
+                      TLINE_HEIGHT-2*LINE_WIDTH))
     # Net
-    pygame.draw.rect(win, line_color, (WIDTH//2 - NET_WIDTH//2, HEIGHT//2 - LINE_WIDTH//2, NET_WIDTH, LINE_WIDTH))    
+    pygame.draw.rect(win, line_color, 
+                     (WIDTH//2 - NET_WIDTH//2, 
+                      HEIGHT//2 - LINE_WIDTH//2, 
+                      NET_WIDTH, 
+                      LINE_WIDTH))    
 
     for player in players:
         player.draw(win)
@@ -110,28 +147,38 @@ def draw(win, players, ball, buttons):
 
 def handle_player_movement(keys, bottom_player):
     # ToDo: change player movement from wasd to ball position dependent
-    if keys[pygame.K_w] and bottom_player.y - bottom_player.VELOCITY >= 0:
+    if (keys[pygame.K_w] 
+        and bottom_player.y - bottom_player.VELOCITY >= 0):
         bottom_player.move_vertical(up=True)
-    if keys[pygame.K_s] and bottom_player.y + bottom_player.VELOCITY + bottom_player.height <= HEIGHT:
+    if (keys[pygame.K_s] 
+        and bottom_player.y + bottom_player.VELOCITY 
+        + bottom_player.height <= HEIGHT):
         bottom_player.move_vertical(up=False)
-    if keys[pygame.K_a] and bottom_player.x - bottom_player.VELOCITY >= 0:
+    if (keys[pygame.K_a] 
+        and bottom_player.x - bottom_player.VELOCITY >= 0):
         bottom_player.move_horizontal(left=True)
-    if keys[pygame.K_d] and bottom_player.x + bottom_player.VELOCITY + bottom_player.width <= WIDTH:
+    if (keys[pygame.K_d] 
+        and bottom_player.x + bottom_player.VELOCITY 
+        + bottom_player.width <= WIDTH):
         bottom_player.move_horizontal(left=False)
 
 def handle_ball_movement(keys, ball):
     # User is only allowed to move the ball
-    if keys[pygame.K_UP] and ball.y - ball.VELOCITY >= 0:
+    if (keys[pygame.K_UP] 
+        and ball.y - ball.VELOCITY >= 0):
         ball.move_vertical(up=True)
-    if keys[pygame.K_DOWN] and ball.y + ball.VELOCITY + ball.radius <= HEIGHT:
+    if (keys[pygame.K_DOWN] 
+        and ball.y + ball.VELOCITY + ball.radius <= HEIGHT):
         ball.move_vertical(up=False)
-    if keys[pygame.K_LEFT] and ball.x - ball.VELOCITY >= 0:
+    if (keys[pygame.K_LEFT] 
+        and ball.x - ball.VELOCITY >= 0):
         ball.move_horizontal(left=True)
-    if keys[pygame.K_RIGHT] and ball.x + ball.VELOCITY + ball.radius <= WIDTH:
+    if (keys[pygame.K_RIGHT] 
+        and ball.x + ball.VELOCITY + ball.radius <= WIDTH):
         ball.move_horizontal(left=False)
-    #print(str(ball.get_X()) + " " + str(ball.get_Y()))
 
-def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_score):
+def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, 
+                     turn, current_score):
     # makes the ball go to the position, based on the bot shot
     r = ralley.get_ralley()
     series = pd.Series(r)
@@ -144,131 +191,195 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_scor
     current_shot = ""
     current_shot = series[len(series)-1]
 
-    # Takes the last shot in the ralley and iterates through the characters in that shot
-    # looks at depth of shot first and finds a fitting y position and then the same for 
-    # direction and x posititon
+    # Takes the last shot in the ralley and iterates through the
+    # characters in that shot, looks at depth of shot first and finds a 
+    # fitting y position and then the same for direction and x posititon
     for c in current_shot:
-        # The first if statement checks, whose turn in the ralley it is (of top or bottom player)
-        # accordingly, the ball is moved to the right side of the court into the correct space
-        
+        # The first if statement checks, whose turn in the ralley it is 
+        # (of top or bottom player)accordingly, the ball is moved to the 
+        # right side of the court into the correct space
         if turn == "bottom":
-            # Ball placement for Serve encoding dependet on shot count, and serving player
+            # Ball placement for Serve encoding dependet on shot count,
+            # and serving player
             if c in SERVE_DIRECTION:
-                point_count = scoring.Scoring.get_point_count_per_game(current_score)
-                y_pos = random.randint(HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS, HEIGHT//2 - 0.3*TLINE_HEIGHT//2)
+                point_count = scoring.Scoring.get_point_count_per_game(
+                    current_score)
+                y_pos = random.randint(
+                    HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS, 
+                    HEIGHT//2 - 0.3*TLINE_HEIGHT//2)
                 # Serve to the outside
                 if c == "4":
                     if point_count % 2 == 0:
                         # bottom player serves from deuce side
-                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
                     elif point_count % 2 == 1:
                         # bottom player serves from the Ad side
-                        x_pos = random.randint(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
 
                 # Serve to the body    
                 elif c == "5":
                     if point_count % 2 == 0:
                         # bottom player serves from deuce side
-                        x_pos = random.randint(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
                     elif point_count % 2 == 1:
                         # bottom player serves from the Ad side
-                        x_pos = random.randint(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
                 
                 # Serve down the T            
                 elif c == "6":
                     if point_count % 2 == 0:
                         # bottom player serves from deuce side
-                        x_pos = random.randint(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS)
+                        x_pos = random.randint(
+                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 + BALL_RADIUS)
                     elif point_count % 2 == 1:
                         # bottom player serves from the Ad side
-                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS, WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 - BALL_RADIUS, 
+                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
                     
             if c in RETURN_DEPTH:
                 if c == "7":
-                    y_pos = random.randint(HEIGHT//2 - TLINE_HEIGHT//2, HEIGHT//2 - BALL_RADIUS//2)
+                    y_pos = random.randint(
+                        HEIGHT//2 - TLINE_HEIGHT//2, 
+                        HEIGHT//2 - BALL_RADIUS//2)
                 elif c == "8":
-                    y_pos = random.randint(HEIGHT//2 - TLINE_HEIGHT//2 - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2), HEIGHT//2 - TLINE_HEIGHT//2)
+                    y_pos = random.randint(
+                        HEIGHT//2 - TLINE_HEIGHT//2 
+                        - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2), 
+                        HEIGHT//2 - TLINE_HEIGHT//2)
                 elif c == "9":
-                    y_pos = random.randint(HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS, HEIGHT//2 - TLINE_HEIGHT//2 - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2))
+                    y_pos = random.randint(
+                        HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS, 
+                        HEIGHT//2 - TLINE_HEIGHT//2 
+                        - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2))
 
             if c in DIRECTIONS:
                 if c == "1":
-                    #print("1")
-                    x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
+                    x_pos = random.randint(
+                        WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
+                        WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
                 elif c == "2":
-                    #print("2")
-                    x_pos = random.randint(WIDTH//2 - BALL_RADIUS - int(0.2*SINGLES_LINES_WIDTH//2), WIDTH//2 + BALL_RADIUS + int(0.2*SINGLES_LINES_WIDTH//2))
+                    x_pos = random.randint(
+                        WIDTH//2 - BALL_RADIUS 
+                        - int(0.2*SINGLES_LINES_WIDTH//2), 
+                        WIDTH//2 + BALL_RADIUS 
+                        + int(0.2*SINGLES_LINES_WIDTH//2))
                 elif c == "3":
-                    #print("3")
-                    x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                    x_pos = random.randint(
+                        WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, 
+                        WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
 
             if (y_pos == 10):
-                #print("Error in Ball Positioning on y position from bottom player")
-                y_pos = random.randint(HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS, HEIGHT//2 - BALL_RADIUS)
+                y_pos = random.randint(
+                    HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS, 
+                    HEIGHT//2 - BALL_RADIUS)
             if (x_pos == 10):
-                #print("Error in Ball Positioning on x position from bottom player")
-                x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
+                x_pos = random.randint(
+                    WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
+                    WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
 
         elif turn == "top":
-            # Ball placement for Serve encoding dependet on shot count, and serving player
+            # Ball placement for Serve encoding dependet on shot count, 
+            # and serving player
             if c in SERVE_DIRECTION:
-                point_count = scoring.Scoring.get_point_count_per_game(current_score)
-                y_pos = random.randint(HEIGHT//2 + 0.3*TLINE_HEIGHT//2, HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS)
+                point_count = scoring.Scoring.get_point_count_per_game(
+                    current_score)
+                y_pos = random.randint(
+                    HEIGHT//2 + 0.3*TLINE_HEIGHT//2, 
+                    HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS)
                 # Serve to the outside
                 if c == "4":
                     if point_count % 2 == 0:
                         # top player serves from deuce side
-                        x_pos = random.randint(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
                     elif point_count % 2 == 1:
                         # top player serves from the Ad side
-                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
 
                 # Serve to the body    
                 elif c == "5":
                     if point_count % 2 == 0:
                         # top player serves from deuce side
-                        x_pos = random.randint(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
                     elif point_count % 2 == 1:
                         # top player serves from the Ad side
-                        x_pos = random.randint(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
                 
                 # Serve down the T            
                 elif c == "6":
                     if point_count % 2 == 0:
                         # top player serves from deuce side
-                        x_pos = random.randint(WIDTH//2 - BALL_RADIUS, WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
+                        x_pos = random.randint(
+                            WIDTH//2 - BALL_RADIUS, 
+                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
                     elif point_count % 2 == 1:
                         # top player serves from the Ad side
-                        x_pos = random.randint(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, WIDTH//2 + BALL_RADIUS)
+                        x_pos = random.randint(
+                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, 
+                            WIDTH//2 + BALL_RADIUS)
 
             if c in RETURN_DEPTH:
                 if c == "7":
                     #print("y Pos because of 7")
-                    y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2)
+                    y_pos = random.randint(
+                        HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2)
                 elif c == "8":
                     #print("y Pos because of 8")
-                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
+                    y_pos = random.randint(
+                        HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS, 
+                        HEIGHT//2 + TLINE_HEIGHT//2 
+                        + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
                 elif c == "9":
                     #print("y Pos because of 9")
-                    y_pos = random.randint(HEIGHT//2 + TLINE_HEIGHT//2 + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
+                    y_pos = random.randint(
+                        HEIGHT//2 + TLINE_HEIGHT//2 
+                        + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, 
+                        HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
                     
             if c in DIRECTIONS:
                 if c == "1":
                     #print("x Pos because of 1")
-                    x_pos = random.randint(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                    x_pos = random.randint(
+                        WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, 
+                        WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
                 elif c == "2":
                     #print("x Pos because of 2")
-                    x_pos = random.randint(WIDTH//2 - BALL_RADIUS - int(0.2*SINGLES_LINES_WIDTH//2), WIDTH//2 + BALL_RADIUS + int(0.2*SINGLES_LINES_WIDTH//2))
+                    x_pos = random.randint(
+                        WIDTH//2 - BALL_RADIUS 
+                        - int(0.2*SINGLES_LINES_WIDTH//2), 
+                        WIDTH//2 + BALL_RADIUS 
+                        + int(0.2*SINGLES_LINES_WIDTH//2))
                 elif c == "3":
                     #print("x Pos because of 3")
-                    x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
+                    x_pos = random.randint(
+                        WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
+                        WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
                     
             if (y_pos == 10):
-                #print("Error in Ball Positioning on y position from top player")
-                y_pos = random.randint(HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
+                y_pos = random.randint(
+                    HEIGHT//2 + BALL_RADIUS, 
+                    HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
             if (x_pos == 10):
-                #print("Error in Ball Positioning on x position from top player")
-                x_pos = random.randint(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
+                x_pos = random.randint(
+                    WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
+                    WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
     
     if TRANSITION_ANIMATION == True:
         # Here the ball transitions to the new position
@@ -291,42 +402,44 @@ def encode_serve(ball, serve_position):
     ball_x = ball.get_X()
     ball_y = ball.get_Y()
     
-    # the ball has to be above the net (2D View) and also below the T-Line of 
-    # the top half of the court
+    # the ball has to be above the net (2D View) and also below the 
+    # T-Line of the top half of the court
     if (ball_y <= HEIGHT//2 - BALL_RADIUS
         and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS):
         # Depending on the serve position, the service field switches
         if serve_position == "right":
-            # when the ball is in the right 30% of the opponents left service field, 
-            # its encoding it to "down the T" -> 6
+            # when the ball is in the right 30% of the opponents left 
+            # service field, its encoding it to "down the T" -> 6
             if (ball_x <= WIDTH//2 + BALL_RADIUS 
                 and ball_x >= WIDTH//2 - 0.3*(SINGLES_LINES_WIDTH//2)):
                 return 6
-            # when the ball is in the middle 40% of the left service field of the opponent
-            # its encoded as a "body serve" -> 5
+            # when the ball is in the middle 40% of the left service 
+            # field of the opponent its encoded as a "body serve" -> 5
             elif (ball_x < WIDTH//2 - 0.3*(SINGLES_LINES_WIDTH//2)
                   and ball_x >= WIDTH//2 - 0.7*(SINGLES_LINES_WIDTH//2)):
                 return 5
-            # when the ball is in the left 30% of the left service field of the opponent
-            # its encoded as a "wide serve" -> 4
+            # when the ball is in the left 30% of the left service field 
+            # of the opponent its encoded as a "wide serve" -> 4
             elif (ball_x < WIDTH//2 - 0.7*(SINGLES_LINES_WIDTH//2)
-                  and ball_x >= WIDTH//2 - (SINGLES_LINES_WIDTH//2) - BALL_RADIUS):
+                  and ball_x >= WIDTH//2 - (SINGLES_LINES_WIDTH//2) 
+                  - BALL_RADIUS):
                 return 4
         elif serve_position == "left":
-            # when the ball is in the left 30% of the opponents right service field, 
-            # its encoding it to "down the T" -> 6
+            # when the ball is in the left 30% of the opponents right 
+            # service field, its encoding it to "down the T" -> 6
             if (ball_x >= WIDTH//2 - BALL_RADIUS 
                 and ball_x <= WIDTH//2 + 0.3*(SINGLES_LINES_WIDTH//2)):
                 return 6
-            # when the ball is in the middle 40% of the right service field of the opponent
-            # its encoded as a "body serve" -> 5
+            # when the ball is in the middle 40% of the right service 
+            # field of the opponent its encoded as a "body serve" -> 5
             elif (ball_x > WIDTH//2 + 0.3*(SINGLES_LINES_WIDTH//2)
                   and ball_x <= WIDTH//2 + 0.7*(SINGLES_LINES_WIDTH//2)):
                 return 5
-            # when the ball is in the right 30% of the right service field of the opponent
-            # its encoded as a "wide serve" -> 4
+            # when the ball is in the right 30% of the right service 
+            # field of the opponent its encoded as a "wide serve" -> 4
             elif (ball_x > WIDTH//2 + 0.7*(SINGLES_LINES_WIDTH//2)
-                  and ball_x <= WIDTH//2 + (SINGLES_LINES_WIDTH//2) + BALL_RADIUS):
+                  and ball_x <= WIDTH//2 + (SINGLES_LINES_WIDTH//2) 
+                  + BALL_RADIUS):
                 return 4
     else: print("Serve is not valid")
 
@@ -334,17 +447,18 @@ def encode_shot_direction(ball):
     ball_x = ball.get_X()
     ball_y = ball.get_Y()
 
-    # The ball has to be above the net (2D view) and also below the baseline of the 
-    # opponents field
+    # The ball has to be above the net (2D view) and also below the 
+    # baseline of the opponents field
 
     if (ball_y <= HEIGHT//2 - BALL_RADIUS
        and ball_y >= HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS):
-        # If the ball is to the right of the left singles line and if it is in the left 
-        # 30% of the court, then the encoding is 1
+        # If the ball is to the right of the left singles line and if it
+        #  is in the left 30% of the court, then the encoding is 1
         if (ball_x <= WIDTH//2 - 0.2*SINGLES_LINES_WIDTH
             and ball_x >= WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS):
             return 1
-        # If the ball is in the middle 40% of the opponents court, encoding is a 2 
+        # If the ball is in the middle 40% of the opponents court, 
+        # encoding is a 2 
         elif (ball_x > WIDTH//2 - 0.2*SINGLES_LINES_WIDTH
             and ball_x < WIDTH//2 + 0.2*SINGLES_LINES_WIDTH):
             return 2
@@ -357,20 +471,23 @@ def encode_shot_direction(ball):
 def encode_shot_depth(ball):
     ball_x = ball.get_X()
     ball_y = ball.get_Y()
-    # If the ball is between both single lines left and right, we can start encoding
-    # the Ball depth
+    # If the ball is between both single lines left and right, we can 
+    # start encoding the Ball depth
     if (ball_x <= WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2
         and ball_x >= WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS):
-        # if the ball is in the Service field (Above the net and below the T-Line)
+        # if the ball is in the Service field (Above the net and below 
+        # the T-Line)
         if (ball_y <= HEIGHT//2
             and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS):
             return 7
         # if the ball is between Base and T Line, but closer to T-Line
         elif (ball_y < HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS
-              and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 - ((COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)):
+              and ball_y >= HEIGHT//2 - TLINE_HEIGHT//2 
+              - ((COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)):
             return 8
-        # If the ball is between T and Baseline, but closer to the baseline
-        elif (ball_y < HEIGHT//2 - TLINE_HEIGHT//2 - ((COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
+        # If the ball is between T and Baseline, but closer to baseline
+        elif (ball_y < HEIGHT//2 - TLINE_HEIGHT//2 
+              - ((COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
               and ball_y >= HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS):
             return 9
     else: print("Ball is Wide (left or right)")
@@ -388,7 +505,8 @@ def encode_shot_selection(ball, ralley):
     # Encode the other shots after the serve and add them to the ralley
     # but only for every second shot depending on who is serving
     elif old_ralley.get_shot_count() > 0:
-        current_shot = current_shot + str(encode_shot_direction(ball)) + str(encode_shot_depth(ball))
+        current_shot = (current_shot + str(encode_shot_direction(ball)) 
+                        + str(encode_shot_depth(ball)))
         ralley.add_shot_to_ralley(current_shot)
     
 def main_loop():
@@ -396,15 +514,21 @@ def main_loop():
     clock = pygame.time.Clock()
     # Set MANUAL to true to be able to play with arrow keys
     MANUAL = False
-    # Set to false to safe time and not display the transition animation of the ball
+    # Set to false to safe time and not display the transition animation
+    # of the ball
     TRANSITION_ANIMATION = True
 
-    bottom_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, HEIGHT - PLAYER_HEIGHT - 10, PLAYER_WIDTH, PLAYER_HEIGHT)
-    top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 10, PLAYER_WIDTH, PLAYER_HEIGHT)
+    bottom_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 
+                               HEIGHT - PLAYER_HEIGHT - 10, 
+                               PLAYER_WIDTH, 
+                               PLAYER_HEIGHT)
+    top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 10, 
+                            PLAYER_WIDTH, 
+                            PLAYER_HEIGHT)
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
     
-    # Here the options are displayed to see what kind of game is displayed
+    # The options are displayed to see what kind of game was started
     print("Simulation: " + str(const.MenuVariables.simulation))
     print("No of Games: " + str(const.MenuVariables.simu_matches))
     print("Top Bot: " + str(const.MenuVariables.top_bot))
@@ -412,30 +536,37 @@ def main_loop():
     print("Animation time: " + str(const.MenuVariables.animation_time))
     print("Sets to play: " + str(const.MenuVariables.sets_to_play))
 
-    # Different classes for Top Bot are initialized depending on the choice in the main menu
+    # Different classes for Top Bot are initialized depending on the 
+    # choice in the main menu
     if const.MenuVariables.top_bot == 1:
         top_bot = bot.Bot("Random")
     elif const.MenuVariables.top_bot == 2:
         top_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
     else: top_bot = bot.Bot("Random")
 
-    # Different classes for Bottom Bot are initialized depending on the choice in the main menu
+    # Different classes for Bottom Bot are initialized depending on the 
+    # choice in the main menu
     if const.MenuVariables.bottom_bot == 1:
         bottom_bot = bot.Bot("Random")
     elif const.MenuVariables.bottom_bot == 2:
         bottom_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
     else: bottom_bot = bot.Bot("Random")
 
-    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", const.Colors.BLACK)
-    score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0-0", const.Colors.BLACK)
+    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, 
+                                HEIGHT*0.05, "NEXT", const.Colors.BLACK)
+    score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, 
+                                     HEIGHT*0.05, "0-0", const.Colors.BLACK)
     new_score = scoring.Scoring(0, 0, 0, 0, 0, 0, "bottom_player")
 
-    # the bottom player always starts the first game in the first set of the match
-    new_score.set_serving_player(1) # 1 for Bottom player, 2 for top player
-    new_ball.reset_ball(new_score.get_serving_player(), new_ralley.get_shot_count())
+    # the bottom player always starts the first game in the first set of
+    # the match (1 for Bottom player, 2 for top player)
+    new_score.set_serving_player(1) 
+    new_ball.reset_ball(new_score.get_serving_player(), 
+                        new_ralley.get_shot_count())
    
     while run:
-        draw(WIN, [bottom_player, top_player], new_ball, [next_button, score_text_field])
+        draw(WIN, [bottom_player, top_player], 
+             new_ball, [next_button, score_text_field])
         clock.tick(FPS)
         keys = pygame.key.get_pressed()
         mouse_pos = pygame.mouse.get_pos()
@@ -450,68 +581,92 @@ def main_loop():
             if (event.type == pygame.MOUSEBUTTONDOWN 
                 and next_button.check_button_collision(mouse_pos) 
                 and const.MenuVariables.simulation == False):
-                # Take turns in getting shots from the bot and from the users
-                # If mouse button is pressed on the Next Button a turn is taken
+                # Take turns in getting shots from the bot and from the 
+                # users If mouse button is pressed on the Next Button a 
+                # turn is taken
                 
-                # This if elif statement looks at which player is serving in the game and sets the turn accordingly
-                # before each new ralley, so always the correct player starts the ralley
+                # This if elif statement looks at which player is 
+                # serving in the game and sets the turn accordingly 
+                # before each new ralley, so always the correct player 
+                # starts the ralley
                 # ToDo: set turn for service for tiebreak
-                if new_score.get_serving_player() == 1 and new_ralley.get_shot_count() == 0:
+                if (new_score.get_serving_player() == 1 
+                    and new_ralley.get_shot_count() == 0):
                     top_bot.set_turn(False)
-                elif new_score.get_serving_player() == 2 and new_ralley.get_shot_count() == 0:
+                elif (new_score.get_serving_player() == 2 
+                      and new_ralley.get_shot_count() == 0):
                     top_bot.set_turn(True)
                 #print(new_score.get_serving_player())
                 #print(new_ralley.get_shot_count())
-                # If its not the bots turn, take the ball position as shot by the user/by the bottom player
+                # If its not the bots turn, take the ball position as 
+                # shot by the user/by the bottom player
                 if top_bot.get_turn() == False:
-                    # This is the manual shot encoding, taking the ball position set by arrow keys into account
+                    # This is the manual shot encoding, taking the ball 
+                    # position set by arrow keys into account
                     if MANUAL:
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         bottom_bot.add_shot(new_ralley)
-                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom", new_score)
+                        move_ball_to_pos(new_ball, new_ralley, WIN, 
+                                         TRANSITION_ANIMATION, 
+                                         "bottom", new_score)
                     top_bot.set_turn(True)
 
-                    # If its the bots turn, call function that gets the shot from the bot
+                    # If its the bots turn, call function that gets the 
+                    # shot from the bot
                 elif top_bot.get_turn() == True:
                     top_bot.add_shot(new_ralley)
                     # Ball Movement is an animated transition
-                    move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top", new_score)
+                    move_ball_to_pos(new_ball, new_ralley, WIN, 
+                                     TRANSITION_ANIMATION, "top", new_score)
                     top_bot.set_turn(False)
                     
-                # Here the score is updated, depending on the ralley and the shot count and the turn
+                # Here the score is updated, depending on the ralley and
+                #  the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
-                score_text_field.update_text(str(new_score.get_score()), WIN, const.Colors.BLACK)
+                score_text_field.update_text(str(new_score.get_score()), 
+                                             WIN, const.Colors.BLACK)
         
         
         if const.MenuVariables.simulation == True:
             while new_score.matches_played < const.MenuVariables.simu_matches:
                 
-                if new_score.get_serving_player() == 1 and new_ralley.get_shot_count() == 0:
+                if (new_score.get_serving_player() == 1 
+                    and new_ralley.get_shot_count() == 0):
                     top_bot.set_turn(False)
-                elif new_score.get_serving_player() == 2 and new_ralley.get_shot_count() == 0:
+                elif (new_score.get_serving_player() == 2 
+                      and new_ralley.get_shot_count() == 0):
                     top_bot.set_turn(True)
-                # If its not the bots turn, take the ball position as shot by the user/by the bottom player
+                # If its not the bots turn, take the ball position as 
+                # shot by the user/by the bottom player
                 if top_bot.get_turn() == False:
-                    # This is the manual shot encoding, taking the ball position set by arrow keys into account
+                    # This is the manual shot encoding, taking the ball 
+                    # position set by arrow keys into account
                     if MANUAL:
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         bottom_bot.add_shot(new_ralley)
-                        move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "bottom", new_score)
+                        move_ball_to_pos(new_ball, new_ralley, WIN, 
+                                         TRANSITION_ANIMATION, "bottom", 
+                                         new_score)
                     top_bot.set_turn(True)
 
-                    # If its the bots turn, call function that gets the shot from the bot
+                    # If its the bots turn, call function that gets the 
+                    # shot from the bot
                 elif top_bot.get_turn() == True:
                     top_bot.add_shot(new_ralley)
                     # Ball Movement is an animated transition
-                    move_ball_to_pos(new_ball, new_ralley, WIN, TRANSITION_ANIMATION, "top", new_score)
+                    move_ball_to_pos(new_ball, new_ralley, WIN, 
+                                     TRANSITION_ANIMATION, "top", new_score)
                     top_bot.set_turn(False)
                     
-                # Here the score is updated, depending on the ralley and the shot count and the turn
+                # Here the score is updated, depending on the ralley and 
+                # the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
-                score_text_field.update_text(str(new_score.get_score()), WIN, const.Colors.BLACK)
-                draw(WIN, [bottom_player, top_player], new_ball, [next_button, score_text_field])
+                score_text_field.update_text(str(new_score.get_score()), 
+                                             WIN, const.Colors.BLACK)
+                draw(WIN, [bottom_player, top_player], new_ball, 
+                     [next_button, score_text_field])
 
     pygame.QUIT
 

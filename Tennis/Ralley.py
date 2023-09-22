@@ -3,8 +3,10 @@ import ball
 import constants as const
 
 class Ralley:
-    '''This class keeps track of the ralley and also calls the scoring class, when a ralley is finished'''
-    # Initializing the encodings for the shots, so we can see if a shot terminates a ralley
+    '''This class keeps track of the ralley and also calls the scoring 
+    class, when a ralley is finished'''
+    # Initializing the encodings for the shots, so we can see if a shot 
+    # terminates a ralley
     RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
     ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
     WINNER = const.ShotEncodings.WINNER
@@ -20,7 +22,8 @@ class Ralley:
         self.shot_count += 1
 
     def clear_ralley(self):
-        # This function resets the ralley and gets called after a ralley is won by a player/bot
+        # This function resets the ralley and gets called after a ralley 
+        # is won by a player/bot
         self.shot_count = 0
         self.ralley.clear()
 
@@ -57,7 +60,9 @@ class Ralley:
 
         if c in self.SECOND_SERVE and len(self.ralley) == 1:
             self.shot_count = 0
-            ball.Ball.reset_ball(current_ball, serving_player, point_count_in_game)
+            ball.Ball.reset_ball(current_ball, 
+                                 serving_player, 
+                                 point_count_in_game)
        
         if c in self.RALLEY_ERROR or c in self.ERROR_TYPE or c in self.WINNER:
             # print("Ralley Terminated")
@@ -65,10 +70,15 @@ class Ralley:
             # update Score, dependent on who is serving
 
             self.clear_ralley()
-            # After every ralley, the ball is put to the position, where the next player has to serve from
-            # This is the player who is serving during the ongoing game
+            # After every ralley, the ball is put to the position, 
+            # where the next player has to serve from
             
-            # This is the amount of points in that game, even: next serve from Deuce side, odd: next serve from Ad Side
-            point_count_in_game = scoring.Scoring.get_point_count_per_game(score)
+            # This is the amount of points in that game, even: next
+            # serve from Deuce side, odd: next serve from Ad Side
+            point_count_in_game = scoring.Scoring.get_point_count_per_game(
+                score)
+            # This is the player who is serving during the ongoing game 
             serving_player = scoring.Scoring.get_serving_player(score)
-            ball.Ball.reset_ball(current_ball, serving_player, point_count_in_game)
+            ball.Ball.reset_ball(current_ball, 
+                                 serving_player, 
+                                 point_count_in_game)

@@ -11,6 +11,7 @@ class Ralley:
     ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
     WINNER = const.ShotEncodings.WINNER
     SECOND_SERVE = const.ShotEncodings.SECOND_SERVE
+    LAST_RALLEY = []
 
     def __init__(self, ralley=[], shot_count=0):
         self.ralley = ralley
@@ -35,6 +36,12 @@ class Ralley:
         # returns the length of a ralley
         return len(self.ralley)
     
+    def set_last_ralley(self, ralley):
+        self.LAST_RALLEY = ralley
+
+    def get_last_ralley(self):
+        return self.LAST_RALLEY
+
     def get_shot_count(self):
         # returns the shot count
         return self.shot_count
@@ -51,7 +58,7 @@ class Ralley:
         return last_char
 
     def score_update(self, score, current_ball):
-        # If the last char in ralley is a terminal shot, 
+        # If the last char in ralley is a terminal shot,
         # add a point to the score accordingly
         
         c = self.get_last_char_of_last_shot()
@@ -68,6 +75,7 @@ class Ralley:
             # print("Ralley Terminated")
             score.update_points(self.ralley, c, self.get_shot_count())
             # update Score, dependent on who is serving
+            self.set_last_ralley(self.get_ralley())
             self.clear_ralley()
             # After every ralley, the ball is put to the position, 
             # where the next player has to serve from

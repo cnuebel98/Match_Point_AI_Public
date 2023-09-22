@@ -8,20 +8,27 @@ class Log:
     def __init__(self):
         self.df = pd.DataFrame(columns=['Points_A', 'Points_B', 
                                    'Games_A', 'Games_B',
-                                   'Sets_A', 'Sets_B'])
+                                   'Sets_A', 'Sets_B', 'Serving_Player', 
+                                   'Ralley'])
     
-    def add_score_to_df(self, points_A, points_B,
-                        games_A, games_B, sets_A, sets_B):
-        #print(str(points_A) + "-" + str(points_B) + ", " + str(games_A) + "-"
-        #      + str(games_B) + ", " + str(sets_A) + "-" + str(sets_B))
+    def add_score_to_df(self, points_A, points_B, games_A, games_B, sets_A, 
+                        sets_B, serving_player, ralley):
         
+        if points_A == "AD":
+            points_A = 50
+        if points_B == "AD":
+            points_B = 50
+
         new_row = pd.DataFrame({'Points_A': points_A,
                    'Points_B': points_B,
                    'Games_A': games_A,
                    'Games_B': games_B,
                    'Sets_A': sets_A,
-                   'Sets_B': sets_B}, index = [1])
-        self.df = pd.concat([new_row, self.df.loc[:]]).reset_index(drop=True)
+                   'Sets_B': sets_B,
+                   'Serving_Player': serving_player,
+                   'Ralley': str(ralley)}, index = [1])
+        self.df = pd.concat([self.df.loc[:], new_row]).reset_index(drop=True)
+        self.show_df()
         
     def show_df(self):
         print(self.df)

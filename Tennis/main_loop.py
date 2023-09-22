@@ -637,7 +637,9 @@ def main_loop():
                                                 new_score.get_games_A(),
                                                 new_score.get_games_B(),
                                                 new_score.get_sets_A(),
-                                                new_score.get_sets_B())
+                                                new_score.get_sets_B(),
+                                                new_score.get_serving_player(),
+                                                new_ralley.get_last_ralley())
                     const.Changing.ralley_terminated = False
         
         
@@ -686,7 +688,9 @@ def main_loop():
                                                 new_score.get_games_A(),
                                                 new_score.get_games_B(),
                                                 new_score.get_sets_A(),
-                                                new_score.get_sets_B())
+                                                new_score.get_sets_B(),
+                                                new_score.get_serving_player(),
+                                                new_ralley.get_last_ralley())
                     const.Changing.ralley_terminated = False
 
                 draw(WIN, [bottom_player, top_player], new_ball, 

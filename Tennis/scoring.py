@@ -1,5 +1,4 @@
 import constants as const
-import test_menu
 
 class Scoring:
     '''In this class the whole scoring process for points, games and 
@@ -40,10 +39,28 @@ class Scoring:
         if self.games_A != 0 or self.games_B != 0:
             score =  str(self.games_A) + "-" + str(self.games_B) + ", " + score
 
-        if self.sets_count > 0:  
+        if self.sets_count > 0:
             score =  str(self.set_scores) + score
         
         return score
+    
+    def get_points_A(self):
+        return self.points_A
+    
+    def get_points_B(self):
+        return self.points_B
+    
+    def get_games_A(self):
+        return self.games_A
+    
+    def get_games_B(self):
+        return self.games_B
+    
+    def get_sets_A(self):
+        return self.sets_A
+    
+    def get_sets_B(self):
+        return self.sets_B
     
     def update_points(self, ralley, last_char, shot_count):
         
@@ -83,7 +100,7 @@ class Scoring:
                 elif last_char in self.WINNER:
                     self.give_point(1)
             # Modulo of shotcount = 1 means, that the terminal shot was 
-            # done by player 2        
+            # done by player 2
             elif shot_count % 2 == 1:
                 # If that shot was an error, player 1 gets a point
                 if (last_char in self.ERROR_TYPE 
@@ -96,6 +113,7 @@ class Scoring:
     def give_point(self, player):
         # Point is given so point count per game is updated
         self.point_count_per_game += 1
+        
         # When there is a tiebreak, points are added according to 
         # tiebreak rules
         if self.games_A == 6 and self.games_B == 6:
@@ -164,6 +182,7 @@ class Scoring:
                     self.give_game(2)
                     self.points_A = 0
                     self.points_B = 0
+        const.Changing.ralley_terminated = True
 
     def give_game(self, player):
         # When this is called, the server has to be switched

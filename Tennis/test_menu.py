@@ -71,6 +71,12 @@ def set_color_scheme(selected:tuple, value: any):
     elif value == 4:
         const.MenuVariables.color_scheme = 4
 
+def set_logging(selected: tuple, value: any):
+    if value == 1:
+        const.MenuVariables.logging = False
+    elif value == 2:
+        const.MenuVariables.logging = True
+
 # Menu options are being added
 menu.add.selector('Mode: ', 
                   [('Simulation', 1), ('Manual', 2)], 
@@ -103,6 +109,10 @@ menu.add.selector('Tournament: ',
                    ('Australien Open', 3), ('Wimbledon', 4)], 
                   default=0, 
                   onchange=set_color_scheme)
+menu.add.selector('Export Data: ',
+                  [('Off', 1), ('On', 2)],
+                  default=0,
+                  onchange=set_logging)
 menu.add.button('Play', 
                 start_the_game)
 menu.add.button('Quit', 

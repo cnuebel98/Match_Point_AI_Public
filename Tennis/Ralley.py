@@ -68,7 +68,6 @@ class Ralley:
             # print("Ralley Terminated")
             score.update_points(self.ralley, c, self.get_shot_count())
             # update Score, dependent on who is serving
-
             self.clear_ralley()
             # After every ralley, the ball is put to the position, 
             # where the next player has to serve from

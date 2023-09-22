@@ -6,7 +6,7 @@ class Dims:
     HEIGHT = 720
 
     # Size of elements
-    BALL_RADIUS = 10
+    BALL_RADIUS = 7
     PLAYER_WIDTH = 40
     PLAYER_HEIGHT = 40
 
@@ -76,3 +76,7 @@ class MenuVariables:
     simu_matches = 1
     simulation = True
     color_scheme = 1
+    logging = False
+
+class Changing:
+    ralley_terminated = False

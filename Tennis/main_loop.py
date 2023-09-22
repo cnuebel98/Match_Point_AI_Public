@@ -2,6 +2,7 @@ import pygame
 import ralley
 import ball
 import bot
+import log
 import stat_bot_djokovic
 import button
 import pandas as pd
@@ -527,6 +528,7 @@ def main_loop():
                             PLAYER_HEIGHT)
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
+    new_log = log.Log()
     
     # The options are displayed to see what kind of game was started
     print("Simulation: " + str(const.MenuVariables.simulation))
@@ -584,7 +586,7 @@ def main_loop():
                 # Take turns in getting shots from the bot and from the 
                 # users If mouse button is pressed on the Next Button a 
                 # turn is taken
-                
+
                 # This if elif statement looks at which player is 
                 # serving in the game and sets the turn accordingly 
                 # before each new ralley, so always the correct player 
@@ -622,10 +624,21 @@ def main_loop():
                     top_bot.set_turn(False)
                     
                 # Here the score is updated, depending on the ralley and
-                #  the shot count and the turn
+                # the shot count and the turn
+                
                 new_ralley.score_update(new_score, new_ball)
-                score_text_field.update_text(str(new_score.get_score()), 
+                
+                if const.Changing.ralley_terminated:
+                    score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colors.BLACK)
+                    if const.MenuVariables.logging == True:
+                        new_log.add_score_to_df(new_score.get_points_A(),
+                                                new_score.get_points_B(),
+                                                new_score.get_games_A(),
+                                                new_score.get_games_B(),
+                                                new_score.get_sets_A(),
+                                                new_score.get_sets_B())
+                    const.Changing.ralley_terminated = False
         
         
         if const.MenuVariables.simulation == True:
@@ -663,8 +676,19 @@ def main_loop():
                 # Here the score is updated, depending on the ralley and 
                 # the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
-                score_text_field.update_text(str(new_score.get_score()), 
+                
+                if const.Changing.ralley_terminated:
+                    score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colors.BLACK)
+                    if const.MenuVariables.logging == True:
+                        new_log.add_score_to_df(new_score.get_points_A(),
+                                                new_score.get_points_B(),
+                                                new_score.get_games_A(),
+                                                new_score.get_games_B(),
+                                                new_score.get_sets_A(),
+                                                new_score.get_sets_B())
+                    const.Changing.ralley_terminated = False
+
                 draw(WIN, [bottom_player, top_player], new_ball, 
                      [next_button, score_text_field])
 

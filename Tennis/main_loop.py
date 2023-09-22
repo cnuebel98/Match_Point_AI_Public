@@ -18,29 +18,6 @@ pygame.display.set_caption("PyTennis")
 
 FPS = const.Dims.FPS
 
-WHITE = const.Colors.WHITE
-BLACK = const.Colors.BLACK
-GREEN = const.Colors.GREEN
-DARK_GREEN = const.Colors.DARK_GREEN
-BLUE = const.Colors.BLUE
-YELLOW = const.Colors.YELLOW
-GREY = const.Colors.GREY
-
-# US Open Color Scheme:
-US_OPEN_GREEN = const.Colors.US_OPEN_GREEN
-US_OPEN_BLUE = const.Colors.US_OPEN_BLUE
-
-# Australien Open Color Scheme:
-AUSOPEN_COURT_BLUE = const.Colors.AUSOPEN_COURT_BLUE
-AUSOPEN_COURT_LIGHTBLUE = const.Colors.AUSOPEN_COURT_LIGHTBLUE
-AUSOPEN_LINECOLOR = const.Colors.AUSOPEN_LINECOLOR
-
-# French Open Color Scheme:
-CLAY_COURT_COLOR = const.Colors.CLAY_COURT_COLOR
-
-# Wimbledon Grass Color Scheme
-WIMBLEDON_GREEN = const.Colors.WIMBLEDON_GREEN
-
 PLAYER_WIDTH = const.Dims.PLAYER_WIDTH
 PLAYER_HEIGHT = const.Dims.PLAYER_HEIGHT
 BALL_RADIUS = const.Dims.BALL_RADIUS
@@ -56,7 +33,7 @@ TRANSITION_ANIMATION = False
 
 class PlayerRect:
     # ToDo: Make Players circles instead of squares
-    COLOR = BLUE
+    COLOR = const.Colors.BLACK
     # ToDo: Make velocity dependent on the player
     VELOCITY = 4
 
@@ -82,30 +59,52 @@ class PlayerRect:
             self.x += self.VELOCITY
         
 def draw(win, players, ball, buttons):
-    win.fill(US_OPEN_GREEN)
+    # US Open Color Scheme
+    if const.MenuVariables.color_scheme == 1:
+        court_color_inside = const.Colors.US_OPEN_BLUE
+        court_color_outside = const.Colors.US_OPEN_GREEN
+        line_color = const.Colors.WHITE
+    # Roland Garros Color Scheme
+    elif const.MenuVariables.color_scheme == 2:
+        court_color_inside = const.Colors.CLAY_COURT_COLOR
+        court_color_outside = const.Colors.CLAY_COURT_COLOR
+        line_color = const.Colors.WHITE
+    # AusOpen Color Scheme
+    elif const.MenuVariables.color_scheme == 3:
+        court_color_inside = const.Colors.AUSOPEN_COURT_BLUE
+        court_color_outside = const.Colors.AUSOPEN_COURT_LIGHTBLUE
+        line_color = const.Colors.AUSOPEN_LINECOLOR
+    # Wimbledon Color Scheme
+    elif const.MenuVariables.color_scheme == 4:
+        court_color_inside = const.Colors.WIMBLEDON_GREEN
+        court_color_outside = const.Colors.WIMBLEDON_GREEN
+        line_color = const.Colors.WHITE
+
+    
+    win.fill(court_color_outside)
     
     # Outer Lines
-    pygame.draw.rect(win, WHITE, (WIDTH//2 - COURT_WIDTH//2, HEIGHT//2 - COURT_HEIGHT//2, COURT_WIDTH, COURT_HEIGHT))
-    pygame.draw.rect(win, US_OPEN_BLUE, (WIDTH//2 - COURT_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, COURT_WIDTH-2*LINE_WIDTH, COURT_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, (WIDTH//2 - COURT_WIDTH//2, HEIGHT//2 - COURT_HEIGHT//2, COURT_WIDTH, COURT_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - COURT_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, COURT_WIDTH-2*LINE_WIDTH, COURT_HEIGHT-2*LINE_WIDTH))
     # Single Lines
-    pygame.draw.rect(win, WHITE, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - COURT_HEIGHT//2, SINGLES_LINES_WIDTH, COURT_HEIGHT))
-    pygame.draw.rect(win, US_OPEN_BLUE, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH-2*LINE_WIDTH, COURT_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - COURT_HEIGHT//2, SINGLES_LINES_WIDTH, COURT_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH-2*LINE_WIDTH, COURT_HEIGHT-2*LINE_WIDTH))
     # T Lines horizontal
-    pygame.draw.rect(win, WHITE, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - TLINE_HEIGHT//2, SINGLES_LINES_WIDTH, TLINE_HEIGHT))
-    pygame.draw.rect(win, US_OPEN_BLUE, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH-2*LINE_WIDTH, TLINE_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - TLINE_HEIGHT//2, SINGLES_LINES_WIDTH, TLINE_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH-2*LINE_WIDTH, TLINE_HEIGHT-2*LINE_WIDTH))
     # Middle T Line vertical
-    pygame.draw.rect(win, WHITE, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - TLINE_HEIGHT//2, SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2, TLINE_HEIGHT))
-    pygame.draw.rect(win, US_OPEN_BLUE, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2 - LINE_WIDTH*2, TLINE_HEIGHT-2*LINE_WIDTH))
+    pygame.draw.rect(win, line_color, (WIDTH//2 - SINGLES_LINES_WIDTH//2, HEIGHT//2 - TLINE_HEIGHT//2, SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2, TLINE_HEIGHT))
+    pygame.draw.rect(win, court_color_inside, (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2 - LINE_WIDTH*2, TLINE_HEIGHT-2*LINE_WIDTH))
     # Net
-    pygame.draw.rect(win, WHITE, (WIDTH//2 - NET_WIDTH//2, HEIGHT//2 - LINE_WIDTH//2, NET_WIDTH, LINE_WIDTH))    
+    pygame.draw.rect(win, line_color, (WIDTH//2 - NET_WIDTH//2, HEIGHT//2 - LINE_WIDTH//2, NET_WIDTH, LINE_WIDTH))    
 
     for player in players:
         player.draw(win)
 
     for button in buttons:
-        button.draw(win, WHITE)
+        button.draw(win, const.Colors.WHITE)
 
-    ball.draw(win, YELLOW)
+    ball.draw(win, const.Colors.YELLOW)
 
     pygame.display.update()
 
@@ -279,7 +278,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, turn, current_scor
         y = ball.get_Y()
         for i in range(0, 11, 1):
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
-            ball.draw(win, YELLOW)
+            ball.draw(win, const.Colors.YELLOW)
             pygame.display.update()
             time.sleep(const.MenuVariables.animation_time)
     else:
@@ -427,8 +426,8 @@ def main_loop():
         bottom_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
     else: bottom_bot = bot.Bot("Random")
 
-    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", BLACK)
-    score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0-0", BLACK)
+    next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "NEXT", const.Colors.BLACK)
+    score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, HEIGHT*0.05, "0-0", const.Colors.BLACK)
     new_score = scoring.Scoring(0, 0, 0, 0, 0, 0, "bottom_player")
 
     # the bottom player always starts the first game in the first set of the match
@@ -482,7 +481,7 @@ def main_loop():
                     
                 # Here the score is updated, depending on the ralley and the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
-                score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
+                score_text_field.update_text(str(new_score.get_score()), WIN, const.Colors.BLACK)
         
         
         if const.MenuVariables.simulation == True:
@@ -511,7 +510,7 @@ def main_loop():
                     
                 # Here the score is updated, depending on the ralley and the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
-                score_text_field.update_text(str(new_score.get_score()), WIN, BLACK)
+                score_text_field.update_text(str(new_score.get_score()), WIN, const.Colors.BLACK)
                 draw(WIN, [bottom_player, top_player], new_ball, [next_button, score_text_field])
 
     pygame.QUIT

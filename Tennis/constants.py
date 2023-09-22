@@ -69,3 +69,4 @@ class MenuVariables:
     animation_time = 0.00
     simu_matches = 1
     simulation = True
+    color_scheme = 1

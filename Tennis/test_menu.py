@@ -57,13 +57,24 @@ def simulation_bool(selected:tuple, value: any):
         const.MenuVariables.simulation = True
     else: const.MenuVariables.simulation = False
 
+def set_color_scheme(selected:tuple, value: any):
+    if value == 1:
+        const.MenuVariables.color_scheme = 1
+    elif value == 2:
+        const.MenuVariables.color_scheme = 2
+    elif value == 3:
+        const.MenuVariables.color_scheme = 3
+    elif value == 4:
+        const.MenuVariables.color_scheme = 4
+
 # Menu options are being added
-menu.add.selector('Mode: ', [('Simulation', 1), ('Manual', 2)], onchange=simulation_bool)
+menu.add.selector('Mode: ', [('Simulation', 1), ('Manual', 2)], default=0, onchange=simulation_bool)
 menu.add.range_slider('Number of Matches: ', default=1, range_values=[1,10], increment=int(1), range_text_value_enabled = False, slider_text_value_enabled=True , onchange=set_simu_game_no)
-menu.add.selector('Top Player: ', [('Random', 1), ('Djokovic', 2)], onchange=set_top_player)
-menu.add.selector('Bottom Player: ', [('Random', 1), ('Djokovic', 2)], onchange=set_bottom_player)
-menu.add.selector('Animation time ', [('Fast', 1), ('Medium', 2), ('Slow', 3)], onchange=set_animation)
-menu.add.selector('Best of ', [('3', 1), ('5', 2)], onchange=set_sets_to_play)
+menu.add.selector('Top Player: ', [('Random', 1), ('Djokovic', 2)], default=0, onchange=set_top_player)
+menu.add.selector('Bottom Player: ', [('Random', 1), ('Djokovic', 2)], default=0, onchange=set_bottom_player)
+menu.add.selector('Animation time: ', [('Fast', 1), ('Medium', 2), ('Slow', 3)], default=0, onchange=set_animation)
+menu.add.selector('Best of: ', [('3', 1), ('5', 2)], default=0, onchange=set_sets_to_play)
+menu.add.selector('Tournament: ', [('US Open', 1), ('Roland Garros', 2), ('Australien Open', 3), ('Wimbledon', 4)], default=0, onchange=set_color_scheme)
 menu.add.button('Play', start_the_game)
 menu.add.button('Quit', pygame_menu.events.EXIT)
 

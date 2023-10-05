@@ -1,4 +1,5 @@
 import constants as const
+import scoring
 import random
 
 class Stat_Bot_Djokovic:
@@ -16,10 +17,19 @@ class Stat_Bot_Djokovic:
         self.name = name
         self.turn = turn
 
-    def add_shot(self, current_ralley):
+    def add_shot(self, current_ralley, score):
         '''Adds the most likely shot based on djokovic data'''
-        i = random.randint(0, 99)
+        i = random.randint(0, 9999)
+        x = score.get_point_count_per_game()
+        #print(x)
         shot = "123"
+        if (current_ralley.get_shot_count() == "0"):
+            # Add a first serve
+            ...
+        elif (current_ralley.get_shot_count() == "1" 
+              and current_ralley.get_last_char_of_last_shot() == ","):
+            # Add Second Serve
+            ...
         current_ralley.add_shot_to_ralley(shot)
         print(current_ralley.get_ralley())
 

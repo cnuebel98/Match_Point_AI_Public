@@ -62,6 +62,15 @@ class Scoring:
     def get_sets_B(self):
         return self.sets_B
     
+    def update_point_count_per_game(self, x):
+        self.point_count_per_game += x
+
+    def get_point_count_per_game(self):
+        return self.point_count_per_game
+    
+    def reset_point_count_per_game(self):
+        self.point_count_per_game = 0
+    
     def update_points(self, ralley, last_char, shot_count):
         
         # if bottom player (1) was serving
@@ -112,8 +121,9 @@ class Scoring:
 
     def give_point(self, player):
         # Point is given so point count per game is updated
-        self.point_count_per_game += 1
-        
+        # self.point_count_per_game += 1
+        self.update_point_count_per_game(1)
+        #print(self.get_point_count_per_game())
         # When there is a tiebreak, points are added according to 
         # tiebreak rules
         if self.games_A == 6 and self.games_B == 6:
@@ -189,7 +199,7 @@ class Scoring:
         self.switch_serving_player()
         # When a game is finished, the points per game count has to be 
         # reset
-        self.point_count_per_game = 0
+        self.reset_point_count_per_game()
         # Updates the score in a set
         if player == 1:
             # if player a leads by 2 games in a set and both players 

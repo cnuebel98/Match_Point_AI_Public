@@ -608,7 +608,7 @@ def main_loop():
                     if MANUAL:
                         encode_shot_selection(new_ball, new_ralley)
                     else:
-                        bottom_bot.add_shot(new_ralley)
+                        bottom_bot.add_shot(new_ralley, new_score)
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
                                          TRANSITION_ANIMATION, 
                                          "bottom", new_score)
@@ -617,7 +617,7 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
-                    top_bot.add_shot(new_ralley)
+                    top_bot.add_shot(new_ralley, new_score)
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_ralley, WIN, 
                                      TRANSITION_ANIMATION, "top", new_score)
@@ -660,7 +660,7 @@ def main_loop():
                     if MANUAL:
                         encode_shot_selection(new_ball, new_ralley)
                     else:
-                        bottom_bot.add_shot(new_ralley)
+                        bottom_bot.add_shot(new_ralley, new_score)
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
                                          TRANSITION_ANIMATION, "bottom", 
                                          new_score)
@@ -669,7 +669,7 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
-                    top_bot.add_shot(new_ralley)
+                    top_bot.add_shot(new_ralley, new_score)
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_ralley, WIN, 
                                      TRANSITION_ANIMATION, "top", new_score)

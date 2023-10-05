@@ -3,20 +3,21 @@ import scipy.stats
 import config2
 from train_functionals_2 import *
 
-
+# Change Path to the cleaned Dataset
 df = pd.read_csv(r'C:\Users\carlo\TrainingsTool\Tennis\ML_Stuff\first_serve_djoko_dir_v1.csv', encoding='unicode_escape', low_memory=False)
 
+# Target column of the dataset to predict
 target = '0_dir'
 
-dataframe_result = pd.DataFrame(columns=['model_name',
+dataframe_result = pd.DataFrame(columns=['model_name', "acc_train", 
+                                         "b_acc_train", "pre_train", 
+                                         "rec_train", "fscore_train",
+                                         "acc_val", "b_acc_val", "pre_val", 
+                                         "rec_val", "fscore_val", "acc_test", 
+                                         "b_acc_test", "pre_test", "rec_test", 
+                                         "fscore_test", 'target'])
 
-                                         "acc_train", "b_acc_train", "pre_train", "rec_train", "fscore_train",
-                                         "acc_val", "b_acc_val", "pre_val", "rec_val", "fscore_val",
-                                         "acc_test", "b_acc_test", "pre_test", "rec_test", "fscore_test",
-
-                                         'target'])
-
-
+# Change to config2.models_test to see if its running
 for model_name, model in config2.models.items():
     # apply scaler to df without target
     #df_scaled = config2.scaler.fit_transform(df.drop(target, axis=1))

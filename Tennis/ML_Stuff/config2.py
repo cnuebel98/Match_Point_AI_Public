@@ -6,15 +6,8 @@ from sklearn.svm import LinearSVC, SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 
-
-
-kFold_val =3
-
-
-
+kFold_val = 3
 scaler = StandardScaler() # MinMaxScaler() #MaxAbsScaler()
-
-
 models = {
     'DT': DecisionTreeClassifier(),
     'GradBoost': GradientBoostingClassifier(),
@@ -30,15 +23,11 @@ models = {
 
 models_test = {
     'DT': DecisionTreeClassifier(),
-
 }
 
-
+# Set to False when only testing the dataset for errors
 hyperparameter_tuning = True
-
-
 hyperparameter_search = {
-
 
 'RF' : {"max_depth": [5,10,15],
                   "n_estimators":[5,10,15,20],
@@ -47,7 +36,6 @@ hyperparameter_search = {
                      "min_samples_leaf": [3, 10],
                      "bootstrap": [True, False],
                      "criterion": ["gini", "entropy"]},
-
 
 'DT' : {'criterion': ["entropy", "gini"],
       'max_depth': [5, 10, 15, 25, 30, 35, 40],
@@ -60,7 +48,6 @@ hyperparameter_search = {
            'max_depth':[5,10,15],
            'min_samples_split':[5,10,15],
            'max_features':list(range(7,15))},
-
 
 'bagging': {'n_estimators': [10, 20, 30, 40],
             'max_samples': [2, 5, 10, 15, 20],
@@ -76,7 +63,6 @@ hyperparameter_search = {
 
 'GNB': {'priors': [None],
         'var_smoothing': [0.00000001, 0.000000001, 0.00000001]},
-
 
 'LogReg': {'penalty': ['none', 'l1', 'l2', 'elasticnet'],
            'class_weight': ['balanced', 'None'],

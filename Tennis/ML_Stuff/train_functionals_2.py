@@ -168,17 +168,11 @@ def train_fist_it(df, model,model_name, target):
     rec_test = []
     fscore_test = []
 
-
-
-
     #df_train_val = df.iloc[train_index_outer]
-
     # 20% of data not used for the hyperprams
     #X_test = df.drop(target, axis=1).iloc[test_index_outer]
     # X_test = X_test[config2.input_cols]
     #y_test = df[target].iloc[test_index_outer]
-
-
 
     kf_val = KFold(n_splits=config2.kFold_val, shuffle=True, random_state=42)
 
@@ -219,9 +213,6 @@ def train_fist_it(df, model,model_name, target):
         plt.show()
         '''
 
-
-
-
     return [model_name,
             round(mean(acc_train), 4), round(mean(b_acc_train), 4),
             round(mean(pre_train), 4), round(mean(rec_train),4),
@@ -236,8 +227,6 @@ def train_fist_it(df, model,model_name, target):
             round(mean(fscore_test), 4),
 
             target]
-
-
 
 def result(df, model,model_name, target):
     """
@@ -263,12 +252,7 @@ def result(df, model,model_name, target):
         store_hyperparams(model_name, best_hyper)
         model = load_hyperparams(model,best_hyper)
 
-
     train_result= train_fist_it(df, model,model_name, target)
-
-
-
-
     return train_result
 
 

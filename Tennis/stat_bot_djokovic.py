@@ -752,25 +752,610 @@ class Stat_Bot_Djokovic:
               and "," in 
               ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
             # Add return to the Second Serve
-            shot = "SecondServeReturn"
+            # shot = "SecondServeReturn"
 
             x = score.get_point_count_per_game()
             if (x % 2 == 0): 
                 # Returning from Deuce Side of the court
                 if (current_ralley.get_last_char_of_last_shot() == "4"):
-                    print("2ndS return from Deuce Side on serve 4")
+                    #print("2ndS return from Deuce Side on serve 4")
+
+                    i = random.randint(0, 9999)
+                    if (i < 2271):
+                        # Direction of the shot
+                        shot = "1"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 2667):
+                            shot = shot + "7"
+                        elif (j < (2667 + 6667)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 1053):
+                            shot = shot + "n"
+                        elif (k < (1053 + 351)):
+                            shot = shot + "w"
+                        elif (k < (1053 + 351 + 526)):
+                            shot = shot + "d"
+                        elif (k < (1053 + 351 + 526 + 351)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 10000):
+                            shot = "f" + shot
+
+                    elif (i < (2271 + 5657)):
+                        # Direction of the shot
+                        shot = "2"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 1441):
+                            shot = shot + "7"
+                        elif (j < (1441 + 5315)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 634):
+                            shot = shot + "n"
+                        elif (k < (634 + 1127)):
+                            shot = shot + "d"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 9789):
+                            shot = "f" + shot
+                        elif (l < (9789 + 7)):
+                            shot = "b" + shot
+                        else:
+                            shot = "r" + shot
+
+                    elif (i < (2271 + 5657 + 2072)):
+                        # Direction of the shot
+                        shot = "3"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 571):
+                            shot = shot + "7"
+                        elif (j < (571 + 7143)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 1154):
+                            shot = shot + "n"
+                        elif (k < (1154 + 1154)):
+                            shot = shot + "w"
+                        elif (k < (1154 + 1154 + 962)):
+                            shot = shot + "d"
+                        elif (k < (1154 + 1154 + 962 + 1538)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 10000):
+                            shot = "f" + shot
+
                 elif (current_ralley.get_last_char_of_last_shot() == "5"):
-                    print("2ndS return from Deuce Side on serve 5")
+                    #print("2ndS return from Deuce Side on serve 5")
+
+                    i = random.randint(0, 9999)
+                    if (i < 1621):
+                        # Direction of the shot
+                        shot = "1"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 1961):
+                            shot = shot + "7"
+                        elif (j < (1961 + 5490)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 763):
+                            shot = shot + "w"
+                        elif (k < (763 + 593)):
+                            shot = shot + "d"
+                        elif (k < (763 + 593 + 339)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 4746):
+                            shot = "f" + shot
+                        elif (l < (4746 + 5169)):
+                            shot = "b" + shot
+                        else:
+                            shot = "r" + shot
+
+                    elif (i < (1621 + 6277)):
+                        # Direction of the shot
+                        shot = "2"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 1450):
+                            shot = shot + "7"
+                        elif (j < (1450 + 5776)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 263):
+                            shot = shot + "n"
+                        elif (k < (263 + 547)):
+                            shot = shot + "d"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 3982):
+                            shot = "f" + shot
+                        elif (l < (3982 + 5864)):
+                            shot = "b" + shot
+                        elif (l < (3982 + 5864 + 88)):
+                            shot = "r" + shot
+                        else:
+                            shot = "s" + shot
+
+                    elif (i < (1621 + 6277 + 2102)):
+                        # Direction of the shot
+                        shot = "3"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 2143):
+                            shot = shot + "7"
+                        elif (j < (2143 + 6190)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 458):
+                            shot = shot + "n"
+                        elif (k < (458 + 458)):
+                            shot = shot + "w"
+                        elif (k < (458 + 458 + 654)):
+                            shot = shot + "d"
+                        elif (k < (458 + 458 + 654 + 65)):
+                            shot = shot + "x"
+                        elif (k < (458 + 458 + 654 + 65 + 327)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 3660):
+                            shot = "f" + shot
+                        elif (l < (3660 + 6144)):
+                            shot = "b" + shot
+                        else:
+                            shot = "r" + shot
+
                 elif (current_ralley.get_last_char_of_last_shot() == "6"):
-                    print("2ndS return from Deuce Side on serve 6")
+                    #print("2ndS return from Deuce Side on serve 6")
+
+                    i = random.randint(0, 9999)
+                    if (i < 976):
+                        # Direction of the shot
+                        shot = "1"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 625):
+                            shot = shot + "7"
+                        elif (j < (625 + 5313)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 612):
+                            shot = shot + "w"
+                        elif (k < (612 + 1020)):
+                            shot = shot + "d"
+                        elif (k < (612 + 1020 + 408)):
+                            shot = shot + "x"
+                        elif (k < (612 + 1020 + 408 + 204)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 1020):
+                            shot = "f" + shot
+                        elif (l < (1020 + 8776)):
+                            shot = "b" + shot
+                        else:
+                            shot = "s" + shot
+
+                    elif (i < (976 + 6155)):
+                        # Direction of the shot
+                        shot = "2"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 1311):
+                            shot = shot + "7"
+                        elif (j < (1311 + 5820)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 194):
+                            shot = shot + "n"
+                        elif (k < (194 + 647)):
+                            shot = shot + "d"
+                        elif (k < (194 + 647 + 32)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 291):
+                            shot = "f" + shot
+                        elif (l < (291 + 9256)):
+                            shot = "b" + shot
+                        elif (l < (291 + 9256 + 421)):
+                            shot = "s" + shot
+                        else:
+                            shot = "m" + shot
+
+                    elif (i < (976 + 6155 + 2869)):
+                        # Direction of the shot
+                        shot = "3"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 2143):
+                            shot = shot + "7"
+                        elif (j < (2143 + 5089)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 764):
+                            shot = shot + "n"
+                        elif (k < (764 + 347)):
+                            shot = shot + "w"
+                        elif (k < (764 + 347 + 486)):
+                            shot = shot + "d"
+                        elif (k < (764 + 347 + 486 + 69)):
+                            shot = shot + "x"
+                        elif (k < (764 + 347 + 486 + 69 + 69)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 139):
+                            shot = "f" + shot
+                        elif (l < (139 + 9375)):
+                            shot = "b" + shot
+                        else:
+                            shot = "s" + shot
+
             elif (x % 2 == 1):
                 # Returning from Ad Side of the court
                 if (current_ralley.get_last_char_of_last_shot() == "4"):
-                    print("2ndS return from Ad Side on serve 4")
+                    #print("2ndS return from Ad Side on serve 4")
+
+                    i = random.randint(0, 9999)
+                    if (i < 399):
+                        # Direction of the shot
+                        shot = "1"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 2857):
+                            shot = shot + "7"
+                        elif (j < (2857 + 5000)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 2500):
+                            shot = shot + "w"
+                        elif (k < (2500 + 1250)):
+                            shot = shot + "d"
+                        elif (k < (2500 + 1250 + 417)):
+                            shot = shot + "x"
+                        elif (k < (2500 + 1250 + 417 + 833)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 1250):
+                            shot = "f" + shot
+                        elif (l < (1250 + 5333)):
+                            shot = "b" + shot
+                        else:
+                            shot = "s" + shot
+
+                    elif (i < (399 + 2795)):
+                        # Direction of the shot
+                        shot = "2"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 902):
+                            shot = shot + "7"
+                        elif (j < (902 + 5984)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 357):
+                            shot = shot + "n"
+                        elif (k < (357 + 774)):
+                            shot = shot + "d"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 119):
+                            shot = "f" + shot
+                        elif (l < (119 + 9702)):
+                            shot = "b" + shot
+                        else:
+                            shot = "s" + shot
+
+                    elif (i < (399 + 2795 + 6805)):
+                        # Direction of the shot
+                        shot = "3"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 2458):
+                            shot = shot + "7"
+                        elif (j < (2458 + 5810)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 244):
+                            shot = shot + "n"
+                        elif (k < (244 + 318)):
+                            shot = shot + "w"
+                        elif (k < (244 + 318 + 318)):
+                            shot = shot + "d"
+                        elif (k < (244 + 318 + 318 + 122)):
+                            shot = shot + "x"
+                        elif (k < (244 + 318 + 318 + 122 + 82)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 196):
+                            shot = "f" + shot
+                        elif (l < (196 + 9756)):
+                            shot = "b" + shot
+                        else:
+                            shot = "s" + shot
+
                 elif (current_ralley.get_last_char_of_last_shot() == "5"):
-                    print("2ndS return from Ad Side on serve 5")
+                    #print("2ndS return from Ad Side on serve 5")
+
+                    i = random.randint(0, 9999)
+                    if (i < 685):
+                        # Direction of the shot
+                        shot = "1"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 5357):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 513):
+                            shot = shot + "n"
+                        elif (k < (513 + 1026)):
+                            shot = shot + "w"
+                        elif (k < (513 + 1026 + 513)):
+                            shot = shot + "d"
+                        elif (k < (513 + 1026 + 513 + 513)):
+                            shot = shot + "x"
+                        elif (k < (513 + 1026 + 513 + 513 + 2821)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 5641):
+                            shot = "f" + shot
+                        else:
+                            shot = "b" + shot
+
+                    elif (i < (685 + 3989)):
+                        # Direction of the shot
+                        shot = "2"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 1295):
+                            shot = shot + "7"
+                        elif (j < (1295 + 5026)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 264):
+                            shot = shot + "n"
+                        elif (k < (264 + 617)):
+                            shot = shot + "d"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 3480):
+                            shot = "f" + shot
+                        elif (l < (3480 + 6432)):
+                            shot = "b" + shot
+                        elif (l < (3480 + 6432 + 44)):
+                            shot = "s" + shot
+                        else:
+                            shot = "r" + shot
+
+                    elif (i < (685 + 3989 + 5325)):
+                        # Direction of the shot
+                        shot = "3"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 2030):
+                            shot = shot + "7"
+                        elif (j < (2030 + 5639)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 363):
+                            shot = shot + "n"
+                        elif (k < (363 + 297)):
+                            shot = shot + "w"
+                        elif (k < (363 + 297 + 396)):
+                            shot = shot + "d"
+                        elif (k < (363 + 297 + 396 + 33)):
+                            shot = shot + "x"
+                        elif (k < (363 + 297 + 396 + 33 + 66)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 3102):
+                            shot = "f" + shot
+                        elif (l < (3102 + 6832)):
+                            shot = "b" + shot
+                        elif (l < (3102 + 6832 + 33)):
+                            shot = "s" + shot
+                        else:
+                            shot = "r" + shot
+
                 elif (current_ralley.get_last_char_of_last_shot() == "6"):
-                    print("2ndS return from Ad Side on serve 6")
+                    #print("2ndS return from Ad Side on serve 6")
+
+                    i = random.randint(0, 9999)
+                    if (i < 1288):
+                        # Direction of the shot
+                        shot = "1"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 833):
+                            shot = shot + "7"
+                        elif (j < (833 + 7083)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 588):
+                            shot = shot + "n"
+                        elif (k < (588 + 1471)):
+                            shot = shot + "w"
+                        elif (k < (588 + 1471 + 588)):
+                            shot = shot + "d"
+                        elif (k < (588 + 1471 + 588 + 294)):
+                            shot = shot + "x"
+                        elif (k < (588 + 1471 + 588 + 294 + 1765)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 10000):
+                            shot = "f" + shot
+
+                    elif (i < (1288 + 5644)):
+                        # Direction of the shot
+                        shot = "2"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 1754):
+                            shot = shot + "7"
+                        elif (j < (1754 + 5439)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 604):
+                            shot = shot + "n"
+                        elif (k < (604 + 872)):
+                            shot = shot + "d"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 9866):
+                            shot = "f" + shot
+                        else:
+                            shot = "r" + shot
+
+                    elif (i < (1288 + 5644 + 3068)):
+                        # Direction of the shot
+                        shot = "3"
+                        
+                        # Lenght encoding of the shot has to be added
+                        j = random.randint(0, 9999)
+                        if (j < 2429):
+                            shot = shot + "7"
+                        elif (j < (2429 + 5571)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Here the Error/Winner Probabilitites are added
+                        k = random.randint(0, 9999)
+                        if (k < 617):
+                            shot = shot + "n"
+                        elif (k < (617 + 494)):
+                            shot = shot + "w"
+                        elif (k < (617 + 494 + 988)):
+                            shot = shot + "d"
+                        elif (k < (617 + 494 + 988 + 123)):
+                            shot = shot + "x"
+                        elif (k < (617 + 494 + 988 + 123 + 123)):
+                            shot = shot + "*"
+
+                        # Here the Shot type is added
+                        l = random.randint(0, 9999)
+                        if (l < 9753):
+                            shot = "f" + shot
+                        elif (l < (9753 + 123)):
+                            shot = "b" + shot
+                        else:
+                            shot = "s" + shot
 
 
         else:

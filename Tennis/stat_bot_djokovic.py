@@ -1,5 +1,4 @@
 import constants as const
-import scoring
 import random
 import ralley
 
@@ -13,6 +12,8 @@ class Stat_Bot_Djokovic:
     ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
     WINNER = const.ShotEncodings.WINNER
     EXTRA_STUFF = const.ShotEncodings.EXTRA_STUFF
+    Returning = False
+    Serving = False
 
     def __init__(self, name="", turn=False):
         self.name = name
@@ -20,12 +21,14 @@ class Stat_Bot_Djokovic:
 
     def add_shot(self, current_ralley, score):
         '''Adds the most likely shot based on djokovic data'''
-        
-            # Serve from deuce side
+
+        # Serve from deuce side
         if (ralley.Ralley.get_len_ralley(current_ralley) == 0):
             # Adding a first serve from deuce side
             # First we need to add the direction
             i = random.randint(0, 9999)
+            self.Serving = True
+            self.Returning = False
             # The real probabilities are used for 1st serve from deuce side
             if (i < 4938):
                 shot = "4"
@@ -71,6 +74,8 @@ class Stat_Bot_Djokovic:
         elif (ralley.Ralley.get_len_ralley(current_ralley) == 1
               and current_ralley.get_last_char_of_last_shot() == ","):
             # Add Second Serve
+            self.Serving = True
+            self.Returning = False
             i = random.randint(0, 9999)
             if (i < 3628):
                 shot = "4"
@@ -110,6 +115,8 @@ class Stat_Bot_Djokovic:
         # First Serve is returned
         elif (ralley.Ralley.get_len_ralley(current_ralley) == 1):
             # Add return to the first Serve
+            self.Serving = False
+            self.Returning = True
             x = score.get_point_count_per_game()
             if (x % 2 == 0):
                 # Returning from Deuce Side of the court
@@ -753,7 +760,8 @@ class Stat_Bot_Djokovic:
               ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
             # Add return to the Second Serve
             # shot = "SecondServeReturn"
-
+            self.Serving = False
+            self.Returning = True
             x = score.get_point_count_per_game()
             if (x % 2 == 0): 
                 # Returning from Deuce Side of the court
@@ -1359,10 +1367,95 @@ class Stat_Bot_Djokovic:
 
 
         else:
-            print("Error: Szenario was not covered")
+            # We need to seperate between serving and returning in the
+            # ralley and also between first and second serves
             shot = "123"
-        
-        
+            # If Djoko was starting the ralley with a first serve
+            if(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
+                and self.Serving == True
+                and "," in 
+                ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
+                print("Djoko was opening the ralley with a second serve")
+
+                # If Opponents last shot was dir 1
+                if "1" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 1")
+                    # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 2
+                elif "2" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 2")
+                    # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 3
+                elif "3" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 3")
+                    # probabilities for Djokos Shot are added
+                
+            # ElIf Djoko started Ralley with a second Serve
+            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
+                and self.Serving == True):
+                print("Djoko was opening the ralley with a first serve")        
+                
+                # If Opponents last shot was dir 1
+                if "1" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 1")
+                    # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 2
+                elif "2" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 2")
+                    # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 3
+                elif "3" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 3")
+                    # probabilities for Djokos Shot are added
+            
+            # ElIf Djoko was returning a second serve in the ralley
+            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
+                and self.Returning == True
+                and "," in 
+                ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
+                print("Djoko is returning a second serve in this ralley")
+                
+                # If Opponents last shot was dir 1
+                if "1" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 1")
+                    # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 2
+                elif "2" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 2")
+                    # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 3
+                elif "3" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 3")
+                    # probabilities for Djokos Shot are added
+            
+            # ElIf Djoko was returning a first serve in the ralley
+            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
+                and self.Returning == True):
+                print("Djoko is returning a first serve in this ralley")
+                
+                # If Opponents last shot was dir 1
+                if "1" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 1")
+                        # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 2
+                elif "2" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 2")
+                        # probabilities for Djokos Shot are added
+
+                # ElIf Opponents last shot was dir 3
+                elif "3" in current_ralley.get_last_shot():
+                    print("Opponents last shot was in dir 3")
+                        # probabilities for Djokos Shot are added
+            else: 
+                shot = "123"
+                print("Szenario under development")
 
         current_ralley.add_shot_to_ralley(shot)
         shot = ""

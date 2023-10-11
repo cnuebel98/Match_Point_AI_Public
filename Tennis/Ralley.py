@@ -51,6 +51,10 @@ class Ralley:
         second_to_last_shot = r[0]
         return second_to_last_shot
     
+    def get_last_shot(self):
+        r = self.get_ralley()
+        return r[len(r)-1]
+    
     def get_last_char_of_last_shot(self):
         # this is called in score_update and returns 
         # the last char of the last shot of the current ralley

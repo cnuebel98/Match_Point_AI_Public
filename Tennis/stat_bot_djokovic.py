@@ -1381,18 +1381,452 @@ class Stat_Bot_Djokovic:
                 if "1" in current_ralley.get_last_shot():
                     print("Opponents last shot was in dir 1")
                     # probabilities for Djokos Shot are added
+                    
+                    i = random.randint(0, 9999)
+                    if (i < 4184):
+                        shot = "1"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 2542):
+                            shot = shot + "7"
+                        elif (j < (2542 + 4661)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 494):
+                            shot = shot + "n"
+                        elif (k < (494 + 426)):
+                            shot = shot + "w"
+                        elif (k < (494 + 426 + 170)):
+                            shot = shot + "d"
+                        elif (k < (494 + 426 + 170 + 34)):
+                            shot = shot + "x"
+                        elif (k < (494 + 426 + 170 + 34 + 613)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 9114):
+                            shot = shot + "f"
+                        elif (l < (9114 + 426)):
+                            shot = shot + "r"
+                        elif (l < (9114 + 426 + 17)):
+                            shot = shot + "s"
+                        elif (l < (9114 + 426 + 17 + 153)):
+                            shot = shot + "v"
+                        elif (l < (9114 + 426 + 17 + 153 + 68)):
+                            shot = shot + "o"
+                        elif (l < (9114 + 426 + 17 + 153 + 68 + 68)):
+                            shot = shot + "u"
+                        elif (l < (9114 + 426 + 17 + 153 + 68 + 68 + 68)):
+                            shot = shot + "l"
+                        elif (l < (9114 + 426 + 17 + 153 + 68 + 68 + 68 + 51)):
+                            shot = shot + "h"
+                        elif (l < (9114 + 426 + 17 + 153 + 68 + 68 + 68 + 51 
+                                   + 17)):
+                            shot = shot + "j"
+                        elif (l < (9114 + 426 + 17 + 153 + 68 + 68 + 68 + 51 
+                                   + 17 + 17)):
+                            shot = shot + "t"
+
+                    elif (i < (4184 + 2730)):
+                        shot = "2"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 1607):
+                            shot = shot + "7"
+                        elif (j < (1607 + 4643)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 574):
+                            shot = shot + "n"
+                        elif (k < (574 + 444)):
+                            shot = shot + "d"
+                        elif (k < (574 + 444 + 235)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 7911):
+                            shot = shot + "f"
+                        elif (l < (7911 + 26)):
+                            shot = shot + "b"
+                        elif (l < (7911 + 26 + 1227)):
+                            shot = shot + "r"
+                        elif (l < (7911 + 26 + 1227 + 235)):
+                            shot = shot + "v"
+                        elif (l < (7911 + 26 + 1227 + 235 + 78)):
+                            shot = shot + "o"
+                        elif (l < (7911 + 26 + 1227 + 235 + 78 + 78)):
+                            shot = shot + "u"
+                        elif (l < (7911 + 26 + 1227 + 235 + 78 + 78 + 392)):
+                            shot = shot + "l"
+                        elif (l < (7911 + 26 + 1227 + 235 + 78 + 78 + 392 
+                                   + 52)):
+                            shot = shot + "h"
+
+                    else:
+                        shot = "3"
+                        j = random.randint(0, 9999)
+                        # Shot length is added
+                        if (j < 563):
+                            shot = shot + "7"
+                        elif (j < (563 + 5915)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 577):
+                            shot = shot + "n"
+                        elif (k < (577 + 577)):
+                            shot = shot + "w"
+                        elif (k < (577 + 577 + 485)):
+                            shot = shot + "d"
+                        elif (k < (577 + 577 + 485 + 69)):
+                            shot = shot + "x"
+                        elif (k < (577 + 577 + 485 + 69 + 739)):
+                            shot = shot + "*"
+                        # Shot Type is added
+
+                        l = random.randint(0, 9999)
+                        if (l < 9215):
+                            shot = shot + "f"
+                        elif (l < (9215 + 92)):
+                            shot = shot + "b"
+                        elif (l < (9215 + 92 + 323)):
+                            shot = shot + "r"
+                        elif (l < (9215 + 92 + 323 + 46)):
+                            shot = shot + "s"
+                        elif (l < (9215 + 92 + 323 + 46 + 69)):
+                            shot = shot + "v"
+                        elif (l < (9215 + 92 + 323 + 46 + 69 + 46)):
+                            shot = shot + "o"
+                        elif (l < (9215 + 92 + 323 + 46 + 69 + 46 + 115)):
+                            shot = shot + "u"
+                        elif (l < (9215 + 92 + 323 + 46 + 69 + 46 + 115 + 46)):
+                            shot = shot + "l"
+                        elif (l < (9215 + 92 + 323 + 46 + 69 + 46 + 115 + 46 
+                                   + 23)):
+                            shot = shot + "h"
+                        elif (l < (9215 + 92 + 323 + 46 + 69 + 46 + 115 + 46 
+                                   + 23 + 23)):
+                            shot = shot + "j"
 
                 # ElIf Opponents last shot was dir 2
                 elif "2" in current_ralley.get_last_shot():
                     print("Opponents last shot was in dir 2")
                     # probabilities for Djokos Shot are added
+                    
+                    i = random.randint(0, 9999)
+                    if (i < 2931):
+                        shot = "1"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 1533):
+                            shot = shot + "7"
+                        elif (j < (1533 + 5733)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 475):
+                            shot = shot + "n"
+                        elif (k < (475 + 356)):
+                            shot = shot + "w"
+                        elif (k < (475 + 356 + 211)):
+                            shot = shot + "d"
+                        elif (k < (475 + 356 + 211 + 53)):
+                            shot = shot + "x"
+                        elif (k < (475 + 356 + 211 + 53 + 897)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 6979):
+                            shot = shot + "f"
+                        elif (l < (6979 + 2137)):
+                            shot = shot + "b"
+                        elif (l < (6979 + 2137 + 13)):
+                            shot = shot + "r"
+                        elif (l < (6979 + 2137 + 13 + 106)):
+                            shot = shot + "s"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158)):
+                            shot = shot + "v"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158 + 132)):
+                            shot = shot + "z"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158 + 132 + 92)):
+                            shot = shot + "o"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158 + 132 + 92 
+                                   + 40)):
+                            shot = shot + "u"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158 + 132 + 92 
+                                   + 40 + 290)):
+                            shot = shot + "y"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158 + 132 + 92 
+                                   + 40 + 290 + 13)):
+                            shot = shot + "m"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158 + 132 + 92 
+                                   + 40 + 290 + 13 + 26)):
+                            shot = shot + "i"
+                        elif (l < (6979 + 2137 + 13 + 106 + 158 + 132 + 92 
+                                   + 40 + 290 + 13 + 26 + 13)):
+                            shot = shot + "j"
+
+                    elif (i < (2931 + 2838)):
+                        shot = "2"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 1466):
+                            shot = shot + "7"
+                        elif (j < (1466 + 4914)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 286):
+                            shot = shot + "n"
+                        elif (k < (286 + 463)):
+                            shot = shot + "d"
+                        elif (k < (286 + 463 + 27)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 4605):
+                            shot = shot + "f"
+                        elif (l < (4605 + 4659)):
+                            shot = shot + "b"
+                        elif (l < (4605 + 4659 + 41)):
+                            shot = shot + "r"
+                        elif (l < (4605 + 4659 + 41 + 531)):
+                            shot = shot + "s"
+                        elif (l < (4605 + 4659 + 41 + 531 + 41)):
+                            shot = shot + "z"
+                        elif (l < (4605 + 4659 + 41 + 531 + 41 + 68)):
+                            shot = shot + "o"
+                        elif (l < (4605 + 4659 + 41 + 531 + 41 + 68 + 14)):
+                            shot = shot + "y"
+                        elif (l < (4605 + 4659 + 41 + 531 + 41 + 68 + 14 + 14)):
+                            shot = shot + "l"
+                        elif (l < (4605 + 4659 + 41 + 531 + 41 + 68 + 14 + 14 + 14)):
+                            shot = shot + "i"
+                        elif (l < (4605 + 4659 + 41 + 531 + 41 + 68 + 14 + 14 + 14 + 14)):
+                            shot = shot + "j"
+
+                    else:
+                        shot = "3"
+                        j = random.randint(0, 9999)
+                        # Shot length is added
+                        if (j < 1065):
+                            shot = shot + "7"
+                        elif (j < (1065 + 4907)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 320):
+                            shot = shot + "n"
+                        elif (k < (320 + 448)):
+                            shot = shot + "w"
+                        elif (k < (320 + 448 + 302)):
+                            shot = shot + "d"
+                        elif (k < (320 + 448 + 302 + 18)):
+                            shot = shot + "x"
+                        elif (k < (320 + 448 + 302 + 18 + 612)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 5238):
+                            shot = shot + "f"
+                        elif (l < (5238 + 3912)):
+                            shot = shot + "b"
+                        elif (l < (5238 + 3912 + 18)):
+                            shot = shot + "r"
+                        elif (l < (5238 + 3912 + 18 + 503)):
+                            shot = shot + "s"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55)):
+                            shot = shot + "v"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55 + 73)):
+                            shot = shot + "z"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55 + 73 + 91)):
+                            shot = shot + "o"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55 + 73 + 91 
+                                   + 18)):
+                            shot = shot + "u"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55 + 73 + 91 
+                                   + 18 + 46)):
+                            shot = shot + "y"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55 + 73 + 91 
+                                   + 18 + 46 + 9)):
+                            shot = shot + "l"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55 + 73 + 91 
+                                   + 18 + 46 + 9 + 9)):
+                            shot = shot + "h"
+                        elif (l < (5238 + 3912 + 18 + 503 + 55 + 73 + 91 
+                                   + 18 + 46 + 9 + 9 + 27)):
+                            shot = shot + "j"
 
                 # ElIf Opponents last shot was dir 3
                 elif "3" in current_ralley.get_last_shot():
                     print("Opponents last shot was in dir 3")
                     # probabilities for Djokos Shot are added
+                    
+                    i = random.randint(0, 9999)
+                    if (i < 2317):
+                        shot = "1"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 1373):
+                            shot = shot + "7"
+                        elif (j < (1373 + 4314)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabilities are added
+                        k = random.randint(0, 9999)
+                        if (k < 656):
+                            shot = shot + "n"
+                        elif (k < (656 + 480)):
+                            shot = shot + "w"
+                        elif (k < (656 + 480 + 496)):
+                            shot = shot + "d"
+                        elif (k < (656 + 480 + 496 + 96)):
+                            shot = shot + "x"
+                        elif (k < (656 + 480 + 496 + 96 + 1328)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 1792):
+                            shot = shot + "f"
+                        elif (l < (1792 + 6400)):
+                            shot = shot + "b"
+                        elif (l < (1792 + 6400 + 608)):
+                            shot = shot + "s"
+                        elif (l < (1792 + 6400 + 608 + 272)):
+                            shot = shot + "z"
+                        elif (l < (1792 + 6400 + 608 + 272 + 768)):
+                            shot = shot + "y"
+                        elif (l < (1792 + 6400 + 608 + 272 + 768 + 112)):
+                            shot = shot + "m"
+                        elif (l < (1792 + 6400 + 608 + 272 + 768 + 112 + 32)):
+                            shot = shot + "i"
+                        elif (l < (1792 + 6400 + 608 + 272 + 768 + 112 + 32 
+                                   + 16)):
+                            shot = shot + "t"
+
+                    elif (i < (2317 + 2309)):
+                        shot = "2"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 561):
+                            shot = shot + "7"
+                        elif (j < (561 + 4486)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 369):
+                            shot = shot + "n"
+                        elif (k < (369 + 401)):
+                            shot = shot + "d"
+                        elif (k < (369 + 401 + 32)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 385):
+                            shot = shot + "f"
+                        elif (l < (385 + 8010)):
+                            shot = shot + "b"
+                        elif (l < (385 + 8010 + 16)):
+                            shot = shot + "r"
+                        elif (l < (385 + 8010 + 16 + 1059)):
+                            shot = shot + "s"
+                        elif (l < (385 + 8010 + 16 + 1059 + 112)):
+                            shot = shot + "z"
+                        elif (l < (385 + 8010 + 16 + 1059 + 112 + 16)):
+                            shot = shot + "o"
+                        elif (l < (385 + 8010 + 16 + 1059 + 112 + 16 + 80)):
+                            shot = shot + "y"
+                        elif (l < (385 + 8010 + 16 + 1059 + 112 + 16 + 80 
+                                   + 16)):
+                            shot = shot + "l"
+                        elif (l < (385 + 8010 + 16 + 1059 + 112 + 16 + 80 
+                                   + 16 + 289)):
+                            shot = shot + "m"
+                        elif (l < (385 + 8010 + 16 + 1059 + 112 + 16 + 80 
+                                   + 16 + 289 + 16)):
+                            shot = shot + "i"
+
+                    else:
+                        shot = "3"
+                        j = random.randint(0, 9999)
+                        # Shot length is added
+                        if (j < 1476):
+                            shot = shot + "7"
+                        elif (j < (1476 + 5000)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 372):
+                            shot = shot + "n"
+                        elif (k < (372 + 269)):
+                            shot = shot + "w"
+                        elif (k < (372 + 269 + 193)):
+                            shot = shot + "d"
+                        elif (k < (372 + 269 + 193 + 21)):
+                            shot = shot + "x"
+                        elif (k < (372 + 269 + 193 + 21 + 276)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 772):
+                            shot = shot + "f"
+                        elif (l < (772 + 7703)):
+                            shot = shot + "b"
+                        elif (l < (772 + 7703 + 1069)):
+                            shot = shot + "s"
+                        elif (l < (772 + 7703 + 1069 + 124)):
+                            shot = shot + "z"
+                        elif (l < (772 + 7703 + 1069 + 124 + 41)):
+                            shot = shot + "o"
+                        elif (l < (772 + 7703 + 1069 + 124 + 41 + 14)):
+                            shot = shot + "u"
+                        elif (l < (772 + 7703 + 1069 + 124 + 41 + 14 + 172)):
+                            shot = shot + "y"
+                        elif (l < (772 + 7703 + 1069 + 124 + 41 + 14 + 172 
+                                   + 90)):
+                            shot = shot + "m"
+                        elif (l < (772 + 7703 + 1069 + 124 + 41 + 14 + 172 
+                                   + 90 + 14)):
+                            shot = shot + "i"
+
                 
-            # ElIf Djoko started Ralley with a second Serve
+            # ElIf Djoko started Ralley with a first Serve
             elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
                 and self.Serving == True):
                 print("Djoko was opening the ralley with a first serve")        
@@ -1401,16 +1835,501 @@ class Stat_Bot_Djokovic:
                 if "1" in current_ralley.get_last_shot():
                     print("Opponents last shot was in dir 1")
                     # probabilities for Djokos Shot are added
+                    i = random.randint(0, 9999)
+                    if (i < 3943):
+                        shot = "1"
+
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 3023):
+                            shot = shot + "7"
+                        elif (j < (3023 + 4651)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 461):
+                            shot = shot + "n"
+                        elif (k < (461 + 476)):
+                            shot = shot + "w"
+                        elif (k < (461 + 476 + 353)):
+                            shot = shot + "x"
+                        elif (k < (461 + 476 + 353 + 1229)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 8694):
+                            shot = shot + "f"
+                        elif (l < (8694 + 15)):
+                            shot = shot + "b"
+                        elif (l < (8694 + 15 + 399)):
+                            shot = shot + "r"
+                        elif (l < (8694 + 15 + 399 + 384)):
+                            shot = shot + "v"
+                        elif (l < (8694 + 15 + 399 + 384 + 200)):
+                            shot = shot + "o"
+                        elif (l < (8694 + 15 + 399 + 384 + 200 + 123)):
+                            shot = shot + "u"
+                        elif (l < (8694 + 15 + 399 + 384 + 200 + 123 + 108)):
+                            shot = shot + "l"
+                        elif (l < (8694 + 15 + 399 + 384 + 200 + 123 + 108 
+                              + 31)):
+                            shot = shot + "h"
+                        elif (l < (8694 + 15 + 399 + 384 + 200 + 123 + 108 
+                              + 31 + 46)):
+                            shot = shot + "j"
+
+                    elif (i < (3943 + 2550)):
+                        shot = "2"
+
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 2000):
+                            shot = shot + "7"
+                        elif (j < (2000 + 4353)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 475):
+                            shot = shot + "n"
+                        elif (k < (475 + 285)):
+                            shot = shot + "d"
+                        elif (k < (475 + 285 + 238)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 8100):
+                            shot = shot + "f"
+                        elif (l < (8100 + 1188)):
+                            shot = shot + "r"
+                        elif (l < (8100 + 1188 + 261)):
+                            shot = shot + "v"
+                        elif (l < (8100 + 1188 + 261 + 119)):
+                            shot = shot + "o"
+                        elif (l < (8100 + 1188 + 261 + 119 + 95)):
+                            shot = shot + "u"
+                        elif (l < (8100 + 1188 + 261 + 119 + 95 + 190)):
+                            shot = shot + "l"
+                        elif (l < (8100 + 1188 + 261 + 119 + 95 + 190 + 48)):
+                            shot = shot + "h"
+
+                    else:
+                        shot = "3"
+                        j = random.randint(0, 9999)
+
+                        # Shot length is added
+                        if (j < 1238):
+                            shot = shot + "7"
+                        elif (j < (1238 + 4381)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 553):
+                            shot = shot + "n"
+                        elif (k < (553 + 397)):
+                            shot = shot + "w"
+                        elif (k < (553 + 397 + 535)):
+                            shot = shot + "d"
+                        elif (k < (553 + 397 + 535 + 17)):
+                            shot = shot + "x"
+                        elif (k < (553 + 397 + 535 + 17 + 1192)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 8653):
+                            shot = shot + "f"
+                        elif (l < (8653 + 17)):
+                            shot = shot + "b"
+                        elif (l < (8653 + 17 + 363)):
+                            shot = shot + "r"
+                        elif (l < (8653 + 17 + 363 + 17)):
+                            shot = shot + "s"
+                        elif (l < (8653 + 17 + 363 + 17 + 604)):
+                            shot = shot + "v"
+                        elif (l < (8653 + 17 + 363 + 17 + 604 + 35)):
+                            shot = shot + "z"
+                        elif (l < (8653 + 17 + 363 + 17 + 604 + 35 + 69)):
+                            shot = shot + "o"
+                        elif (l < (8653 + 17 + 363 + 17 + 604 + 35 + 69 
+                                   + 121)):
+                            shot = shot + "u"
+                        elif (l < (8653 + 17 + 363 + 17 + 604 + 35 + 69 + 121 
+                                   + 35)):
+                            shot = shot + "l"
+                        elif (l < (8653 + 17 + 363 + 17 + 604 + 35 + 69 + 121 
+                                   + 35 + 52)):
+                            shot = shot + "h"
+                        elif (l < (8653 + 17 + 363 + 17 + 604 + 35 + 69 + 121 
+                                   + 35 + 52 + 17)):
+                            shot = shot + "i"
+                        elif (l < (8653 + 17 + 363 + 17 + 604 + 35 + 69 + 121 
+                                   + 35 + 52 + 17 + 17)):
+                            shot = shot + "j"
 
                 # ElIf Opponents last shot was dir 2
                 elif "2" in current_ralley.get_last_shot():
                     print("Opponents last shot was in dir 2")
                     # probabilities for Djokos Shot are added
 
+                    i = random.randint(0, 9999)
+                    if (i < 3726):
+                        shot = "1"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 2383):
+                            shot = shot + "7"
+                        elif (j < (2383 + 4799)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 395):
+                            shot = shot + "n"
+                        elif (k < (395 + 312)):
+                            shot = shot + "w"
+                        elif (k < (395 + 312 + 146)):
+                            shot = shot + "d"
+                        elif (k < (395 + 312 + 146 + 7)):
+                            shot = shot + "x"
+                        elif (k < (395 + 312 + 146 + 7 + 1775)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 7524):
+                            shot = shot + "f"
+                        elif (l < (7524 + 1103)):
+                            shot = shot + "b"
+                        elif (l < (7524 + 1103 + 28)):
+                            shot = shot + "r"
+                        elif (l < (7524 + 1103 + 28 + 76)):
+                            shot = shot + "s"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250)):
+                            shot = shot + "v"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139)):
+                            shot = shot + "z"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139 + 312)):
+                            shot = shot + "o"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139 + 312 
+                                   + 7)):
+                            shot = shot + "p"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139 + 312 
+                                   + 7 + 69)):
+                            shot = shot + "u"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139 + 312 
+                                   + 7 + 69 + 347)):
+                            shot = shot + "y"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139 + 312 
+                                   + 7 + 69 + 347 + 21)):
+                            shot = shot + "h"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139 + 312 
+                                   + 7 + 69 + 347 + 21 + 118)):
+                            shot = shot + "j"
+                        elif (l < (7524 + 1103 + 28 + 76 + 250 + 139 + 312 
+                                   + 7 + 69 + 347 + 21 + 118 + 7)):
+                            shot = shot + "k"
+
+                    elif (i < (3726 + 2021)):
+                        shot = "2"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 1420):
+                            shot = shot + "7"
+                        elif (j < (1420 + 4438)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 384):
+                            shot = shot + "n"
+                        elif (k < (384 + 256)):
+                            shot = shot + "d"
+                        elif (k < (384 + 256 + 192)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 5243):
+                            shot = shot + "f"
+                        elif (l < (5243 + 3760)):
+                            shot = shot + "b"
+                        elif (l < (5243 + 3760 + 38)):
+                            shot = shot + "r"
+                        elif (l < (5243 + 3760 + 38 + 345)):
+                            shot = shot + "s"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141)):
+                            shot = shot + "v"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77)):
+                            shot = shot + "z"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77 + 23)):
+                            shot = shot + "o"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77 + 23 
+                                   + 26)):
+                            shot = shot + "y"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77 + 23 
+                                   + 26 + 26)):
+                            shot = shot + "l"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77 + 23 
+                                   + 26 + 26 + 13)):
+                            shot = shot + "m"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77 + 23 
+                                   + 26 + 26 + 13 + 13)):
+                            shot = shot + "h"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77 + 23 
+                                   + 26 + 26 + 13 + 13 + 38)):
+                            shot = shot + "i"
+                        elif (l < (5243 + 3760 + 38 + 345 + 141 + 77 + 23 
+                                   + 26 + 26 + 13 + 13 + 38 + 51)):
+                            shot = shot + "j"
+
+                    else:
+                        shot = "3"
+                        j = random.randint(0, 9999)
+                        # Shot length is added
+                        if (j < 1138):
+                            shot = shot + "7"
+                        elif (j < (1138 + 5103)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 273):
+                            shot = shot + "n"
+                        elif (k < (273 + 292)):
+                            shot = shot + "w"
+                        elif (k < (273 + 292 + 213)):
+                            shot = shot + "d"
+                        elif (k < (273 + 292 + 213 + 43)):
+                            shot = shot + "x"
+                        elif (k < (273 + 292 + 213 + 43 + 996)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 6464):
+                            shot = shot + "f"
+                        elif (l < (6464 + 2509)):
+                            shot = shot + "b"
+                        elif (l < (6464 + 2509 + 18)):
+                            shot = shot + "r"
+                        elif (l < (6464 + 2509 + 18 + 346)):
+                            shot = shot + "s"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122)):
+                            shot = shot + "v"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176)):
+                            shot = shot + "z"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176 + 176)):
+                            shot = shot + "o"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176 + 176 
+                                   + 30)):
+                            shot = shot + "u"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176 + 176 
+                                   + 30 + 24)):
+                            shot = shot + "y"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176 + 176 
+                                   + 30 + 24 + 6)):
+                            shot = shot + "m"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176 + 176 
+                                   + 30 + 24 + 6 + 18)):
+                            shot = shot + "h"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176 + 176 
+                                   + 30 + 24 + 6 + 18 + 6)):
+                            shot = shot + "i"
+                        elif (l < (6464 + 2509 + 18 + 346 + 122 + 176 + 176 
+                                   + 30 + 24 + 6 + 18 + 6 + 103)):
+                            shot = shot + "j"
+
                 # ElIf Opponents last shot was dir 3
                 elif "3" in current_ralley.get_last_shot():
                     print("Opponents last shot was in dir 3")
                     # probabilities for Djokos Shot are added
+                    
+                    i = random.randint(0, 9999)
+                    if (i < 3065):
+                        shot = "1"
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 2748):
+                            shot = shot + "7"
+                        elif (j < (2748 + 3664)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 835):
+                            shot = shot + "n"
+                        elif (k < (835 + 503)):
+                            shot = shot + "w"
+                        elif (k < (835 + 503 + 396)):
+                            shot = shot + "d"
+                        elif (k < (835 + 503 + 396 + 43)):
+                            shot = shot + "x"
+                        elif (k < (835 + 503 + 396 + 43 + 1713)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 2398):
+                            shot = shot + "f"
+                        elif (l < (2398 + 5418)):
+                            shot = shot + "b"
+                        elif (l < (2398 + 5418 + 343)):
+                            shot = shot + "s"
+                        elif (l < (2398 + 5418 + 343 + 21)):
+                            shot = shot + "v"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364)):
+                            shot = shot + "z"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364 + 139)):
+                            shot = shot + "o"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364 + 139 + 11)):
+                            shot = shot + "p"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364 + 139 + 11 
+                                   + 11)):
+                            shot = shot + "u"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364 + 139 + 11 
+                                   + 11 + 1156)):
+                            shot = shot + "y"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364 + 139 + 11 
+                                   + 11 + 1156 + 32)):
+                            shot = shot + "m"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364 + 139 + 11 
+                                   + 11 + 1156 + 32 + 32)):
+                            shot = shot + "i"
+                        elif (l < (2398 + 5418 + 343 + 21 + 364 + 139 + 11 
+                                   + 11 + 1156 + 32 + 32 + 75)):
+                            shot = shot + "j"
+
+                    elif (i < (3065 + 1976)):
+                        shot = "2"
+
+                        # Shot length is added
+                        j = random.randint(0, 9999)
+                        if (j < 783):
+                            shot = shot + "7"
+                        elif (j < (783 + 4000)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 498):
+                            shot = shot + "n"
+                        elif (k < (498 + 498)):
+                            shot = shot + "d"
+                        elif (k < (498 + 498 + 249)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 681):
+                            shot = shot + "f"
+                        elif (l < (681 + 7442)):
+                            shot = shot + "b"
+                        elif (l < (681 + 7442 + 831)):
+                            shot = shot + "s"
+                        elif (l < (681 + 7442 + 831 + 17)):
+                            shot = shot + "v"
+                        elif (l < (681 + 7442 + 831 + 17 + 349)):
+                            shot = shot + "z"
+                        elif (l < (681 + 7442 + 831 + 17 + 349 + 183)):
+                            shot = shot + "o"
+                        elif (l < (681 + 7442 + 831 + 17 + 349 + 183 + 17)):
+                            shot = shot + "p"
+                        elif (l < (681 + 7442 + 831 + 17 + 349 + 183 + 17 
+                                   + 83)):
+                            shot = shot + "y"
+                        elif (l < (681 + 7442 + 831 + 17 + 349 + 183 + 17 
+                                   + 83 + 332)):
+                            shot = shot + "m"
+                        elif (l < (681 + 7442 + 831 + 17 + 349 + 183 + 17 
+                                   + 83 + 332 + 33)):
+                            shot = shot + "i"
+                        elif (l < (681 + 7442 + 831 + 17 + 349 + 183 + 17 
+                                   + 83 + 332 + 33 + 17)):
+                            shot = shot + "j"
+                        elif (l < (681 + 7442 + 831 + 17 + 349 + 183 + 17 
+                                   + 83 + 332 + 33 + 17 + 17)):
+                            shot = shot + "t"
+
+                    else:
+                        shot = "3"
+                        j = random.randint(0, 9999)
+
+                        # Shot length is added
+                        if (j < 1556):
+                            shot = shot + "7"
+                        elif (j < (1556 + 4553)):
+                            shot = shot + "8"
+                        else:
+                            shot = shot + "9"
+                        # Error and Winner Probabiliteis are added
+                        k = random.randint(0, 9999)
+                        if (k < 457):
+                            shot = shot + "n"
+                        elif (k < (457 + 185)):
+                            shot = shot + "w"
+                        elif (k < (457 + 185 + 146)):
+                            shot = shot + "d"
+                        elif (k < (457 + 185 + 146 + 20)):
+                            shot = shot + "x"
+                        elif (k < (457 + 185 + 146 + 20 + 642)):
+                            shot = shot + "*"
+
+                        # Shot Type is added
+                        l = random.randint(0, 9999)
+                        if (l < 1635):
+                            shot = shot + "f"
+                        elif (l < (1635 + 6870)):
+                            shot = shot + "b"
+                        elif (l < (1635 + 6870 + 754)):
+                            shot = shot + "s"
+                        elif (l < (1635 + 6870 + 754 + 7)):
+                            shot = shot + "v"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218)):
+                            shot = shot + "z"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126)):
+                            shot = shot + "o"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7)):
+                            shot = shot + "p"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7 
+                                   + 40)):
+                            shot = shot + "u"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7 
+                                   + 40 + 205)):
+                            shot = shot + "y"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7 
+                                   + 40 + 205 + 20)):
+                            shot = shot + "l"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7 
+                                   + 40 + 205 + 20 + 40)):
+                            shot = shot + "m"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7 
+                                   + 40 + 205 + 20 + 40 + 7)):
+                            shot = shot + "i"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7 
+                                   + 40 + 205 + 20 + 40 + 7 + 46)):
+                            shot = shot + "j"
+                        elif (l < (1635 + 6870 + 754 + 7 + 218 + 126 + 7 
+                                   + 40 + 205 + 20 + 40 + 7 + 46 + 26)):
+                            shot = shot + "k"
             
             # ElIf Djoko was returning a second serve in the ralley
             elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
@@ -1455,7 +2374,7 @@ class Stat_Bot_Djokovic:
                         # probabilities for Djokos Shot are added
             else: 
                 shot = "123"
-                print("Szenario under development")
+                print("Error: Szenario under development")
 
         current_ralley.add_shot_to_ralley(shot)
         shot = ""

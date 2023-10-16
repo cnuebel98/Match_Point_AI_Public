@@ -22,7 +22,7 @@ def start_the_game():
     main_loop.main_loop()
 
 def set_animation(selected: tuple, value: any):
-    # Animation Time is set here. If its going 
+    # Animation Time is set here. If its going
     # fast medium or slow speed
     if value == 1:
         const.MenuVariables.animation_time = 0.00

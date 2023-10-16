@@ -10,6 +10,7 @@ import random
 import time
 import scoring
 import constants as const
+import ralley_tree
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -529,6 +530,12 @@ def main_loop():
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
     new_log = log.Log()
+    new_tree = ralley_tree.Ralley_Tree()
+    
+    
+
+
+
     
     # The options are displayed to see what kind of game was started
     print("Simulation: " + str(const.MenuVariables.simulation))
@@ -601,14 +608,36 @@ def main_loop():
                 #print(new_score.get_serving_player())
                 #print(new_ralley.get_shot_count())
                 # If its not the bots turn, take the ball position as 
-                # shot by the user/by the bottom player
+                # shot by the user/by the bottom bot
                 if top_bot.get_turn() == False:
                     # This is the manual shot encoding, taking the ball 
                     # position set by arrow keys into account
                     if MANUAL:
                         encode_shot_selection(new_ball, new_ralley)
                     else:
+                        # The bottom bot adds a shot here
                         bottom_bot.add_shot(new_ralley, new_score)
+                        
+                        # If the shot was'nt taken in that depth and from
+                        # the current state yet, it is added to the graph
+                        print("Node Index: " + str(new_tree.get_node_index()))
+                        print("Connected to: " + str(new_tree.get_neighbors(
+                            new_tree.get_node_index())))
+
+                        new_tree.add_new_node(new_tree.get_next_node_index(), 
+                                              node_type="state",
+                                              shot_string=
+                                              new_ralley.get_last_shot(),
+                                              depth=
+                                              new_ralley.get_len_ralley())
+                        
+                        if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
+                            new_tree.add_new_edge(0, new_tree.get_node_index())
+                            
+                        else: 
+                            new_tree.add_new_edge(new_tree.get_node_index()-1,
+                                                  new_tree.get_node_index())
+                        
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
                                          TRANSITION_ANIMATION, 
                                          "bottom", new_score)
@@ -618,6 +647,9 @@ def main_loop():
                     # shot from the bot
                 elif top_bot.get_turn() == True:
                     top_bot.add_shot(new_ralley, new_score)
+
+                    
+
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_ralley, WIN, 
                                      TRANSITION_ANIMATION, "top", new_score)
@@ -625,7 +657,7 @@ def main_loop():
                     
                 # Here the score is updated, depending on the ralley and
                 # the shot count and the turn
-                
+                ralley_tree.Ralley_Tree.show_tree(new_tree)
                 new_ralley.score_update(new_score, new_ball)
                 
                 if const.Changing.ralley_terminated:
@@ -641,7 +673,7 @@ def main_loop():
                                                 new_score.get_serving_player(),
                                                 new_ralley.get_last_ralley())
                     const.Changing.ralley_terminated = False
-        
+                
         
         if const.MenuVariables.simulation == True:
             while new_score.matches_played < const.MenuVariables.simu_matches:

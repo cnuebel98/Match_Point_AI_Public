@@ -64,6 +64,7 @@ class ShotEncodings:
     EXTRA_STUFF = ["+", ";", "^", "S", "R", "C", "!", "0", "-", "=", 
                    "P", "Q", "c", "q", "e", "N"]
     SECOND_SERVE = [","]
+    TERMINALS = ["n", "w", "d", "x", "@", "#", "*"]
 
 class MenuVariables:
     '''The Options from the menu are initialized here and set when the 

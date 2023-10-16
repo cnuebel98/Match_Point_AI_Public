@@ -511,6 +511,30 @@ def encode_shot_selection(ball, ralley):
                         + str(encode_shot_depth(ball)))
         ralley.add_shot_to_ralley(current_shot)
     
+def tree_update(new_ralley, new_tree, color):
+    # If the shot was'nt taken in that depth and from
+    # the current state yet, it is added to the graph
+    print("Node Index: " + str(new_tree.get_node_index()))
+    print("Connected to: " + str(new_tree.get_neighbors(
+        new_tree.get_node_index())))
+
+    new_tree.add_new_node(new_tree.get_next_node_index(), 
+                            node_type="state",
+                            color=color,
+                            shot_string=
+                            new_ralley.get_last_shot(),
+                            depth=
+                            new_ralley.get_len_ralley())
+    
+    if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
+        new_tree.add_new_edge(0, new_tree.get_node_index())
+        
+    else: 
+        new_tree.add_new_edge(new_tree.get_node_index()-1,
+                                new_tree.get_node_index())
+    ralley_tree.Ralley_Tree.show_tree(new_tree)
+
+
 def main_loop():
     run = True
     clock = pygame.time.Clock()
@@ -531,11 +555,6 @@ def main_loop():
     new_ralley = ralley.Ralley()
     new_log = log.Log()
     new_tree = ralley_tree.Ralley_Tree()
-    
-    
-
-
-
     
     # The options are displayed to see what kind of game was started
     print("Simulation: " + str(const.MenuVariables.simulation))
@@ -617,26 +636,7 @@ def main_loop():
                     else:
                         # The bottom bot adds a shot here
                         bottom_bot.add_shot(new_ralley, new_score)
-                        
-                        # If the shot was'nt taken in that depth and from
-                        # the current state yet, it is added to the graph
-                        print("Node Index: " + str(new_tree.get_node_index()))
-                        print("Connected to: " + str(new_tree.get_neighbors(
-                            new_tree.get_node_index())))
-
-                        new_tree.add_new_node(new_tree.get_next_node_index(), 
-                                              node_type="state",
-                                              shot_string=
-                                              new_ralley.get_last_shot(),
-                                              depth=
-                                              new_ralley.get_len_ralley())
-                        
-                        if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
-                            new_tree.add_new_edge(0, new_tree.get_node_index())
-                            
-                        else: 
-                            new_tree.add_new_edge(new_tree.get_node_index()-1,
-                                                  new_tree.get_node_index())
+                        tree_update(new_ralley, new_tree, "blue")
                         
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
                                          TRANSITION_ANIMATION, 
@@ -648,7 +648,7 @@ def main_loop():
                 elif top_bot.get_turn() == True:
                     top_bot.add_shot(new_ralley, new_score)
 
-                    
+                    tree_update(new_ralley, new_tree, "green")
 
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_ralley, WIN, 
@@ -657,7 +657,6 @@ def main_loop():
                     
                 # Here the score is updated, depending on the ralley and
                 # the shot count and the turn
-                ralley_tree.Ralley_Tree.show_tree(new_tree)
                 new_ralley.score_update(new_score, new_ball)
                 
                 if const.Changing.ralley_terminated:
@@ -693,6 +692,7 @@ def main_loop():
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         bottom_bot.add_shot(new_ralley, new_score)
+                        
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
                                          TRANSITION_ANIMATION, "bottom", 
                                          new_score)

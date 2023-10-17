@@ -113,7 +113,7 @@ menu.add.selector('Export Data: ',
                   [('Off', 1), ('On', 2)],
                   default=0,
                   onchange=set_logging)
-menu.add.button('Play', 
+menu.add.button('Play',
                 start_the_game)
 menu.add.button('Quit', 
                 pygame_menu.events.EXIT)

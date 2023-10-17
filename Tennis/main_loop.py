@@ -11,6 +11,7 @@ import time
 import scoring
 import constants as const
 import ralley_tree
+import networkx as nx
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -514,24 +515,33 @@ def encode_shot_selection(ball, ralley):
 def tree_update(new_ralley, new_tree, color):
     # If the shot was'nt taken in that depth and from
     # the current state yet, it is added to the graph
-    print("Node Index: " + str(new_tree.get_node_index()))
-    print("Connected to: " + str(new_tree.get_neighbors(
-        new_tree.get_node_index())))
-
-    new_tree.add_new_node(new_tree.get_next_node_index(), 
-                            node_type="state",
-                            color=color,
-                            shot_string=
-                            new_ralley.get_last_shot(),
-                            depth=
-                            new_ralley.get_len_ralley())
     
-    if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
-        new_tree.add_new_edge(0, new_tree.get_node_index())
+    if (new_ralley.get_last_shot() in
+        new_tree.get_shot_list_of_neighbors(new_tree.get_active_node())):
+        print("Matching shots discovered.")
         
-    else: 
-        new_tree.add_new_edge(new_tree.get_node_index()-1,
-                                new_tree.get_node_index())
+        #new_tree.set_active_node()
+    else:
+        new_tree.add_new_node(new_tree.get_next_node_index(), 
+                                node_type="state",
+                                color=color,
+                                shot_string=
+                                new_ralley.get_last_shot(),
+                                depth=
+                                new_ralley.get_len_ralley())
+        new_tree.set_active_node(new_tree.get_node_index())
+    
+        # Here we add the edge When a new node was added
+        if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
+            new_tree.add_new_edge(0, new_tree.get_node_index())
+        else: 
+            new_tree.add_new_edge(new_tree.get_node_index()-1, 
+                                  new_tree.get_node_index())
+    
+    if (new_ralley.get_last_char_of_last_shot()
+        in const.ShotEncodings.TERMINALS):
+        new_tree.set_active_node(0)
+
     ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 

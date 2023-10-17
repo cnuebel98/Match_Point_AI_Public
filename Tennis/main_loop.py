@@ -513,54 +513,68 @@ def encode_shot_selection(ball, ralley):
         ralley.add_shot_to_ralley(current_shot)
     
 def tree_update(new_ralley, new_tree, color):
-    # If the shot was'nt taken in that depth and from
-    # the current state yet, it is added to the graph
-    #print(new_tree.get_shot_list_of_neighbors(new_tree.get_active_node()))
-    #print(new_tree.get_shot_dict_of_neighbors(new_tree.get_active_node()))
+    '''A new node is added to the tree. When the node with the new shot
+    already was played from the current game state, then its not added,
+    otherwise its added as a directional graph to the tree'''
+    
+    # The dictionary is mapping the shot -> index of the node
     dict = new_tree.get_shot_dict_of_neighbors(new_tree.get_active_node())
+    
+    # Index is initialized and later used
     index = None
-    #node_start = new_tree.get_node_index()
 
+    # We check wether the new shot is already in the child nodes of the
+    # current game state
     if (new_ralley.get_last_shot() in
         new_tree.get_shot_list_of_neighbors(new_tree.get_active_node())):
         # If the shot in the gamestate has already been played, then 
         # that node is being set to active
-        print("Matching shots discovered.")
+        # print("Matching shots discovered.")
 
+        # Here we set the node active, where the shot already was played
         for x in new_tree.get_shot_list_of_neighbors(new_tree.get_active_node()):
             if x == new_ralley.get_last_shot():
                 matching_shot = x
                 index = dict[matching_shot]
-                print("Index: " + str(index))
+                #print("Index: " + str(index))
                 new_tree.set_active_node(index)
-        print("Active Node: " + str(new_tree.get_active_node()))
+        #print("Active Node: " + str(new_tree.get_active_node()))
 
+    # If the shot has not yet been played in the current Gamestate, it 
+    # is added to the parent node
     else:
-        node_start = new_tree.get_node_index()
+        node_start = new_tree.get_active_node()
         new_tree.add_new_node(new_tree.get_next_node_index(),
                               node_type="state",
                               color=color,
                               shot_string=new_ralley.get_last_shot(),
                               depth=new_ralley.get_len_ralley())
         
-        
-        print("Node_Start: " + str(node_start))
-        print("Node_End: " + str(new_tree.get_node_index()))
-    
-        # Here we add the edge When a new node was added
+        # Here we add the edge between the new node and the active node
+        # and also set the new node to active
         if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
+            # If the Node is the first shot in a ralley, it's added to 
+            # State 0
+            # print("Ralley length is 1.")
             new_tree.add_new_edge(0, new_tree.get_node_index())
+            new_tree.set_active_node(new_tree.get_node_index())
+            node_start = new_tree.get_active_node()
         else:
+            # If the ralley is ongoing, here the Edges are added
+            # print("Ralley length is not 1")
+            node_start = new_tree.get_active_node()
             new_tree.add_new_edge(node_start, new_tree.get_node_index())
-    
+            new_tree.set_active_node(new_tree.get_node_index())
+    # If the added shot was a terminal shot, the initial state is set to
+    # active
     if (new_ralley.get_last_char_of_last_shot()
         in const.ShotEncodings.TERMINALS):
-        
         new_tree.set_active_node(0)
         node_start = 0
-        print("Hi: " + str(node_start))
+        #print("Hi: " + str(node_start))
 
-    ralley_tree.Ralley_Tree.show_tree(new_tree)
+    
+    #ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 
 def main_loop():
@@ -687,9 +701,11 @@ def main_loop():
                 # the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
                 
+
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colors.BLACK)
+                    ralley_tree.Ralley_Tree.show_tree(new_tree)
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),
                                                 new_score.get_points_B(),

@@ -1,5 +1,11 @@
 import matplotlib.pyplot as plt
 import networkx as nx
+import graphviz
+from networkx.drawing.nx_pydot import graphviz_layout
+
+# ToDo: track the path as a list of node indexes that were taken per ralley
+# ToDo: When the server switches, there needs to be a if statement that 
+# catches that (Maybe in mainloop update tree function with colors)
 
 class Ralley_Tree:
     '''In this class all the functions to generate the game tree are defined'''
@@ -89,12 +95,17 @@ class Ralley_Tree:
         # This is the list of colors for all the nodes. Node Color is
         # Blue for Bottom Bot and Green for Top Bot and Red for State 0
         colors = list(nx.get_node_attributes(self.tree,'color').values())
-        
+        # pos = graphviz.Digraph(self.tree, prog="dot")
+        # pos = nx.nx_pydot.pydot_layout(self.tree, prog="dot")
+        # pos = nx.spring_layout(self.tree, k = 0.8)
+        pos = graphviz_layout(self.tree, prog="dot")
         nx.draw(self.tree,
+                pos,
                 node_color = colors,
-                node_size = 1000,
+                node_size = 250,
                 labels=nx.get_node_attributes(self.tree, 'shot'), 
                 with_labels=True, 
-                font_weight='bold')
+                font_size=7,
+                font_weight='normal')
         
         plt.show()

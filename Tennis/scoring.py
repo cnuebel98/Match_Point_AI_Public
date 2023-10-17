@@ -196,6 +196,7 @@ class Scoring:
 
     def give_game(self, player):
         # When this is called, the server has to be switched
+        
         self.switch_serving_player()
         # When a game is finished, the points per game count has to be 
         # reset

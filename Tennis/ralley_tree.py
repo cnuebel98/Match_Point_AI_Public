@@ -59,6 +59,18 @@ class Ralley_Tree:
         '''This function returns a list of shots of the neighbor nodes
         of a given node'''
         shots_of_neighbor_nodes = []
+        neighbor_nodes = list(self.tree.neighbors(node))
+        shots_of_all_nodes = nx.get_node_attributes(self.tree, 'shot')
+        
+        for n in neighbor_nodes:
+            shots_of_neighbor_nodes.append(shots_of_all_nodes[n])
+
+        return shots_of_neighbor_nodes
+    
+    def get_shot_dict_of_neighbors(self, node):
+        '''This function returns a list of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = {}
         #print("The active node is: " + str(node))
         neighbor_nodes = list(self.tree.neighbors(node))
         shots_of_all_nodes = nx.get_node_attributes(self.tree, 'shot')
@@ -68,7 +80,7 @@ class Ralley_Tree:
         #shots_of_neighbor_nodes = [x for x,y in self.tree.nodes(data=True) if y['color']=="blue"]
         
         for n in neighbor_nodes:
-            shots_of_neighbor_nodes.append(shots_of_all_nodes[n])
+            shots_of_neighbor_nodes[shots_of_all_nodes[n]] = n
 
         return shots_of_neighbor_nodes
 

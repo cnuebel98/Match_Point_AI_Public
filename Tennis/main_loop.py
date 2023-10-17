@@ -515,32 +515,50 @@ def encode_shot_selection(ball, ralley):
 def tree_update(new_ralley, new_tree, color):
     # If the shot was'nt taken in that depth and from
     # the current state yet, it is added to the graph
-    
+    #print(new_tree.get_shot_list_of_neighbors(new_tree.get_active_node()))
+    #print(new_tree.get_shot_dict_of_neighbors(new_tree.get_active_node()))
+    dict = new_tree.get_shot_dict_of_neighbors(new_tree.get_active_node())
+    index = None
+    #node_start = new_tree.get_node_index()
+
     if (new_ralley.get_last_shot() in
         new_tree.get_shot_list_of_neighbors(new_tree.get_active_node())):
+        # If the shot in the gamestate has already been played, then 
+        # that node is being set to active
         print("Matching shots discovered.")
-        
-        #new_tree.set_active_node()
+
+        for x in new_tree.get_shot_list_of_neighbors(new_tree.get_active_node()):
+            if x == new_ralley.get_last_shot():
+                matching_shot = x
+                index = dict[matching_shot]
+                print("Index: " + str(index))
+                new_tree.set_active_node(index)
+        print("Active Node: " + str(new_tree.get_active_node()))
+
     else:
-        new_tree.add_new_node(new_tree.get_next_node_index(), 
-                                node_type="state",
-                                color=color,
-                                shot_string=
-                                new_ralley.get_last_shot(),
-                                depth=
-                                new_ralley.get_len_ralley())
-        new_tree.set_active_node(new_tree.get_node_index())
+        node_start = new_tree.get_node_index()
+        new_tree.add_new_node(new_tree.get_next_node_index(),
+                              node_type="state",
+                              color=color,
+                              shot_string=new_ralley.get_last_shot(),
+                              depth=new_ralley.get_len_ralley())
+        
+        
+        print("Node_Start: " + str(node_start))
+        print("Node_End: " + str(new_tree.get_node_index()))
     
         # Here we add the edge When a new node was added
         if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
             new_tree.add_new_edge(0, new_tree.get_node_index())
-        else: 
-            new_tree.add_new_edge(new_tree.get_node_index()-1, 
-                                  new_tree.get_node_index())
+        else:
+            new_tree.add_new_edge(node_start, new_tree.get_node_index())
     
     if (new_ralley.get_last_char_of_last_shot()
         in const.ShotEncodings.TERMINALS):
+        
         new_tree.set_active_node(0)
+        node_start = 0
+        print("Hi: " + str(node_start))
 
     ralley_tree.Ralley_Tree.show_tree(new_tree)
 

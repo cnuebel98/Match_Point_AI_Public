@@ -2,22 +2,20 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 
-# ToDo: track the path as a list of node indexes that were taken per ralley
-# ToDo: When the server switches, there needs to be a if statement that 
-# catches that (Maybe in mainloop update tree function with colors)
-
 class Ralley_Tree:
-    '''In this class all the functions to generate the game tree are defined'''
+    '''In this class all the functions to generate the game tree are 
+    defined'''
     def __init__(self):
         '''Initializing a tree as a NetworkX Graph'''
         self.tree = nx.DiGraph()
         self.node_index = 0
         self.tree.add_node(0, color="red", type="init", shot="", depth=0)
         self.active_node = 0
+        self.visited_nodes = [0]
 
-    def add_new_edge(self, node_A, node_B):
+    def add_new_edge(self, node_A, node_B, n_visits):
         '''Adds a new edge between two given nodes'''
-        self.tree.add_edge(node_A, node_B)
+        self.tree.add_edge(node_A, node_B, n_visits=n_visits)
 
     def add_new_node(self, index, color, node_type, shot_string, depth):
         '''A new node is added to the tree, with an unique index, a type
@@ -108,6 +106,26 @@ class Ralley_Tree:
 
         return colors_of_neighbor_nodes
 
+    def add_node_visit(self, node):
+        '''The given node is added to the visited_nodes list.'''
+        self.visited_nodes.append(node)
+
+    def clear_visited_nodes(self):
+        '''The visited_nodes list is being cleard before each new 
+        ralley'''
+        self.visited_nodes.clear()
+        self.visited_nodes.append(0)
+
+    def get_visited_nodes(self):
+        '''Returns the List of the visited nodes in a ralley'''
+        return self.visited_nodes
+
+    def update_edge_visit_counts(self):
+        print("Visited_nodes: " + str(self.visited_nodes))
+        for x in range(0, len(self.visited_nodes)-1):
+            self.tree[self.visited_nodes[x]][self.visited_nodes[x+1]][
+                'n_visits'] += 1
+
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''
         # This is the list of colors for all the nodes. Node Color is
@@ -126,4 +144,17 @@ class Ralley_Tree:
                 font_size=5,
                 font_weight='normal')
         
+        # edge_labels here are the node indices added together with "->"
+        # edge_labels = dict([((n1, n2), f'{n1}->{n2}') for n1, n2 in self.tree.edges])
+        
+        # Edge_Labels are the number of visits
+        edge_labels = dict([((n1, n2), d['n_visits'])
+                            for n1, n2, d in self.tree.edges(data=True)])
+        
+        nx.draw_networkx_edge_labels(self.tree, 
+                                     pos, 
+                                     edge_labels=edge_labels, 
+                                     font_size=5)
+
+        # draw the tree
         plt.show()

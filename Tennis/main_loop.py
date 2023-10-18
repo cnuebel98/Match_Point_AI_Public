@@ -519,14 +519,17 @@ def tree_update(new_ralley, new_tree, color):
     otherwise its added as a directional graph to the tree'''
     
     # The dictionaries are mapping the shot/color -> index of the node
-    shot_dict = new_tree.get_shot_dict_of_neighbors(new_tree.get_active_node())
-    color_dict = new_tree.get_color_dict_of_neighbors(new_tree.get_active_node())
-    
+    shot_dict = new_tree.get_shot_dict_of_neighbors(
+        new_tree.get_active_node())
+    color_dict = new_tree.get_color_dict_of_neighbors(
+        new_tree.get_active_node())
     #print(shot_dict)
-    print(color_dict)
-    # Index is initialized and later used
+    #print(color_dict)
     
+    # Shot in tree boolean is initialized
     shot_in_tree = False
+    
+    #new_tree.add_node_visit(new_tree.get_active_node())
 
     # We check wether the new shot is already in the child nodes of the
     # current game state
@@ -538,7 +541,8 @@ def tree_update(new_ralley, new_tree, color):
         index_list = []
         
         # Here we set the node active, where the shot already was played
-        for x in new_tree.get_shot_list_of_neighbors(new_tree.get_active_node()):
+        for x in new_tree.get_shot_list_of_neighbors(
+            new_tree.get_active_node()):
             if (x == new_ralley.get_last_shot()):
                 
                 # matching shot is the value we are looking for in the
@@ -553,7 +557,7 @@ def tree_update(new_ralley, new_tree, color):
 
                 for h in range(len(index_list)):
                     if color_dict[index_list[h]] == color:
-                        print(True)
+                        #print(True)
                         shot_in_tree = True
                         new_tree.set_active_node(index_list[h])
 
@@ -572,21 +576,35 @@ def tree_update(new_ralley, new_tree, color):
         if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
             # If the Node is the first shot in a ralley, it's added to 
             # State 0
-            new_tree.add_new_edge(0, new_tree.get_node_index())
+            new_tree.add_new_edge(0, new_tree.get_node_index(), 0)
             new_tree.set_active_node(new_tree.get_node_index())
             node_start = new_tree.get_active_node()
         else:
             # If the ralley is ongoing, here the Edges are added
             # print("Ralley length is not 1")
             node_start = new_tree.get_active_node()
-            new_tree.add_new_edge(node_start, new_tree.get_node_index())
+            new_tree.add_new_edge(node_start, new_tree.get_node_index(), 0)
             new_tree.set_active_node(new_tree.get_node_index())
+    #print("Active Node: " + str(new_tree.get_active_node()))
+    new_tree.add_node_visit(new_tree.get_active_node())
     # If the added shot was a terminal shot, the initial state is set to
     # active
     if (new_ralley.get_last_char_of_last_shot()
         in const.ShotEncodings.TERMINALS):
+
+        # The visited Nodes List is used to update the visit counts on 
+        # each edge, that has been visited durcing the ralley
+        #print("List of visited Nodes: " + str(new_tree.get_visited_nodes()))
+        new_tree.update_edge_visit_counts()
+
+        # The visited node list is being deleted
+        new_tree.clear_visited_nodes()
+
+        # Also the initial state is set to active
         new_tree.set_active_node(0)
         node_start = 0
+
+    #print("Visited_nodes: " + str(new_tree.get_visited_nodes()))
     #ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 def main_loop():
@@ -795,7 +813,6 @@ def main_loop():
 
                 draw(WIN, [bottom_player, top_player], new_ball, 
                      [next_button, score_text_field])
-
     pygame.QUIT
 
 if __name__ == "__main__":

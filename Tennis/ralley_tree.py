@@ -73,22 +73,41 @@ class Ralley_Tree:
 
         return shots_of_neighbor_nodes
     
-    def get_shot_dict_of_neighbors(self, node):
+    def get_color_list_of_neighbors(self, node):
         '''This function returns a list of shots of the neighbor nodes
         of a given node'''
-        shots_of_neighbor_nodes = {}
-        #print("The active node is: " + str(node))
+        colors_of_neighbor_nodes = []
         neighbor_nodes = list(self.tree.neighbors(node))
-        shots_of_all_nodes = nx.get_node_attributes(self.tree, 'shot')
-        color_of_all_nodes = nx.get_node_attributes(self.tree, 'color')
-        #print(self.tree[node])
-
-        #shots_of_neighbor_nodes = [x for x,y in self.tree.nodes(data=True) if y['color']=="blue"]
+        colors_of_all_nodes = nx.get_node_attributes(self.tree, 'color')
         
         for n in neighbor_nodes:
-            shots_of_neighbor_nodes[shots_of_all_nodes[n]] = n
+            colors_of_neighbor_nodes.append(colors_of_all_nodes[n])
+
+        return colors_of_neighbor_nodes
+
+    def get_shot_dict_of_neighbors(self, node):
+        '''This function returns a dict of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.tree.neighbors(node))
+        shots_of_all_nodes = nx.get_node_attributes(self.tree, 'shot')
+        
+        for n in neighbor_nodes:
+            shots_of_neighbor_nodes[n] = shots_of_all_nodes[n]
 
         return shots_of_neighbor_nodes
+
+    def get_color_dict_of_neighbors(self, node):
+        '''This function returns a dict of the colors of the neighbor
+        nodes of a given node'''
+        colors_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.tree.neighbors(node))
+        color_of_all_nodes = nx.get_node_attributes(self.tree, 'color')
+        
+        for i in neighbor_nodes:
+            colors_of_neighbor_nodes[i] = color_of_all_nodes[i]
+
+        return colors_of_neighbor_nodes
 
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''

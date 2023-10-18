@@ -517,11 +517,15 @@ def tree_update(new_ralley, new_tree, color):
     already was played from the current game state, then its not added,
     otherwise its added as a directional graph to the tree'''
     
-    # The dictionary is mapping the shot -> index of the node
-    dict = new_tree.get_shot_dict_of_neighbors(new_tree.get_active_node())
+    # The dictionaries are mapping the shot/color -> index of the node
+    shot_dict = new_tree.get_shot_dict_of_neighbors(new_tree.get_active_node())
+    color_dict = new_tree.get_color_dict_of_neighbors(new_tree.get_active_node())
     
+    #print(shot_dict)
+    print(color_dict)
     # Index is initialized and later used
-    index = None
+    
+    shot_in_tree = False
 
     # We check wether the new shot is already in the child nodes of the
     # current game state
@@ -530,19 +534,31 @@ def tree_update(new_ralley, new_tree, color):
         # If the shot in the gamestate has already been played, then 
         # that node is being set to active
         # print("Matching shots discovered.")
-
+        index_list = []
+        
         # Here we set the node active, where the shot already was played
         for x in new_tree.get_shot_list_of_neighbors(new_tree.get_active_node()):
-            if x == new_ralley.get_last_shot():
+            if (x == new_ralley.get_last_shot()):
+                
+                # matching shot is the value we are looking for in the
+                # shot dict to get the indices
                 matching_shot = x
-                index = dict[matching_shot]
-                #print("Index: " + str(index))
-                new_tree.set_active_node(index)
-        #print("Active Node: " + str(new_tree.get_active_node()))
+                
+                # create an index list with all the indices of the
+                # shot_dict, where the value has been found
+
+                index_list = [k for k,v in shot_dict.items() 
+                              if v == matching_shot]
+
+                for h in range(len(index_list)):
+                    if color_dict[index_list[h]] == color:
+                        print(True)
+                        shot_in_tree = True
+                        new_tree.set_active_node(index_list[h])
 
     # If the shot has not yet been played in the current Gamestate, it 
     # is added to the parent node
-    else:
+    if shot_in_tree == False:
         node_start = new_tree.get_active_node()
         new_tree.add_new_node(new_tree.get_next_node_index(),
                               node_type="state",
@@ -555,7 +571,6 @@ def tree_update(new_ralley, new_tree, color):
         if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
             # If the Node is the first shot in a ralley, it's added to 
             # State 0
-            # print("Ralley length is 1.")
             new_tree.add_new_edge(0, new_tree.get_node_index())
             new_tree.set_active_node(new_tree.get_node_index())
             node_start = new_tree.get_active_node()
@@ -571,11 +586,7 @@ def tree_update(new_ralley, new_tree, color):
         in const.ShotEncodings.TERMINALS):
         new_tree.set_active_node(0)
         node_start = 0
-        #print("Hi: " + str(node_start))
-
-    
     #ralley_tree.Ralley_Tree.show_tree(new_tree)
-
 
 def main_loop():
     run = True

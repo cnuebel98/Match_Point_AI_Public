@@ -4,6 +4,7 @@ import ball
 import bot
 import log
 import stat_bot_djokovic
+import simpler_stat_bot_djoko
 import button
 import pandas as pd
 import random
@@ -623,6 +624,9 @@ def main_loop():
         top_bot = bot.Bot("Random")
     elif const.MenuVariables.top_bot == 2:
         top_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
+    elif const.MenuVariables.top_bot == 3:
+        top_bot = (simpler_stat_bot_djoko.
+                   Simple_Stat_Bot_Djokovic("Simple_Djoko"))
     else: top_bot = bot.Bot("Random")
 
     # Different classes for Bottom Bot are initialized depending on the 
@@ -631,6 +635,9 @@ def main_loop():
         bottom_bot = bot.Bot("Random")
     elif const.MenuVariables.bottom_bot == 2:
         bottom_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
+    elif const.MenuVariables.bottom_bot == 3:
+        bottom_bot = (simpler_stat_bot_djoko.
+                      Simple_Stat_Bot_Djokovic("Simple_Djoko"))
     else: bottom_bot = bot.Bot("Random")
 
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, 
@@ -644,7 +651,9 @@ def main_loop():
     new_score.set_serving_player(1) 
     new_ball.reset_ball(new_score.get_serving_player(), 
                         new_ralley.get_shot_count())
-   
+
+    set_counting_for_tree = 0
+
     while run:
         draw(WIN, [bottom_player, top_player], 
              new_ball, [next_button, score_text_field])
@@ -711,12 +720,16 @@ def main_loop():
                 # Here the score is updated, depending on the ralley and
                 # the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
-                
+                if (new_score.get_set_count() != set_counting_for_tree):
+                    set_counting_for_tree = new_score.get_set_count()
+                    ralley_tree.Ralley_Tree.show_tree(new_tree)
 
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colors.BLACK)
-                    ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    
+                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
+
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),
                                                 new_score.get_points_B(),

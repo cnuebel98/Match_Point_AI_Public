@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import networkx as nx
-import graphviz
 from networkx.drawing.nx_pydot import graphviz_layout
 
 # ToDo: track the path as a list of node indexes that were taken per ralley
@@ -121,10 +120,10 @@ class Ralley_Tree:
         nx.draw(self.tree,
                 pos,
                 node_color = colors,
-                node_size = 250,
+                node_size = 150,
                 labels=nx.get_node_attributes(self.tree, 'shot'), 
                 with_labels=True, 
-                font_size=7,
+                font_size=5,
                 font_weight='normal')
         
         plt.show()

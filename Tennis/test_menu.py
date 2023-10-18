@@ -44,6 +44,8 @@ def set_top_player(selected:tuple, value: any):
         const.MenuVariables.top_bot = 1
     elif value == 2:
         const.MenuVariables.top_bot = 2
+    elif value == 3:
+        const.MenuVariables.top_bot = 3
 
 def set_bottom_player(selected:tuple, value: any):
     # Bottom Players strategy is set 
@@ -51,6 +53,8 @@ def set_bottom_player(selected:tuple, value: any):
         const.MenuVariables.bottom_bot = 1
     elif value == 2:
         const.MenuVariables.bottom_bot = 2
+    elif value == 3:
+        const.MenuVariables.bottom_bot = 3
 
 def set_simu_game_no(value: any):
     x = int(value)
@@ -89,11 +93,11 @@ menu.add.range_slider('Number of Matches: ',
                       slider_text_value_enabled=True, 
                       onchange=set_simu_game_no)
 menu.add.selector('Top Player: ', 
-                  [('Random', 1), ('Djokovic', 2)], 
+                  [('Random', 1), ('Djokovic', 2), ('SimpleDjoko', 3)], 
                   default=0, 
                   onchange=set_top_player)
 menu.add.selector('Bottom Player: ', 
-                  [('Random', 1), ('Djokovic', 2)], 
+                  [('Random', 1), ('Djokovic', 2), ('SimpleDjoko', 3)], 
                   default=0, 
                   onchange=set_bottom_player)
 menu.add.selector('Animation time: ', 

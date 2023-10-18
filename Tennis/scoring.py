@@ -62,6 +62,9 @@ class Scoring:
     def get_sets_B(self):
         return self.sets_B
     
+    def get_set_count(self):
+        return self.sets_count
+    
     def update_point_count_per_game(self, x):
         self.point_count_per_game += x
 

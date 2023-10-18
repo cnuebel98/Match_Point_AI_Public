@@ -133,7 +133,7 @@ class Ralley_Tree:
         colors = list(nx.get_node_attributes(self.tree,'color').values())
         # pos = graphviz.Digraph(self.tree, prog="dot")
         # pos = nx.nx_pydot.pydot_layout(self.tree, prog="dot")
-        # pos = nx.spring_layout(self.tree, k = 0.8)
+        #pos = nx.spring_layout(self.tree, k = 0.8)
         pos = graphviz_layout(self.tree, prog="dot")
         nx.draw(self.tree,
                 pos,

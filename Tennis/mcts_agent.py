@@ -9,7 +9,7 @@ class MCTS_Agent:
         self.name = name
         self.turn = turn
 
-    def add_shot(self, current_ralley, score, current_tree):
+    def add_shot(self, current_ralley, score):
         '''This function is calling the different phases of MCTS'''
         # 1. Tree selection phase with UCT Formular:
         
@@ -40,3 +40,6 @@ class MCTS_Agent:
         # - 
         
         # 2. Expansion phase
+
+        shot ="123n"
+        current_ralley.add_shot_to_ralley(shot)

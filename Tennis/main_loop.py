@@ -13,6 +13,7 @@ import scoring
 import constants as const
 import ralley_tree
 import networkx as nx
+import mcts_agent
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -656,6 +657,8 @@ def main_loop():
     elif const.MenuVariables.bottom_bot == 3:
         bottom_bot = (simpler_stat_bot_djoko.
                       Simple_Stat_Bot_Djokovic("Simple_Djoko"))
+    elif const.MenuVariables.bottom_bot == 4:
+        bottom_bot = mcts_agent.MCTS_Agent("MCTS Agent")
     else: bottom_bot = bot.Bot("Random")
 
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, 

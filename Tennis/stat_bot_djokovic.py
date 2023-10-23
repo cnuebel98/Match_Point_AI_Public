@@ -3,6 +3,9 @@ import random
 import ralley
 
 class Stat_Bot_Djokovic:
+    '''This is the Djokovic bot, which adds the probabilities of a shot 
+    in a situation based on real world data'''
+    
     SERVE_DIRECTION = const.ShotEncodings.SERVE_DIRECTION
     EVERY_SHOT_TYPE = const.ShotEncodings.EVERY_SHOT_TYPE
     RETURN_SHOT_TYPES = const.ShotEncodings.RETURN_SHOT_TYPES

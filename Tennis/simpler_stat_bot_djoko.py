@@ -3,6 +3,8 @@ import random
 import ralley
 
 class Simple_Stat_Bot_Djokovic:
+    '''This Bot simplifies the stat_bot_djoko by not
+    differentiating between different error types anymore'''
     SERVE_DIRECTION = const.ShotEncodings.SERVE_DIRECTION
     EVERY_SHOT_TYPE = const.ShotEncodings.EVERY_SHOT_TYPE
     RETURN_SHOT_TYPES = const.ShotEncodings.RETURN_SHOT_TYPES
@@ -108,14 +110,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 674):
-                            shot = shot + "n"
-                        elif (k < (674 + 751)):
-                            shot = shot + "w"
-                        elif (k < (674 + 751 + 855)):
-                            shot = shot + "d"
-                        elif (k < (674 + 751 + 855 + 181)):
-                            shot = shot + "x"
+                        if (k < (674 + 751 + 855 + 181)):
+                            shot = shot + "nwdx"
                         elif (k < (674 + 751 + 855 + 181 + 440)):
                             shot = shot + "*"
 
@@ -143,10 +139,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 876):
-                            shot = shot + "n"
-                        elif (k < (876 + 1139)):
-                            shot = shot + "d"
+                        if (k < (876 + 1139)):
+                            shot = shot + "nwdx"
                         elif (k < (876 + 1139 + 15)):
                             shot = shot + "*"
 
@@ -174,12 +168,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 1172):
-                            shot = shot + "n"
-                        elif (k < (1172 + 1719)):
-                            shot = shot + "w"
-                        elif (k < (1172 + 1719 + 1484)):
-                            shot = shot + "d"
+                        if (k < (1172 + 1719 + 1484)):
+                            shot = shot + "nwdx"
                         elif (k < (1172 + 1719 + 1484 + 313)):
                             shot = shot + "*"
 
@@ -209,12 +199,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 1379):
-                            shot = shot + "w"
-                        elif (k < (1379 + 517)):
-                            shot = shot + "d"
-                        elif (k < (1379 + 517 + 172)):
-                            shot = shot + "x"
+                        if (k < (1379 + 517 + 172)):
+                            shot = shot + "nwdx"
                         elif (k < (1379 + 517 + 172 + 172)):
                             shot = shot + "*"
 
@@ -242,10 +228,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 432):
-                            shot = shot + "n"
-                        elif (k < (432 + 617)):
-                            shot = shot + "d"
+                        if (k < (432 + 617)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -273,10 +257,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 1053):
-                            shot = shot + "n"
-                        elif (k < (1053 + 789)):
-                            shot = shot + "w"
+                        if (k < (1053 + 789)):
+                            shot = shot + "nwdx"
                         elif (k < (1053 + 789 + 789)):
                             shot = shot + "*"
 
@@ -290,7 +272,6 @@ class Simple_Stat_Bot_Djokovic:
                             shot = "s" + shot
                         else:
                             shot = "r" + shot
-
 
                 elif (current_ralley.get_last_char_of_last_shot() == "6"):
                     # shot = "1stS return from Deuce Side on serve 6"
@@ -310,14 +291,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 345):
-                            shot = shot + "n"
-                        elif (k < (345 + 1172)):
-                            shot = shot + "w"
-                        elif (k < (345 + 1172 + 1241)):
-                            shot = shot + "d"
-                        elif (k < (345 + 1172 + 1241 + 276)):
-                            shot = shot + "x"
+                        if (k < (345 + 1172 + 1241 + 276)):
+                            shot = shot + "nwdx"
                         elif (k < (345 + 1172 + 1241 + 276 + 69)):
                             shot = shot + "*"
 
@@ -345,10 +320,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 654):
-                            shot = shot + "n"
-                        elif (k < (654 + 857)):
-                            shot = shot + "d"
+                        if (k < (654 + 857)):
+                            shot = shot + "nwdx"
                         elif (k < (654 + 857 + 16)):
                             shot = shot + "*"
 
@@ -378,14 +351,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 822):
-                            shot = shot + "n"
-                        elif (k < (822 + 594)):
-                            shot = shot + "w"
-                        elif (k < (822 + 594 + 457)):
-                            shot = shot + "d"
-                        elif (k < (822 + 594 + 457 + 46)):
-                            shot = shot + "x"
+                        if (k < (822 + 594 + 457 + 46)):
+                            shot = shot + "nwdx"
                         elif (k < (822 + 594 + 457 + 46 + 91)):
                             shot = shot + "*"
 
@@ -418,14 +385,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 978):
-                            shot = shot + "n"
-                        elif (k < (978 + 2065)):
-                            shot = shot + "w"
-                        elif (k < (978 + 2065 + 1957)):
-                            shot = shot + "d"
-                        elif (k < (978 + 2065 + 1957 + 109)):
-                            shot = shot + "x"
+                        if (k < (978 + 2065 + 1957 + 109)):
+                            shot = shot + "nwdx"
                         elif (k < (978 + 2065 + 1957 + 109 + 652)):
                             shot = shot + "*"
 
@@ -455,10 +416,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 519):
-                            shot = shot + "n"
-                        elif (k < (519 + 1196)):
-                            shot = shot + "d"
+                        if (k < (519 + 1196)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -486,14 +445,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 799):
-                            shot = shot + "n"
-                        elif (k < (799 + 639)):
-                            shot = shot + "w"
-                        elif (k < (799 + 639 + 411)):
-                            shot = shot + "d"
-                        elif (k < (799 + 639 + 411 + 23)):
-                            shot = shot + "x"
+                        if (k < (799 + 639 + 411 + 23)):
+                            shot = shot + "nwdx"
                         elif (k < (799 + 639 + 411 + 23 + 46)):
                             shot = shot + "*"
 
@@ -528,12 +481,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 1000):
-                            shot = shot + "n"
-                        elif (k < (1000 + 333)):
-                            shot = shot + "w"
-                        elif (k < (1000 + 333 + 333)):
-                            shot = shot + "d"
+                        if (k < (1000 + 333 + 333)):
+                            shot = shot + "nwdx"
                         elif (k < (1000 + 333 + 333 + 667)):
                             shot = shot + "*"
 
@@ -563,10 +512,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 548):
-                            shot = shot + "n"
-                        elif (k < (548 + 1027)):
-                            shot = shot + "d"
+                        if (k < (548 + 1027)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -594,14 +541,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 423):
-                            shot = shot + "n"
-                        elif (k < (423 + 845)):
-                            shot = shot + "w"
-                        elif (k < (423 + 845 + 423)):
-                            shot = shot + "d"
-                        elif (k < (423 + 845 + 423 + 141)):
-                            shot = shot + "x"
+                        if (k < (423 + 845 + 423 + 141)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -634,14 +575,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 1016):
-                            shot = shot + "n"
-                        elif (k < (1016 + 1094)):
-                            shot = shot + "w"
-                        elif (k < (1016 + 1094 + 781)):
-                            shot = shot + "d"
-                        elif (k < (1016 + 1094 + 781 + 78)):
-                            shot = shot + "x"
+                        if (k < (1016 + 1094 + 781 + 78)):
+                            shot = shot + "nwdx"
                         elif (k < (1016 + 1094 + 781 + 78 + 391)):
                             shot = shot + "*"
 
@@ -669,10 +604,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 711):
-                            shot = shot + "n"
-                        elif (k < (711 + 1015)):
-                            shot = shot + "d"
+                        if (k < (711 + 1015)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -702,14 +635,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 662):
-                            shot = shot + "n"
-                        elif (k < (662 + 993)):
-                            shot = shot + "w"
-                        elif (k < (662 + 993 + 588)):
-                            shot = shot + "d"
-                        elif (k < (662 + 993 + 588 + 404)):
-                            shot = shot + "x"
+                        if (k < (662 + 993 + 588 + 404)):
+                            shot = shot + "nwdx"
                         elif (k < (662 + 993 + 588 + 404 + 37)):
                             shot = shot + "*"
 
@@ -754,12 +681,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 1053):
-                            shot = shot + "n"
-                        elif (k < (1053 + 351)):
-                            shot = shot + "w"
-                        elif (k < (1053 + 351 + 526)):
-                            shot = shot + "d"
+                        if (k < (1053 + 351 + 526)):
+                            shot = shot + "nwdx"
                         elif (k < (1053 + 351 + 526 + 351)):
                             shot = shot + "*"
 
@@ -783,10 +706,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 634):
-                            shot = shot + "n"
-                        elif (k < (634 + 1127)):
-                            shot = shot + "d"
+                        if (k < (634 + 1127)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -812,12 +733,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 1154):
-                            shot = shot + "n"
-                        elif (k < (1154 + 1154)):
-                            shot = shot + "w"
-                        elif (k < (1154 + 1154 + 962)):
-                            shot = shot + "d"
+                        if (k < (1154 + 1154 + 962)):
+                            shot = shot + "nwdx"
                         elif (k < (1154 + 1154 + 962 + 1538)):
                             shot = shot + "*"
 
@@ -845,10 +762,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 763):
-                            shot = shot + "w"
-                        elif (k < (763 + 593)):
-                            shot = shot + "d"
+                        if (k < (763 + 593)):
+                            shot = shot + "nwdx"
                         elif (k < (763 + 593 + 339)):
                             shot = shot + "*"
 
@@ -876,10 +791,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 263):
-                            shot = shot + "n"
-                        elif (k < (263 + 547)):
-                            shot = shot + "d"
+                        if (k < (263 + 547)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -907,14 +820,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 458):
-                            shot = shot + "n"
-                        elif (k < (458 + 458)):
-                            shot = shot + "w"
-                        elif (k < (458 + 458 + 654)):
-                            shot = shot + "d"
-                        elif (k < (458 + 458 + 654 + 65)):
-                            shot = shot + "x"
+                        if (k < (458 + 458 + 654 + 65)):
+                            shot = shot + "nwdx"
                         elif (k < (458 + 458 + 654 + 65 + 327)):
                             shot = shot + "*"
 
@@ -946,12 +853,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 612):
-                            shot = shot + "w"
-                        elif (k < (612 + 1020)):
-                            shot = shot + "d"
-                        elif (k < (612 + 1020 + 408)):
-                            shot = shot + "x"
+                        if (k < (612 + 1020 + 408)):
+                            shot = shot + "nwdx"
                         elif (k < (612 + 1020 + 408 + 204)):
                             shot = shot + "*"
 
@@ -979,10 +882,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 194):
-                            shot = shot + "n"
-                        elif (k < (194 + 647)):
-                            shot = shot + "d"
+                        if (k < (194 + 647)):
+                            shot = shot + "nwdx"
                         elif (k < (194 + 647 + 32)):
                             shot = shot + "*"
 
@@ -1012,14 +913,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 764):
-                            shot = shot + "n"
-                        elif (k < (764 + 347)):
-                            shot = shot + "w"
-                        elif (k < (764 + 347 + 486)):
-                            shot = shot + "d"
-                        elif (k < (764 + 347 + 486 + 69)):
-                            shot = shot + "x"
+                        if (k < (764 + 347 + 486 + 69)):
+                            shot = shot + "nwdx"
                         elif (k < (764 + 347 + 486 + 69 + 69)):
                             shot = shot + "*"
 
@@ -1053,12 +948,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 2500):
-                            shot = shot + "w"
-                        elif (k < (2500 + 1250)):
-                            shot = shot + "d"
-                        elif (k < (2500 + 1250 + 417)):
-                            shot = shot + "x"
+                        if (k < (2500 + 1250 + 417)):
+                            shot = shot + "nwdx"
                         elif (k < (2500 + 1250 + 417 + 833)):
                             shot = shot + "*"
 
@@ -1086,11 +977,9 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 357):
-                            shot = shot + "n"
-                        elif (k < (357 + 774)):
-                            shot = shot + "d"
-
+                        if (k < (357 + 774)):
+                            shot = shot + "nwdx"
+                        
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
                         if (l < 119):
@@ -1115,14 +1004,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 244):
-                            shot = shot + "n"
-                        elif (k < (244 + 318)):
-                            shot = shot + "w"
-                        elif (k < (244 + 318 + 318)):
-                            shot = shot + "d"
-                        elif (k < (244 + 318 + 318 + 122)):
-                            shot = shot + "x"
+                        if (k < (244 + 318 + 318 + 122)):
+                            shot = shot + "nwdx"
                         elif (k < (244 + 318 + 318 + 122 + 82)):
                             shot = shot + "*"
 
@@ -1152,14 +1035,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 513):
-                            shot = shot + "n"
-                        elif (k < (513 + 1026)):
-                            shot = shot + "w"
-                        elif (k < (513 + 1026 + 513)):
-                            shot = shot + "d"
-                        elif (k < (513 + 1026 + 513 + 513)):
-                            shot = shot + "x"
+                        if (k < (513 + 1026 + 513 + 513)):
+                            shot = shot + "nwdx"
                         elif (k < (513 + 1026 + 513 + 513 + 2821)):
                             shot = shot + "*"
 
@@ -1185,10 +1062,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 264):
-                            shot = shot + "n"
-                        elif (k < (264 + 617)):
-                            shot = shot + "d"
+                        if (k < (264 + 617)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -1216,14 +1091,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 363):
-                            shot = shot + "n"
-                        elif (k < (363 + 297)):
-                            shot = shot + "w"
-                        elif (k < (363 + 297 + 396)):
-                            shot = shot + "d"
-                        elif (k < (363 + 297 + 396 + 33)):
-                            shot = shot + "x"
+                        if (k < (363 + 297 + 396 + 33)):
+                            shot = shot + "nwdx"
                         elif (k < (363 + 297 + 396 + 33 + 66)):
                             shot = shot + "*"
 
@@ -1257,14 +1126,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 588):
-                            shot = shot + "n"
-                        elif (k < (588 + 1471)):
-                            shot = shot + "w"
-                        elif (k < (588 + 1471 + 588)):
-                            shot = shot + "d"
-                        elif (k < (588 + 1471 + 588 + 294)):
-                            shot = shot + "x"
+                        if (k < (588 + 1471 + 588 + 294)):
+                            shot = shot + "nwdx"
                         elif (k < (588 + 1471 + 588 + 294 + 1765)):
                             shot = shot + "*"
 
@@ -1288,10 +1151,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 604):
-                            shot = shot + "n"
-                        elif (k < (604 + 872)):
-                            shot = shot + "d"
+                        if (k < (604 + 872)):
+                            shot = shot + "nwdx"
 
                         # Here the Shot type is added
                         l = random.randint(0, 9999)
@@ -1315,14 +1176,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Here the Error/Winner Probabilitites are added
                         k = random.randint(0, 9999)
-                        if (k < 617):
-                            shot = shot + "n"
-                        elif (k < (617 + 494)):
-                            shot = shot + "w"
-                        elif (k < (617 + 494 + 988)):
-                            shot = shot + "d"
-                        elif (k < (617 + 494 + 988 + 123)):
-                            shot = shot + "x"
+                        if (k < (617 + 494 + 988 + 123)):
+                            shot = shot + "nwdx"
                         elif (k < (617 + 494 + 988 + 123 + 123)):
                             shot = shot + "*"
 
@@ -1334,7 +1189,6 @@ class Simple_Stat_Bot_Djokovic:
                             shot = "b" + shot
                         else:
                             shot = "s" + shot
-
 
         else:
             # We need to seperate between serving and returning in the
@@ -1366,14 +1220,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 494):
-                            shot = shot + "n"
-                        elif (k < (494 + 426)):
-                            shot = shot + "w"
-                        elif (k < (494 + 426 + 170)):
-                            shot = shot + "d"
-                        elif (k < (494 + 426 + 170 + 34)):
-                            shot = shot + "x"
+                        if (k < (494 + 426 + 170 + 34)):
+                            shot = shot + "nwdx"
                         elif (k < (494 + 426 + 170 + 34 + 613)):
                             shot = shot + "*"
 
@@ -1415,10 +1263,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 574):
-                            shot = shot + "n"
-                        elif (k < (574 + 444)):
-                            shot = shot + "d"
+                        if (k < (574 + 444)):
+                            shot = shot + "nwdx"
                         elif (k < (574 + 444 + 235)):
                             shot = shot + "*"
 
@@ -1455,14 +1301,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 577):
-                            shot = shot + "n"
-                        elif (k < (577 + 577)):
-                            shot = shot + "w"
-                        elif (k < (577 + 577 + 485)):
-                            shot = shot + "d"
-                        elif (k < (577 + 577 + 485 + 69)):
-                            shot = shot + "x"
+                        if (k < (577 + 577 + 485 + 69)):
+                            shot = shot + "nwdx"
                         elif (k < (577 + 577 + 485 + 69 + 739)):
                             shot = shot + "*"
                         # Shot Type is added
@@ -1510,14 +1350,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 475):
-                            shot = shot + "n"
-                        elif (k < (475 + 356)):
-                            shot = shot + "w"
-                        elif (k < (475 + 356 + 211)):
-                            shot = shot + "d"
-                        elif (k < (475 + 356 + 211 + 53)):
-                            shot = shot + "x"
+                        if (k < (475 + 356 + 211 + 53)):
+                            shot = shot + "nwdx"
                         elif (k < (475 + 356 + 211 + 53 + 897)):
                             shot = shot + "*"
 
@@ -1566,10 +1400,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 286):
-                            shot = shot + "n"
-                        elif (k < (286 + 463)):
-                            shot = shot + "d"
+                        if (k < (286 + 463)):
+                            shot = shot + "nwdx"
                         elif (k < (286 + 463 + 27)):
                             shot = shot + "*"
 
@@ -1612,14 +1444,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 320):
-                            shot = shot + "n"
-                        elif (k < (320 + 448)):
-                            shot = shot + "w"
-                        elif (k < (320 + 448 + 302)):
-                            shot = shot + "d"
-                        elif (k < (320 + 448 + 302 + 18)):
-                            shot = shot + "x"
+                        if (k < (320 + 448 + 302 + 18)):
+                            shot = shot + "nwdx"
                         elif (k < (320 + 448 + 302 + 18 + 612)):
                             shot = shot + "*"
 
@@ -1674,14 +1500,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabilities are added
                         k = random.randint(0, 9999)
-                        if (k < 656):
-                            shot = shot + "n"
-                        elif (k < (656 + 480)):
-                            shot = shot + "w"
-                        elif (k < (656 + 480 + 496)):
-                            shot = shot + "d"
-                        elif (k < (656 + 480 + 496 + 96)):
-                            shot = shot + "x"
+                        if (k < (656 + 480 + 496 + 96)):
+                            shot = shot + "nwdx"
                         elif (k < (656 + 480 + 496 + 96 + 1328)):
                             shot = shot + "*"
 
@@ -1718,10 +1538,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 369):
-                            shot = shot + "n"
-                        elif (k < (369 + 401)):
-                            shot = shot + "d"
+                        if (k < (369 + 401)):
+                            shot = shot + "nwdx"
                         elif (k < (369 + 401 + 32)):
                             shot = shot + "*"
 
@@ -1764,14 +1582,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 372):
-                            shot = shot + "n"
-                        elif (k < (372 + 269)):
-                            shot = shot + "w"
-                        elif (k < (372 + 269 + 193)):
-                            shot = shot + "d"
-                        elif (k < (372 + 269 + 193 + 21)):
-                            shot = shot + "x"
+                        if (k < (372 + 269 + 193 + 21)):
+                            shot = shot + "nwdx"
                         elif (k < (372 + 269 + 193 + 21 + 276)):
                             shot = shot + "*"
 
@@ -1823,12 +1635,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 461):
-                            shot = shot + "n"
-                        elif (k < (461 + 476)):
-                            shot = shot + "w"
-                        elif (k < (461 + 476 + 353)):
-                            shot = shot + "x"
+                        if (k < (461 + 476 + 353)):
+                            shot = shot + "nwdx"
                         elif (k < (461 + 476 + 353 + 1229)):
                             shot = shot + "*"
 
@@ -1869,10 +1677,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 475):
-                            shot = shot + "n"
-                        elif (k < (475 + 285)):
-                            shot = shot + "d"
+                        if (k < (475 + 285)):
+                            shot = shot + "nwdx"
                         elif (k < (475 + 285 + 238)):
                             shot = shot + "*"
 
@@ -1907,14 +1713,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 553):
-                            shot = shot + "n"
-                        elif (k < (553 + 397)):
-                            shot = shot + "w"
-                        elif (k < (553 + 397 + 535)):
-                            shot = shot + "d"
-                        elif (k < (553 + 397 + 535 + 17)):
-                            shot = shot + "x"
+                        if (k < (553 + 397 + 535 + 17)):
+                            shot = shot + "nwdx"
                         elif (k < (553 + 397 + 535 + 17 + 1192)):
                             shot = shot + "*"
 
@@ -1966,16 +1766,11 @@ class Simple_Stat_Bot_Djokovic:
                             shot = shot + "8"
                         else:
                             shot = shot + "9"
+
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 395):
-                            shot = shot + "n"
-                        elif (k < (395 + 312)):
-                            shot = shot + "w"
-                        elif (k < (395 + 312 + 146)):
-                            shot = shot + "d"
-                        elif (k < (395 + 312 + 146 + 7)):
-                            shot = shot + "x"
+                        if (k < (395 + 312 + 146 + 7)):
+                            shot = shot + "nwdx"
                         elif (k < (395 + 312 + 146 + 7 + 1775)):
                             shot = shot + "*"
 
@@ -2026,10 +1821,8 @@ class Simple_Stat_Bot_Djokovic:
                             shot = shot + "9"
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 384):
-                            shot = shot + "n"
-                        elif (k < (384 + 256)):
-                            shot = shot + "d"
+                        if (k < (384 + 256)):
+                            shot = shot + "nwdx"
                         elif (k < (384 + 256 + 192)):
                             shot = shot + "*"
 
@@ -2081,14 +1874,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 273):
-                            shot = shot + "n"
-                        elif (k < (273 + 292)):
-                            shot = shot + "w"
-                        elif (k < (273 + 292 + 213)):
-                            shot = shot + "d"
-                        elif (k < (273 + 292 + 213 + 43)):
-                            shot = shot + "x"
+                        if (k < (273 + 292 + 213 + 43)):
+                            shot = shot + "nwdx"
                         elif (k < (273 + 292 + 213 + 43 + 996)):
                             shot = shot + "*"
 
@@ -2146,14 +1933,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 835):
-                            shot = shot + "n"
-                        elif (k < (835 + 503)):
-                            shot = shot + "w"
-                        elif (k < (835 + 503 + 396)):
-                            shot = shot + "d"
-                        elif (k < (835 + 503 + 396 + 43)):
-                            shot = shot + "x"
+                        if (k < (835 + 503 + 396 + 43)):
+                            shot = shot + "nwdx"
                         elif (k < (835 + 503 + 396 + 43 + 1713)):
                             shot = shot + "*"
 
@@ -2203,10 +1984,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 498):
-                            shot = shot + "n"
-                        elif (k < (498 + 498)):
-                            shot = shot + "d"
+                        if (k < (498 + 498)):
+                            shot = shot + "nwdx"
                         elif (k < (498 + 498 + 249)):
                             shot = shot + "*"
 
@@ -2253,16 +2032,11 @@ class Simple_Stat_Bot_Djokovic:
                             shot = shot + "8"
                         else:
                             shot = shot + "9"
+
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 457):
-                            shot = shot + "n"
-                        elif (k < (457 + 185)):
-                            shot = shot + "w"
-                        elif (k < (457 + 185 + 146)):
-                            shot = shot + "d"
-                        elif (k < (457 + 185 + 146 + 20)):
-                            shot = shot + "x"
+                        if (k < (457 + 185 + 146 + 20)):
+                            shot = shot + "nwdx"
                         elif (k < (457 + 185 + 146 + 20 + 642)):
                             shot = shot + "*"
 
@@ -2327,16 +2101,11 @@ class Simple_Stat_Bot_Djokovic:
                             shot = shot + "8"
                         else:
                             shot = shot + "9"
+
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 452):
-                            shot = shot + "n"
-                        elif (k < (452 + 347)):
-                            shot = shot + "w"
-                        elif (k < (452 + 347 + 226)):
-                            shot = shot + "d"
-                        elif (k < (452 + 347 + 226 + 90)):
-                            shot = shot + "x"
+                        if (k < (452 + 347 + 226 + 90)):
+                            shot = shot + "nwdx"
                         elif (k < (452 + 347 + 226 + 90 + 347)):
                             shot = shot + "*"
 
@@ -2368,10 +2137,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 446):
-                            shot = shot + "n"
-                        elif (k < (446 + 540)):
-                            shot = shot + "d"
+                        if (k < (446 + 540)):
+                            shot = shot + "nwdx"
                         elif (k < (446 + 540 + 70)):
                             shot = shot + "*"
 
@@ -2402,16 +2169,11 @@ class Simple_Stat_Bot_Djokovic:
                             shot = shot + "8"
                         else:
                             shot = shot + "9"
+
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 574):
-                            shot = shot + "n"
-                        elif (k < (574 + 444)):
-                            shot = shot + "w"
-                        elif (k < (574 + 444 + 444)):
-                            shot = shot + "d"
-                        elif (k < (574 + 444 + 444 + 52)):
-                            shot = shot + "x"
+                        if (k < (574 + 444 + 444 + 52)):
+                            shot = shot + "nwdx"
                         elif (k < (574 + 444 + 444 + 52 + 522)):
                             shot = shot + "*"
 
@@ -2446,12 +2208,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 265):
-                            shot = shot + "n"
-                        elif (k < (265 + 389)):
-                            shot = shot + "w"
-                        elif (k < (265 + 389 + 248)):
-                            shot = shot + "d"
+                        if (k < (265 + 389 + 248)):
+                            shot = shot + "nwdx"
                         elif (k < (265 + 389 + 248 + 708)):
                             shot = shot + "*"
 
@@ -2494,10 +2252,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 281):
-                            shot = shot + "n"
-                        elif (k < (281 + 346)):
-                            shot = shot + "d"
+                        if (k < (281 + 346)):
+                            shot = shot + "nwdx"
                         elif (k < (281 + 346 + 87)):
                             shot = shot + "*"
 
@@ -2543,16 +2299,11 @@ class Simple_Stat_Bot_Djokovic:
                             shot = shot + "8"
                         else:
                             shot = shot + "9"
+                        
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 190):
-                            shot = shot + "n"
-                        elif (k < (190 + 206)):
-                            shot = shot + "w"
-                        elif (k < (190 + 206 + 190)):
-                            shot = shot + "d"
-                        elif (k < (190 + 206 + 190 + 63)):
-                            shot = shot + "x"
+                        if (k < (190 + 206 + 190 + 63)):
+                            shot = shot + "nwdx"
                         elif (k < (190 + 206 + 190 + 63 + 714)):
                             shot = shot + "*"
 
@@ -2606,14 +2357,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 817):
-                            shot = shot + "n"
-                        elif (k < (817 + 741)):
-                            shot = shot + "w"
-                        elif (k < (817 + 741 + 380)):
-                            shot = shot + "d"
-                        elif (k < (817 + 741 + 380 + 95)):
-                            shot = shot + "x"
+                        if (k < (817 + 741 + 380 + 95)):
+                            shot = shot + "nwdx"
                         elif (k < (817 + 741 + 380 + 95 + 817)):
                             shot = shot + "*"
 
@@ -2653,10 +2398,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 548):
-                            shot = shot + "n"
-                        elif (k < (548 + 389)):
-                            shot = shot + "d"
+                        if (k < (548 + 389)):
+                            shot = shot + "nwdx"
                         elif (k < (548 + 389 + 71)):
                             shot = shot + "*"
 
@@ -2690,14 +2433,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 260):
-                            shot = shot + "n"
-                        elif (k < (260 + 341)):
-                            shot = shot + "w"
-                        elif (k < (260 + 341 + 185)):
-                            shot = shot + "d"
-                        elif (k < (260 + 341 + 185 + 37)):
-                            shot = shot + "x"
+                        if (k < (260 + 341 + 185 + 37)):
+                            shot = shot + "nwdx"
                         elif (k < (260 + 341 + 185 + 37 + 334)):
                             shot = shot + "*"
 
@@ -2748,14 +2485,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 472):
-                            shot = shot + "n"
-                        elif (k < (472 + 449)):
-                            shot = shot + "w"
-                        elif (k < (472 + 449 + 334)):
-                            shot = shot + "d"
-                        elif (k < (472 + 449 + 334 + 46)):
-                            shot = shot + "x"
+                        if (k < (472 + 449 + 334 + 46)):
+                            shot = shot + "nwdx"
                         elif (k < (472 + 449 + 334 + 46 + 530)):
                             shot = shot + "*"
 
@@ -2789,10 +2520,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 712):
-                            shot = shot + "n"
-                        elif (k < (712 + 642)):
-                            shot = shot + "d"
+                        if (k < (712 + 642)):
+                            shot = shot + "nwdx"
                         elif (k < (712 + 642 + 52)):
                             shot = shot + "*"
 
@@ -2828,14 +2557,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 483):
-                            shot = shot + "n"
-                        elif (k < (483 + 428)):
-                            shot = shot + "w"
-                        elif (k < (483 + 428 + 539)):
-                            shot = shot + "d"
-                        elif (k < (483 + 428 + 539 + 112)):
-                            shot = shot + "x"
+                        if (k < (483 + 428 + 539 + 112)):
+                            shot = shot + "nwdx"
                         elif (k < (483 + 428 + 539 + 112 + 799)):
                             shot = shot + "*"
 
@@ -2874,14 +2597,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 247):
-                            shot = shot + "n"
-                        elif (k < (247 + 378)):
-                            shot = shot + "w"
-                        elif (k < (247 + 378 + 230)):
-                            shot = shot + "d"
-                        elif (k < (247 + 378 + 230 + 33)):
-                            shot = shot + "x"
+                        if (k < (247 + 378 + 230 + 33)):
+                            shot = shot + "nwdx"
                         elif (k < (247 + 378 + 230 + 33 + 888)):
                             shot = shot + "*"
 
@@ -2933,10 +2650,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 182):
-                            shot = shot + "n"
-                        elif (k < (182 + 481)):
-                            shot = shot + "d"
+                        if (k < (182 + 481)):
+                            shot = shot + "nwdx"
                         elif (k < (182 + 481 + 100)):
                             shot = shot + "*"
 
@@ -2990,14 +2705,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 341):
-                            shot = shot + "n"
-                        elif (k < (341 + 384)):
-                            shot = shot + "w"
-                        elif (k < (341 + 384 + 128)):
-                            shot = shot + "d"
-                        elif (k < (341 + 384 + 128 + 14)):
-                            shot = shot + "x"
+                        if (k < (341 + 384 + 128 + 14)):
+                            shot = shot + "nwdx"
                         elif (k < (341 + 384 + 128 + 14 + 640)):
                             shot = shot + "*"
 
@@ -3054,14 +2763,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 748):
-                            shot = shot + "n"
-                        elif (k < (748 + 906)):
-                            shot = shot + "w"
-                        elif (k < (748 + 906 + 504)):
-                            shot = shot + "d"
-                        elif (k < (748 + 906 + 504 + 43)):
-                            shot = shot + "x"
+                        if (k < (748 + 906 + 504 + 43)):
+                            shot = shot + "nwdx"
                         elif (k < (748 + 906 + 504 + 43 + 1007)):
                             shot = shot + "*"
 
@@ -3104,10 +2807,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 356):
-                            shot = shot + "n"
-                        elif (k < (356 + 700)):
-                            shot = shot + "d"
+                        if (k < (356 + 700)):
+                            shot = shot + "nwdx"
                         elif (k < (356 + 700 + 51)):
                             shot = shot + "*"
 
@@ -3147,14 +2848,8 @@ class Simple_Stat_Bot_Djokovic:
 
                         # Error and Winner Probabiliteis are added
                         k = random.randint(0, 9999)
-                        if (k < 326):
-                            shot = shot + "n"
-                        elif (k < (326 + 326)):
-                            shot = shot + "w"
-                        elif (k < (326 + 326 + 267)):
-                            shot = shot + "d"
-                        elif (k < (326 + 326 + 267 + 20)):
-                            shot = shot + "x"
+                        if (k < (326 + 326 + 267 + 20)):
+                            shot = shot + "nwdx"
                         elif (k < (326 + 326 + 267 + 20 + 306)):
                             shot = shot + "*"
 
@@ -3185,7 +2880,7 @@ class Simple_Stat_Bot_Djokovic:
                             shot = "m" + shot
 
             else: 
-                #shot = "123"
+                shot = "123"
                 print("Error: Szenario under development")
 
         current_ralley.add_shot_to_ralley(shot)

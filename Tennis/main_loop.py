@@ -671,6 +671,7 @@ def main_loop():
                         new_ralley.get_shot_count())
 
     set_counting_for_tree = 0
+    match_count_for_tree = 0
 
     while run:
         draw(WIN, [bottom_player, top_player], 
@@ -777,8 +778,10 @@ def main_loop():
                     if MANUAL:
                         encode_shot_selection(new_ball, new_ralley)
                     else:
+                        # The bottom bot adds a shot here
                         bottom_bot.add_shot(new_ralley, new_score)
-                        
+                        tree_update(new_ralley, new_tree, "blue")
+
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
                                          TRANSITION_ANIMATION, "bottom", 
                                          new_score)
@@ -788,6 +791,8 @@ def main_loop():
                     # shot from the bot
                 elif top_bot.get_turn() == True:
                     top_bot.add_shot(new_ralley, new_score)
+                    tree_update(new_ralley, new_tree, "green")
+
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_ralley, WIN, 
                                      TRANSITION_ANIMATION, "top", new_score)
@@ -797,6 +802,11 @@ def main_loop():
                 # the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
                 
+                if (new_score.get_match_count() != match_count_for_tree):
+                    match_count_for_tree = new_score.get_match_count()
+                    ralley_tree.Ralley_Tree.show_tree(new_tree)
+
+
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colors.BLACK)

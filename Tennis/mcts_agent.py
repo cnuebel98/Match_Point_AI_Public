@@ -14,11 +14,11 @@ class MCTS_Agent:
 
         # Get the data to work with (current_tree, current_ralley,
         # score, and so on)
-        print(str(current_ralley.get_ralley()))
-        print(str(score.get_score()))
+        #print("Ralley: " + str(current_ralley.get_ralley()))
+        #print("Score: " + str(score.get_score()))
         
         ralley_tree.Ralley_Tree.show_tree(current_tree)
-        print(str(ralley_tree.Ralley_Tree.get_active_node(current_tree)))
+        #print("Active Node: " + str(current_tree.get_active_node()))
 
         # 1. Tree selection phase with UCT Formular:
         
@@ -52,6 +52,12 @@ class MCTS_Agent:
         shot ="123n"
         current_ralley.add_shot_to_ralley(shot)
 
+
+    def get_uct_value(self, node_1, node_2):
+        '''Returns the current UCT Value between two nodes'''
+        ...
+
+    
 
     def selection_phase(self):
         ...

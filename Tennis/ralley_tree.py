@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
+import constants as const
 
 class Ralley_Tree:
     '''In this class all the functions to generate the game tree are 
@@ -9,19 +10,22 @@ class Ralley_Tree:
         '''Initializing a tree as a NetworkX Graph'''
         self.tree = nx.DiGraph()
         self.node_index = 0
-        self.tree.add_node(0, color="red", type="init", shot="", depth=0)
+        self.tree.add_node(0, colour="red", type="init", shot="", depth=0)
         self.active_node = 0
         self.visited_nodes = [0]
 
-    def add_new_edge(self, node_A, node_B, n_visits):
+    def add_new_edge(self, node_A, node_B, n_visits, uct_value, win_count):
         '''Adds a new edge between two given nodes'''
-        self.tree.add_edge(node_A, node_B, n_visits=n_visits)
+        self.tree.add_edge(node_A, node_B,
+                           n_visits=n_visits,
+                           uct_value=uct_value,
+                           win_count=win_count)
 
-    def add_new_node(self, index, color, node_type, shot_string, depth):
+    def add_new_node(self, index, colour, node_type, shot_string, depth):
         '''A new node is added to the tree, with an unique index, a type
         (action or state node), a shot encoding string and a depth'''
         self.tree.add_node(index,
-                           color=color,
+                           colour=colour,
                            type=node_type,
                            shot=shot_string,
                            depth=depth)
@@ -74,17 +78,17 @@ class Ralley_Tree:
 
         return shots_of_neighbor_nodes
     
-    def get_color_list_of_neighbors(self, node):
+    def get_colour_list_of_neighbors(self, node):
         '''This function returns a list of shots of the neighbor nodes
         of a given node'''
-        colors_of_neighbor_nodes = []
+        colours_of_neighbor_nodes = []
         neighbor_nodes = list(self.tree.neighbors(node))
-        colors_of_all_nodes = nx.get_node_attributes(self.tree, 'color')
+        colours_of_all_nodes = nx.get_node_attributes(self.tree, 'colour')
         
         for n in neighbor_nodes:
-            colors_of_neighbor_nodes.append(colors_of_all_nodes[n])
+            colours_of_neighbor_nodes.append(colours_of_all_nodes[n])
 
-        return colors_of_neighbor_nodes
+        return colours_of_neighbor_nodes
 
     def get_shot_dict_of_neighbors(self, node):
         '''This function returns a dict of shots of the neighbor nodes
@@ -98,17 +102,17 @@ class Ralley_Tree:
 
         return shots_of_neighbor_nodes
 
-    def get_color_dict_of_neighbors(self, node):
-        '''This function returns a dict of the colors of the neighbor
+    def get_colour_dict_of_neighbors(self, node):
+        '''This function returns a dict of the colours of the neighbor
         nodes of a given node'''
-        colors_of_neighbor_nodes = {}
+        colours_of_neighbor_nodes = {}
         neighbor_nodes = list(self.tree.neighbors(node))
-        color_of_all_nodes = nx.get_node_attributes(self.tree, 'color')
+        colour_of_all_nodes = nx.get_node_attributes(self.tree, 'colour')
         
         for i in neighbor_nodes:
-            colors_of_neighbor_nodes[i] = color_of_all_nodes[i]
+            colours_of_neighbor_nodes[i] = colour_of_all_nodes[i]
 
-        return colors_of_neighbor_nodes
+        return colours_of_neighbor_nodes
 
     def add_node_visit(self, node):
         '''The given node is added to the visited_nodes list.'''
@@ -129,19 +133,38 @@ class Ralley_Tree:
         for x in range(0, len(self.visited_nodes)-1):
             self.tree[self.visited_nodes[x]][self.visited_nodes[x+1]][
                 'n_visits'] += 1
+            
+    def update_edge_wins(self, last_char_of_last_shot, player_of_last_shot):
+        '''Update win count on the visited edges'''
+        # The edge wins are updated only for the bottom player
+        #print(self.visited_nodes)
+        #print("last shot: " + str(last_char_of_last_shot))
+        #print("player: " + str(player_of_last_shot))
+        
+        # This if statement checks wether the bottom player made a point
+        # or not
+        if (player_of_last_shot == "blue"
+            and last_char_of_last_shot == const.ShotEncodings.WINNER
+            or player_of_last_shot == "green"
+            and last_char_of_last_shot != const.ShotEncodings.WINNER):
+            #print("bottom player played a Winner or top player made an error")
+            for x in range(0, len(self.visited_nodes)-1):
+                self.tree[self.visited_nodes[x]][self.visited_nodes[x+1]][
+                    'win_count'] += 1
+        
 
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''
-        # This is the list of colors for all the nodes. Node Color is
+        # This is the list of colours for all the nodes. Node Colour is
         # Blue for Bottom Bot and Green for Top Bot and Red for State 0
-        colors = list(nx.get_node_attributes(self.tree,'color').values())
+        colours = list(nx.get_node_attributes(self.tree,'colour').values())
         # pos = graphviz.Digraph(self.tree, prog="dot")
         # pos = nx.nx_pydot.pydot_layout(self.tree, prog="dot")
         # pos = nx.spring_layout(self.tree, k = 0.8)
         pos = graphviz_layout(self.tree, prog="dot")
         nx.draw(self.tree,
                 pos,
-                node_color = colors,
+                node_color = colours,
                 node_size = 150,
                 labels=nx.get_node_attributes(self.tree, 'shot'), 
                 with_labels=True, 
@@ -152,7 +175,7 @@ class Ralley_Tree:
         # edge_labels = dict([((n1, n2), f'{n1}->{n2}') for n1, n2 in self.tree.edges])
         
         # Edge_Labels are the number of visits
-        edge_labels = dict([((n1, n2), d['n_visits'])
+        edge_labels = dict([((n1, n2), d['win_count'])
                             for n1, n2, d in self.tree.edges(data=True)])
         
         nx.draw_networkx_edge_labels(self.tree, 

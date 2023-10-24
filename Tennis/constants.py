@@ -22,9 +22,9 @@ class Dims:
     TLINE_HEIGHT = int(0.5385*COURT_HEIGHT)
     NET_WIDTH = int(1.2*COURT_WIDTH)
 
-class Colors:
-    '''This class stores the colors as RGB Values'''
-    # Some Colors
+class Colours:
+    '''This class stores the colours as RGB Values'''
+    # Some Colours
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     GREEN = (0, 136, 0)
@@ -32,21 +32,23 @@ class Colors:
     BLUE = (0, 164, 255)
     YELLOW = (255, 255, 0)
     GREY = (47, 79, 79)
+    LIGHT_BLUE = (173, 216, 230)
+    LIGHT_GREEN = (195, 211, 255)
     
-    # French Open Color Scheme:
-    CLAY_COURT_COLOR = (194, 69, 45)
+    # French Open Colour Scheme:
+    CLAY_COURT_COLOUR = (194, 69, 45)
     
-    # Wimbledon Grass Color Scheme
+    # Wimbledon Grass Colour Scheme
     WIMBLEDON_GREEN = (0, 123, 34)
 
-    # US Open Color Scheme:
+    # US Open Colour Scheme:
     US_OPEN_GREEN = (108, 147, 92)
     US_OPEN_BLUE = (60, 99, 142)
 
-    # Australien Open Color Scheme:
+    # Australien Open Colour Scheme:
     AUSOPEN_COURT_BLUE = (55, 125, 184)
     AUSOPEN_COURT_LIGHTBLUE = (30, 143, 213)
-    AUSOPEN_LINECOLOR = (232, 247, 255)
+    AUSOPEN_LINECOLOUR = (232, 247, 255)
 
 class ShotEncodings:
     '''This class stores all the Shot encodings in their respective 
@@ -76,7 +78,7 @@ class MenuVariables:
     animation_time = 0.00
     simu_matches = 1
     simulation = True
-    color_scheme = 1
+    colour_scheme = 1
     logging = False
 
 class Changing:

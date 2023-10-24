@@ -38,19 +38,20 @@ TRANSITION_ANIMATION = False
 
 class PlayerRect:
     # ToDo: Make Players circles instead of squares
-    COLOR = const.Colors.BLACK
+    #COLOUR = const.Colours.BLACK
     # ToDo: Make velocity dependent on the player
     VELOCITY = 4
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, x, y, width, height, colour):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
+        self.colour = colour
 
     def draw(self, win):
         pygame.draw.rect(win, 
-                         self.COLOR, 
+                         self.colour, 
                          (self.x, self.y, self.width, self.height))
 
     def move_vertical(self, up=True):
@@ -66,75 +67,75 @@ class PlayerRect:
             self.x += self.VELOCITY
         
 def draw(win, players, ball, buttons):
-    # US Open Color Scheme
-    if const.MenuVariables.color_scheme == 1:
-        court_color_inside = const.Colors.US_OPEN_BLUE
-        court_color_outside = const.Colors.US_OPEN_GREEN
-        line_color = const.Colors.WHITE
-    # Roland Garros Color Scheme
-    elif const.MenuVariables.color_scheme == 2:
-        court_color_inside = const.Colors.CLAY_COURT_COLOR
-        court_color_outside = const.Colors.CLAY_COURT_COLOR
-        line_color = const.Colors.WHITE
-    # AusOpen Color Scheme
-    elif const.MenuVariables.color_scheme == 3:
-        court_color_inside = const.Colors.AUSOPEN_COURT_BLUE
-        court_color_outside = const.Colors.AUSOPEN_COURT_LIGHTBLUE
-        line_color = const.Colors.AUSOPEN_LINECOLOR
-    # Wimbledon Color Scheme
-    elif const.MenuVariables.color_scheme == 4:
-        court_color_inside = const.Colors.WIMBLEDON_GREEN
-        court_color_outside = const.Colors.WIMBLEDON_GREEN
-        line_color = const.Colors.WHITE
+    # US Open Colour Scheme
+    if const.MenuVariables.colour_scheme == 1:
+        court_colour_inside = const.Colours.US_OPEN_BLUE
+        court_colour_outside = const.Colours.US_OPEN_GREEN
+        line_colour = const.Colours.WHITE
+    # Roland Garros Colour Scheme
+    elif const.MenuVariables.colour_scheme == 2:
+        court_colour_inside = const.Colours.CLAY_COURT_COLOUR
+        court_colour_outside = const.Colours.CLAY_COURT_COLOUR
+        line_colour = const.Colours.WHITE
+    # AusOpen Colour Scheme
+    elif const.MenuVariables.colour_scheme == 3:
+        court_colour_inside = const.Colours.AUSOPEN_COURT_BLUE
+        court_colour_outside = const.Colours.AUSOPEN_COURT_LIGHTBLUE
+        line_colour = const.Colours.AUSOPEN_LINECOLOUR
+    # Wimbledon Colour Scheme
+    elif const.MenuVariables.colour_scheme == 4:
+        court_colour_inside = const.Colours.WIMBLEDON_GREEN
+        court_colour_outside = const.Colours.WIMBLEDON_GREEN
+        line_colour = const.Colours.WHITE
 
-    win.fill(court_color_outside)
+    win.fill(court_colour_outside)
     
     # Outer Lines
-    pygame.draw.rect(win, line_color, 
+    pygame.draw.rect(win, line_colour, 
                      (WIDTH//2 - COURT_WIDTH//2, 
                       HEIGHT//2 - COURT_HEIGHT//2, 
                       COURT_WIDTH, 
                       COURT_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, 
+    pygame.draw.rect(win, court_colour_inside, 
                      (WIDTH//2 - COURT_WIDTH//2 + LINE_WIDTH, 
                       HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, 
                       COURT_WIDTH-2*LINE_WIDTH, 
                       COURT_HEIGHT-2*LINE_WIDTH))
     # Single Lines
-    pygame.draw.rect(win, line_color, 
+    pygame.draw.rect(win, line_colour, 
                      (WIDTH//2 - SINGLES_LINES_WIDTH//2, 
                       HEIGHT//2 - COURT_HEIGHT//2, 
                       SINGLES_LINES_WIDTH, 
                       COURT_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, 
+    pygame.draw.rect(win, court_colour_inside, 
                      (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, 
                       HEIGHT//2 - COURT_HEIGHT//2 + LINE_WIDTH, 
                       SINGLES_LINES_WIDTH-2*LINE_WIDTH, 
                       COURT_HEIGHT-2*LINE_WIDTH))
     # T Lines horizontal
-    pygame.draw.rect(win, line_color, 
+    pygame.draw.rect(win, line_colour, 
                      (WIDTH//2 - SINGLES_LINES_WIDTH//2, 
                       HEIGHT//2 - TLINE_HEIGHT//2, 
                       SINGLES_LINES_WIDTH,
                       TLINE_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, 
+    pygame.draw.rect(win, court_colour_inside, 
                      (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, 
                       HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, 
                       SINGLES_LINES_WIDTH-2*LINE_WIDTH, 
                       TLINE_HEIGHT-2*LINE_WIDTH))
     # Middle T Line vertical
-    pygame.draw.rect(win, line_color, 
+    pygame.draw.rect(win, line_colour, 
                      (WIDTH//2 - SINGLES_LINES_WIDTH//2, 
                       HEIGHT//2 - TLINE_HEIGHT//2, 
                       SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2, 
                       TLINE_HEIGHT))
-    pygame.draw.rect(win, court_color_inside, 
+    pygame.draw.rect(win, court_colour_inside, 
                      (WIDTH//2 - SINGLES_LINES_WIDTH//2 + LINE_WIDTH, 
                       HEIGHT//2 - TLINE_HEIGHT//2 + LINE_WIDTH, 
                       SINGLES_LINES_WIDTH//2 + LINE_WIDTH//2 - LINE_WIDTH*2, 
                       TLINE_HEIGHT-2*LINE_WIDTH))
     # Net
-    pygame.draw.rect(win, line_color, 
+    pygame.draw.rect(win, line_colour, 
                      (WIDTH//2 - NET_WIDTH//2, 
                       HEIGHT//2 - LINE_WIDTH//2, 
                       NET_WIDTH, 
@@ -144,9 +145,9 @@ def draw(win, players, ball, buttons):
         player.draw(win)
 
     for button in buttons:
-        button.draw(win, const.Colors.WHITE)
+        button.draw(win, const.Colours.WHITE)
 
-    ball.draw(win, const.Colors.YELLOW)
+    ball.draw(win, const.Colours.YELLOW)
 
     pygame.display.update()
 
@@ -394,7 +395,7 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION,
         y = ball.get_Y()
         for i in range(0, 11, 1):
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
-            ball.draw(win, const.Colors.YELLOW)
+            ball.draw(win, const.Colours.YELLOW)
             pygame.display.update()
             time.sleep(const.MenuVariables.animation_time)
     else:
@@ -514,18 +515,18 @@ def encode_shot_selection(ball, ralley):
                         + str(encode_shot_depth(ball)))
         ralley.add_shot_to_ralley(current_shot)
     
-def tree_update(new_ralley, new_tree, color):
+def tree_update(new_ralley, new_tree, colour):
     '''A new node is added to the tree. When the node with the new shot
     already was played from the current game state, then its not added,
     otherwise its added as a directional graph to the tree'''
     
-    # The dictionaries are mapping the shot/color -> index of the node
+    # The dictionaries are mapping the shot/colour -> index of the node
     shot_dict = new_tree.get_shot_dict_of_neighbors(
         new_tree.get_active_node())
-    color_dict = new_tree.get_color_dict_of_neighbors(
+    colour_dict = new_tree.get_colour_dict_of_neighbors(
         new_tree.get_active_node())
     #print(shot_dict)
-    #print(color_dict)
+    #print(colour_dict)
     
     # Shot in tree boolean is initialized
     shot_in_tree = False
@@ -557,7 +558,7 @@ def tree_update(new_ralley, new_tree, color):
                               if v == matching_shot]
 
                 for h in range(len(index_list)):
-                    if color_dict[index_list[h]] == color:
+                    if colour_dict[index_list[h]] == colour:
                         #print(True)
                         shot_in_tree = True
                         new_tree.set_active_node(index_list[h])
@@ -568,7 +569,7 @@ def tree_update(new_ralley, new_tree, color):
         node_start = new_tree.get_active_node()
         new_tree.add_new_node(new_tree.get_next_node_index(),
                               node_type="state",
-                              color=color,
+                              colour=colour,
                               shot_string=new_ralley.get_last_shot(),
                               depth=new_ralley.get_len_ralley())
         
@@ -577,14 +578,18 @@ def tree_update(new_ralley, new_tree, color):
         if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
             # If the Node is the first shot in a ralley, it's added to 
             # State 0
-            new_tree.add_new_edge(0, new_tree.get_node_index(), 0)
+            new_tree.add_new_edge(0, new_tree.get_node_index(), 0, 0, 0)
             new_tree.set_active_node(new_tree.get_node_index())
             node_start = new_tree.get_active_node()
         else:
             # If the ralley is ongoing, here the Edges are added
             # print("Ralley length is not 1")
             node_start = new_tree.get_active_node()
-            new_tree.add_new_edge(node_start, new_tree.get_node_index(), 0)
+            new_tree.add_new_edge(node_start, 
+                                  new_tree.get_node_index(), 
+                                  0, 
+                                  0, 
+                                  0)
             new_tree.set_active_node(new_tree.get_node_index())
     #print("Active Node: " + str(new_tree.get_active_node()))
     new_tree.add_node_visit(new_tree.get_active_node())
@@ -598,6 +603,8 @@ def tree_update(new_ralley, new_tree, color):
         #print("List of visited Nodes: " + str(new_tree.get_visited_nodes()))
         new_tree.update_edge_visit_counts()
 
+        new_tree.update_edge_wins(new_ralley.get_last_char_of_last_shot(), 
+                                  colour)
         # The visited node list is being deleted
         new_tree.clear_visited_nodes()
 
@@ -620,10 +627,12 @@ def main_loop():
     bottom_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 
                                HEIGHT - PLAYER_HEIGHT - 10, 
                                PLAYER_WIDTH, 
-                               PLAYER_HEIGHT)
+                               PLAYER_HEIGHT,
+                               const.Colours.LIGHT_BLUE)
     top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 10, 
                             PLAYER_WIDTH, 
-                            PLAYER_HEIGHT)
+                            PLAYER_HEIGHT,
+                            const.Colours.LIGHT_GREEN)
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_ralley = ralley.Ralley()
     new_log = log.Log()
@@ -662,9 +671,9 @@ def main_loop():
     else: bottom_bot = bot.Bot("Random")
 
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, 
-                                HEIGHT*0.05, "NEXT", const.Colors.BLACK)
+                                HEIGHT*0.05, "NEXT", const.Colours.BLACK)
     score_text_field = button.Button(0.05*WIDTH, 0.15*HEIGHT, WIDTH*0.2, 
-                                     HEIGHT*0.05, "0-0", const.Colors.BLACK)
+                                     HEIGHT*0.05, "0-0", const.Colours.BLACK)
     new_score = scoring.Scoring(0, 0, 0, 0, 0, 0, "bottom_player")
 
     # the bottom player always starts the first game in the first set of
@@ -748,7 +757,7 @@ def main_loop():
 
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
-                                             WIN, const.Colors.BLACK)
+                                             WIN, const.Colours.BLACK)
                     
                     #ralley_tree.Ralley_Tree.show_tree(new_tree)
 
@@ -812,7 +821,7 @@ def main_loop():
 
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
-                                             WIN, const.Colors.BLACK)
+                                             WIN, const.Colours.BLACK)
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),
                                                 new_score.get_points_B(),

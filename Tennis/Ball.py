@@ -4,7 +4,7 @@ import constants as const
 class Ball:
     '''This is the ball class where most of the ball movement is done 
     and the reset as well as the transition'''
-    COLOR = const.Colors.YELLOW
+    COLOUR = const.Colours.YELLOW
     VELOCITY = const.Dims.BALL_VELOCITY
     
     def __init__(self, x , y, radius):
@@ -12,8 +12,8 @@ class Ball:
         self.y = y
         self.radius = radius
 
-    def draw(self, win, color):
-        pygame.draw.circle(win, color, (self.x, self.y), self.radius)    
+    def draw(self, win, colour):
+        pygame.draw.circle(win, colour, (self.x, self.y), self.radius)    
 
     def move_vertical(self, up=True):
         if up:

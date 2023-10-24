@@ -67,15 +67,15 @@ def simulation_bool(selected:tuple, value: any):
         const.MenuVariables.simulation = True
     else: const.MenuVariables.simulation = False
 
-def set_color_scheme(selected:tuple, value: any):
+def set_colour_scheme(selected:tuple, value: any):
     if value == 1:
-        const.MenuVariables.color_scheme = 1
+        const.MenuVariables.colour_scheme = 1
     elif value == 2:
-        const.MenuVariables.color_scheme = 2
+        const.MenuVariables.colour_scheme = 2
     elif value == 3:
-        const.MenuVariables.color_scheme = 3
+        const.MenuVariables.colour_scheme = 3
     elif value == 4:
-        const.MenuVariables.color_scheme = 4
+        const.MenuVariables.colour_scheme = 4
 
 def set_logging(selected: tuple, value: any):
     if value == 1:
@@ -115,7 +115,7 @@ menu.add.selector('Tournament: ',
                   [('US Open', 1), ('Roland Garros', 2), 
                    ('Australien Open', 3), ('Wimbledon', 4)], 
                   default=0, 
-                  onchange=set_color_scheme)
+                  onchange=set_colour_scheme)
 menu.add.selector('Export Data: ',
                   [('Off', 1), ('On', 2)],
                   default=0,

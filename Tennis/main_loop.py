@@ -719,7 +719,7 @@ def main_loop():
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         # The bottom bot adds a shot here
-                        bottom_bot.add_shot(new_ralley, new_score)
+                        bottom_bot.add_shot(new_ralley, new_score, new_tree)
                         tree_update(new_ralley, new_tree, "blue")
                         
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
@@ -730,7 +730,7 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
-                    top_bot.add_shot(new_ralley, new_score)
+                    top_bot.add_shot(new_ralley, new_score, new_tree)
 
                     tree_update(new_ralley, new_tree, "green")
 
@@ -782,7 +782,7 @@ def main_loop():
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         # The bottom bot adds a shot here
-                        bottom_bot.add_shot(new_ralley, new_score)
+                        bottom_bot.add_shot(new_ralley, new_score, new_tree)
                         tree_update(new_ralley, new_tree, "blue")
 
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
@@ -793,7 +793,7 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
-                    top_bot.add_shot(new_ralley, new_score)
+                    top_bot.add_shot(new_ralley, new_score, new_tree)
                     tree_update(new_ralley, new_tree, "green")
 
                     # Ball Movement is an animated transition

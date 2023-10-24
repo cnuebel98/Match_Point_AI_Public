@@ -51,7 +51,7 @@ class Bot:
         shot = 42
         ralley.add_shot_to_ralley(shot)
         
-    def add_shot(self, current_ralley, score):
+    def add_shot(self, current_ralley, score, current_tree):
         # We will have a 30% Chance of terminating a point,
         # 15% chance of a winner and 15% Chance of an Error
         i = random.randint(0, 99)

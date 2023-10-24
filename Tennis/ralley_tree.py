@@ -26,6 +26,10 @@ class Ralley_Tree:
                            shot=shot_string,
                            depth=depth)
 
+    def get_tree(self):
+        '''Returns the current tree'''
+        return self.tree
+
     def clear_tree(self):
         '''Deletes an existing tree'''
         self.tree.clear()

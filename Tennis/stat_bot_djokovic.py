@@ -22,7 +22,7 @@ class Stat_Bot_Djokovic:
         self.name = name
         self.turn = turn
 
-    def add_shot(self, current_ralley, score):
+    def add_shot(self, current_ralley, score, current_tree):
         '''Adds the most likely shot based on djokovic data'''
 
         # Serve from deuce side

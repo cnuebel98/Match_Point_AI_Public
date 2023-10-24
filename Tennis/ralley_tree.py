@@ -201,6 +201,16 @@ class Ralley_Tree:
 
             self.tree.nodes[self.visited_nodes[x]][
                 'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)
+            
+            #print("N_Wins child: " + str(wi))
+            #print("N_visits child: " + str(si))
+            #print("N_visits parent: " + str(sp))
+            #print("UCT_value " + str((wi/si) + c*math.sqrt((np.log(sp))/si)))
+
+    def get_uct_value(self, node):
+        '''Return the UCT Value of a given Node'''
+        return self.tree.nodes[node]['uct_value']
+
 
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''
@@ -215,7 +225,7 @@ class Ralley_Tree:
                 pos,
                 node_color = colours,
                 node_size = 150,
-                labels=nx.get_node_attributes(self.tree, 'uct_value'), 
+                labels=nx.get_node_attributes(self.tree, 'shot'), 
                 with_labels=True, 
                 font_size=5,
                 font_weight='normal')

@@ -53,20 +53,42 @@ class MCTS_Agent:
         current_ralley.add_shot_to_ralley(shot)
 
 
-    def get_uct_value(self, node_1, node_2):
-        '''Returns the current UCT Value between two nodes'''
-        ...
-
-    
-
     def selection_phase(self):
+        # starting from the root node, always pick the next neighbor
+        # node with the highest UCT Value until a leaf node is reached
+
+        # ToDo: get the list of neighbors from the root/active node
+        # Then get the UCT Values of the neighboring nodes 
+        # Then pick the neighbor with the highest uct value and go there
+        # Do that until a leaf node is found
+
+        # What is a leaf node in my game????
+        # n_neighbors with different directions = 3 (3 directions...)
+        # check the shot encodings for 1 2 and 3, if there is a shot 
+        # with each of those directions, we select the next,
+        # if not, we expand from there
+        # because Djokovic Bot also only looks at the last shots
+        # direction to make a choice
+
+        # Exception for 1st & 2nd Serve, there we have the 3 other
+        # direction for each serve
         ...
     
     def expansion_phase(self):
+        # hen there is a child node, where not all of the 3 directions
+        # have been played into yet, one of those directions is chosen
+        # at random
+        
         ...
     
     def simulation_phase(self):
+        # starting from that unexplored child node, simulation is done.
+        # Djoko Bot and MCTS Simulation Strategy (e.g. Random,
+        # MC-Evaluation, or others) take turns in adding a shot until
+        # terminal state is reached
         ...
     
     def backpropagation_phase(self):
+        # Either only update the values between root node and unexplored
+        # expanded child node, or all of the simulated stuff
         ...

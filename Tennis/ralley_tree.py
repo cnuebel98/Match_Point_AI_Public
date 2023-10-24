@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 import constants as const
+import math
+import numpy as np
 
 class Ralley_Tree:
     '''In this class all the functions to generate the game tree are 
@@ -10,7 +12,13 @@ class Ralley_Tree:
         '''Initializing a tree as a NetworkX Graph'''
         self.tree = nx.DiGraph()
         self.node_index = 0
-        self.tree.add_node(0, colour="red", type="init", shot="", depth=0)
+        self.tree.add_node(0, colour="red", 
+                           type="init", 
+                           shot="", 
+                           depth=0,
+                           n_visits=0,
+                           n_wins=0,
+                           uct_value=0)
         self.active_node = 0
         self.visited_nodes = [0]
 
@@ -21,14 +29,17 @@ class Ralley_Tree:
                            uct_value=uct_value,
                            win_count=win_count)
 
-    def add_new_node(self, index, colour, node_type, shot_string, depth):
+    def add_new_node(self, index, colour, node_type, shot_string, depth,
+                     n_visits, n_wins):
         '''A new node is added to the tree, with an unique index, a type
         (action or state node), a shot encoding string and a depth'''
         self.tree.add_node(index,
                            colour=colour,
                            type=node_type,
                            shot=shot_string,
-                           depth=depth)
+                           depth=depth,
+                           n_visits=n_visits,
+                           n_wins=n_wins)
 
     def get_tree(self):
         '''Returns the current tree'''
@@ -134,15 +145,29 @@ class Ralley_Tree:
             self.tree[self.visited_nodes[x]][self.visited_nodes[x+1]][
                 'n_visits'] += 1
             
+    def update_node_visit_counts(self):
+        '''Nodes attribute of the number of visits is updated'''
+        for x in range(0, len(self.visited_nodes)):
+            self.tree.nodes[self.visited_nodes[x]]['n_visits'] += 1
+
+    def update_node_wins(self, last_char_of_last_shot, player_of_last_shot):
+        '''Nodes attribute of the number of wins is updated'''
+        # This if statement checks wether the bottom player made a point
+        # or not  and if he did the win count on the visited edges is +1
+        if (player_of_last_shot == "blue"
+            and last_char_of_last_shot == const.ShotEncodings.WINNER
+            or player_of_last_shot == "green"
+            and last_char_of_last_shot != const.ShotEncodings.WINNER):
+            #print("bottom player played a Winner or top player made an error")
+            for x in range(0, len(self.visited_nodes)):
+                self.tree.nodes[self.visited_nodes[x]]['n_wins'] += 1
+
     def update_edge_wins(self, last_char_of_last_shot, player_of_last_shot):
         '''Update win count on the visited edges'''
         # The edge wins are updated only for the bottom player
-        #print(self.visited_nodes)
-        #print("last shot: " + str(last_char_of_last_shot))
-        #print("player: " + str(player_of_last_shot))
         
         # This if statement checks wether the bottom player made a point
-        # or not
+        # or not  and if he did the win count on the visited edges is +1
         if (player_of_last_shot == "blue"
             and last_char_of_last_shot == const.ShotEncodings.WINNER
             or player_of_last_shot == "green"
@@ -151,7 +176,31 @@ class Ralley_Tree:
             for x in range(0, len(self.visited_nodes)-1):
                 self.tree[self.visited_nodes[x]][self.visited_nodes[x+1]][
                     'win_count'] += 1
+
+    def update_uct_value(self):
+        # the uct value is the value for the selection phase of the mcts
+        # agent. The one with the largest UCT will be selected
+
+        # UCT = (wi/si) + c * sqrt(ln(sp)/si)
         
+        # (wi/si) ... exploitation term (gets larger, the better the 
+        # node has performed)        
+        # sqrt(ln(sp)/si) ... exploration term (gets larger, when the 
+        # node is picked less and less for simulation)
+        
+        # c  ... exploration parameter, usually sprt(2)
+        c = math.sqrt(2)
+        
+        for x in range(1, len(self.visited_nodes)):
+            # wi ... current nodes number of simulations, that were won
+            wi = self.tree.nodes[self.visited_nodes[x]]['n_wins']
+            # si ... current nodes total number of simulations
+            si = self.tree.nodes[self.visited_nodes[x]]['n_visits']
+            # sp ... parent node's current number of simulations
+            sp = self.tree.nodes[self.visited_nodes[x-1]]['n_visits']
+
+            self.tree.nodes[self.visited_nodes[x]][
+                'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)
 
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''
@@ -166,7 +215,7 @@ class Ralley_Tree:
                 pos,
                 node_color = colours,
                 node_size = 150,
-                labels=nx.get_node_attributes(self.tree, 'shot'), 
+                labels=nx.get_node_attributes(self.tree, 'uct_value'), 
                 with_labels=True, 
                 font_size=5,
                 font_weight='normal')
@@ -175,7 +224,7 @@ class Ralley_Tree:
         # edge_labels = dict([((n1, n2), f'{n1}->{n2}') for n1, n2 in self.tree.edges])
         
         # Edge_Labels are the number of visits
-        edge_labels = dict([((n1, n2), d['win_count'])
+        edge_labels = dict([((n1, n2), d['n_visits'])
                             for n1, n2, d in self.tree.edges(data=True)])
         
         nx.draw_networkx_edge_labels(self.tree, 

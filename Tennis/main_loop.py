@@ -571,7 +571,9 @@ def tree_update(new_ralley, new_tree, colour):
                               node_type="state",
                               colour=colour,
                               shot_string=new_ralley.get_last_shot(),
-                              depth=new_ralley.get_len_ralley())
+                              depth=new_ralley.get_len_ralley(),
+                              n_visits=0,
+                              n_wins=0)
         
         # Here we add the edge between the new node and the active node
         # and also set the new node to active
@@ -601,10 +603,18 @@ def tree_update(new_ralley, new_tree, colour):
         # The visited Nodes List is used to update the visit counts on 
         # each edge, that has been visited durcing the ralley
         #print("List of visited Nodes: " + str(new_tree.get_visited_nodes()))
+        
         new_tree.update_edge_visit_counts()
-
+        new_tree.update_node_visit_counts()
+        new_tree.update_node_wins(new_ralley.get_last_char_of_last_shot(), 
+                                  colour)
         new_tree.update_edge_wins(new_ralley.get_last_char_of_last_shot(), 
                                   colour)
+        new_tree.update_uct_value()
+        
+
+
+        #new_tree.update_uct_value()
         # The visited node list is being deleted
         new_tree.clear_visited_nodes()
 

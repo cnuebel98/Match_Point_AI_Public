@@ -209,9 +209,10 @@ class Ralley_Tree:
             child_nodes = self.get_neighbors(self.visited_nodes[x])
 
             # This UCT Values of the visited_nodes children is updated
-            # for each visited node
+            # for each visited node, if there is more then one, 
+            # otherwise the update is covered already
             if len(child_nodes) > 1:
-                print("Child Nodes: " + str(child_nodes))
+                #print("Child Nodes: " + str(child_nodes))
                 for y in range(0, len(child_nodes)):
                     wi = self.tree.nodes[child_nodes[y]]['n_wins']
                     si = self.tree.nodes[child_nodes[y]]['n_visits']
@@ -219,7 +220,6 @@ class Ralley_Tree:
                     self.tree.nodes[child_nodes[y]][
                         'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)
             
-            #if x > 0:
             # The UCT Value of the visited nodes are updated
             # wi ... current nodes number of simulations, that were won
             wi = self.tree.nodes[self.visited_nodes[x]]['n_wins']

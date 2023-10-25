@@ -20,7 +20,7 @@ class MCTS_Agent:
         #print("Score: " + str(score.get_score()))
         print("Number of Nodes: " + str(current_tree.get_n_nodes()))
         print("Active Node: " + str(current_tree.get_active_node()))
-        ralley_tree.Ralley_Tree.show_tree(current_tree)
+        
         #print("Active Node: " + str(current_tree.get_active_node()))
 
         # 1. Tree selection phase with UCT Formular:
@@ -83,40 +83,56 @@ class MCTS_Agent:
         # Then pick the neighbor with the highest uct value and go there
         # Do that until a leaf node is found
         # Get the list of neighbors from the root/active node
-        
-
-        # Neighbor_list of a node are all neighbors of a node
-        neighbor_list = current_tree.get_neighbors(self.get_active_mcts_node())
-        #print("Neighbors from active MCTS node: " + str(neighbor_list))
 
         # Blue_neighbors are only the neighbors nodes with color blue,
         # so the actions that have been taken by the MCTS Agent
         # from that node
-        blue_neighbors = []
-        blue_neighbors = current_tree.get_list_of_blue_neighbors(
-            self.get_active_mcts_node())
-        # print("Blue Neighbors from Active Node: " + str(blue_neighbors))
 
-        if blue_neighbors:
-            uct_values = current_tree.get_uct_values(blue_neighbors)
-            print("UCT Values of blue neighbors: " + str(uct_values))
+        self.leaf_node = 0
+        i = 0
 
+        while self.leaf_node == 0 or i == 10:
+            blue_neighbors = []
+            blue_neighbors = current_tree.get_list_of_blue_neighbors(
+                self.get_active_mcts_node())
+            # print("Blue Neighbors from Active Node: " + str(blue_neighbors))
 
-        # Here the Blue neighbor with the highest UCT Value is found
-        highest_uct_neighbor = 0
-        for x in range(0, len(blue_neighbors)):
-            if highest_uct_neighbor == 0:
-                highest_uct_neighbor = blue_neighbors[x]
-            elif (current_tree.get_uct_value(highest_uct_neighbor)
-                  <= current_tree.get_uct_value(blue_neighbors[x])):
-                highest_uct_neighbor = blue_neighbors[x]
+            # Idea:
+            # if: blue_neighbors have shots in all directions, then we
+            # set the highest UTC node to mcts_active_node 
 
-        print("Highest UCT Value of any blue neighbor: " + 
-              str(current_tree.get_uct_value(highest_uct_neighbor)))
-        
+            # else: we do: get_mcts_active_node and set that one to leaf
+            # node and we leave the while loop
+
+            # Every time the While loop is left, we need to have set a
+            # leaf node
+
+            if blue_neighbors:
+                uct_values = current_tree.get_uct_values(blue_neighbors)
+                print("UCT Values of blue neighbors: " + str(uct_values))
+
+            # Here the Blue neighbor with the highest UCT Value is found
+            highest_uct_neighbor = 0
+            for x in range(0, len(blue_neighbors)):
+                if highest_uct_neighbor == 0:
+                    highest_uct_neighbor = blue_neighbors[x]
+                elif (current_tree.get_uct_value(highest_uct_neighbor)
+                    <= current_tree.get_uct_value(blue_neighbors[x])):
+                    highest_uct_neighbor = blue_neighbors[x]
+
+            #print("Highest UCT Value of any blue neighbor: " + 
+            #    str(current_tree.get_uct_value(highest_uct_neighbor)))
+            
+            # The Blue neighbornode with the highest UTC Value is set to
+            # active and then the loop is repeated
+            self.set_active_mcts_node(highest_uct_neighbor)
+            
+            i += 1
+
+        self.expansion_phase()
+            
+
         #print(str(current_tree.get_uct_value(self.active_mcts_node)))
-
-
 
         # What is a leaf node in my game????
         # n_neighbors with different directions = 3 (3 directions...)
@@ -133,11 +149,15 @@ class MCTS_Agent:
         
     
     def expansion_phase(self):
-        # hen there is a child node, where not all of the 3 directions
-        # have been played into yet, one of those directions is chosen
-        # at random
+        # We take the leave node and check the direction, which is
+        # not yet in the leaf nodes children, and that is expanded and
+        # is the node we start the simulation form
+        print("The Leaf Node from the Selection Phase is: " 
+              + str(self.leaf_node))
         
-        ...
+        # ToDo: check directions in the children of the leaf node
+        # ToDo: choose a direction and add that as a new node/shot
+        # ToDo: start Simulation Phase from that new node
     
     def simulation_phase(self):
         # starting from that unexplored child node, simulation is done.

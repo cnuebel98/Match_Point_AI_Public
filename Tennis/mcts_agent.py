@@ -1,4 +1,4 @@
-
+import random
 import ralley_tree
 
 class MCTS_Agent:
@@ -8,6 +8,8 @@ class MCTS_Agent:
     def __init__(self, name="", turn=False):
         self.name = name
         self.turn = turn
+        self.active_mcts_node = 0
+        self.leaf_node = 0
 
     def add_shot(self, current_ralley, score, current_tree):
         '''This function is calling the different phases of MCTS'''
@@ -16,7 +18,8 @@ class MCTS_Agent:
         # score, and so on)
         #print("Ralley: " + str(current_ralley.get_ralley()))
         #print("Score: " + str(score.get_score()))
-        
+        print("Number of Nodes: " + str(current_tree.get_n_nodes()))
+        print("Active Node: " + str(current_tree.get_active_node()))
         ralley_tree.Ralley_Tree.show_tree(current_tree)
         #print("Active Node: " + str(current_tree.get_active_node()))
 
@@ -47,20 +50,73 @@ class MCTS_Agent:
         # - when its a serve, the Agent can choose the hit in directions 4, 5, 6
         # - when its in the ralley, the Agent can choose to hit in directions 1, 2, 3
         
-        # 2. Expansion phase
+        for _ in range(0, 10):
+            # repeat the 4 phases x times
+            # Selection phase:
+            #selected_node = self.selection_phase(current_tree)
+            ...
+        self.selection_phase(current_tree)
 
-        shot ="123n"
+        if current_ralley.get_len_ralley() == 0:
+            i = random.randint(0, 99)
+            if i < 33:
+                shot ="4"
+            elif i < 66:
+                shot = "5"
+            else:
+                shot = "6"
+        elif current_ralley.get_len_ralley() > 0:
+            shot = "f18"
+
         current_ralley.add_shot_to_ralley(shot)
 
+        # 2. Expansion phase
 
-    def selection_phase(self):
-        # starting from the root node, always pick the next neighbor
-        # node with the highest UCT Value until a leaf node is reached
 
-        # ToDo: get the list of neighbors from the root/active node
+    def selection_phase(self, current_tree):
+        '''In the selection Phase, we traverse through the current tree,
+        always taking the child node with the highest UCT Value until a
+        leaf node is reached'''
+        
+        
         # Then get the UCT Values of the neighboring nodes 
         # Then pick the neighbor with the highest uct value and go there
         # Do that until a leaf node is found
+        # Get the list of neighbors from the root/active node
+        
+
+        # Neighbor_list of a node are all neighbors of a node
+        neighbor_list = current_tree.get_neighbors(self.get_active_mcts_node())
+        #print("Neighbors from active MCTS node: " + str(neighbor_list))
+
+        # Blue_neighbors are only the neighbors nodes with color blue,
+        # so the actions that have been taken by the MCTS Agent
+        # from that node
+        blue_neighbors = []
+        blue_neighbors = current_tree.get_list_of_blue_neighbors(
+            self.get_active_mcts_node())
+        # print("Blue Neighbors from Active Node: " + str(blue_neighbors))
+
+        if blue_neighbors:
+            uct_values = current_tree.get_uct_values(blue_neighbors)
+            print("UCT Values of blue neighbors: " + str(uct_values))
+
+
+        # Here the Blue neighbor with the highest UCT Value is found
+        highest_uct_neighbor = 0
+        for x in range(0, len(blue_neighbors)):
+            if highest_uct_neighbor == 0:
+                highest_uct_neighbor = blue_neighbors[x]
+            elif (current_tree.get_uct_value(highest_uct_neighbor)
+                  <= current_tree.get_uct_value(blue_neighbors[x])):
+                highest_uct_neighbor = blue_neighbors[x]
+
+        print("Highest UCT Value of any blue neighbor: " + 
+              str(current_tree.get_uct_value(highest_uct_neighbor)))
+        
+        #print(str(current_tree.get_uct_value(self.active_mcts_node)))
+
+
 
         # What is a leaf node in my game????
         # n_neighbors with different directions = 3 (3 directions...)
@@ -72,7 +128,9 @@ class MCTS_Agent:
 
         # Exception for 1st & 2nd Serve, there we have the 3 other
         # direction for each serve
-        ...
+        #self.set_leaf_node()
+        #return self.get_leaf_node()
+        
     
     def expansion_phase(self):
         # hen there is a child node, where not all of the 3 directions
@@ -92,3 +150,27 @@ class MCTS_Agent:
         # Either only update the values between root node and unexplored
         # expanded child node, or all of the simulated stuff
         ...
+
+    def get_active_mcts_node(self):
+        '''Returns the node, that is active during the MCTS process.'''
+        return self.active_mcts_node
+    
+    def set_active_mcts_node(self, node):
+        '''Sets the value of the mcts-active node to a given Node.'''
+        self.active_mcts_node = node
+
+    def reset_active_mcts_node(self):
+        '''Resets the node, that was active during the MCTS process.'''
+        self.active_mcts_node = 0
+
+    def get_leaf_node(self):
+        '''Returns the node, that is active during the MCTS process.'''
+        return self.leaf_node
+    
+    def set_leaf_node(self, node):
+        '''Sets the value of the mcts-active node to a given Node.'''
+        self.leaf_node = node
+
+    def reset_leaf_node(self):
+        '''Resets the node, that was active during the MCTS process.'''
+        self.leaf_node = 0

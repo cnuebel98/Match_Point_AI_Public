@@ -30,7 +30,7 @@ class Ralley_Tree:
                            win_count=win_count)
 
     def add_new_node(self, index, colour, node_type, shot_string, depth,
-                     n_visits, n_wins):
+                     n_visits, n_wins, uct_value):
         '''A new node is added to the tree, with an unique index, a type
         (action or state node), a shot encoding string and a depth'''
         self.tree.add_node(index,
@@ -39,7 +39,8 @@ class Ralley_Tree:
                            shot=shot_string,
                            depth=depth,
                            n_visits=n_visits,
-                           n_wins=n_wins)
+                           n_wins=n_wins,
+                           uct_value=uct_value)
 
     def get_tree(self):
         '''Returns the current tree'''
@@ -73,7 +74,7 @@ class Ralley_Tree:
         return str(x)
     
     def get_neighbors(self, n):
-        '''Returns the neighbor nodes of a given node'''
+        '''Returns a list of the neighbor nodes of a given node'''
         neighbor_list = self.tree.neighbors(n)
         return list(neighbor_list)
     
@@ -124,6 +125,18 @@ class Ralley_Tree:
             colours_of_neighbor_nodes[i] = colour_of_all_nodes[i]
 
         return colours_of_neighbor_nodes
+
+    def get_list_of_blue_neighbors(self, node):
+        '''Returns the list of neighbors, where color = "Blue", which 
+        means that player is bottom player'''
+        blue_neighbors = []
+        neighbors = self.get_neighbors(node)
+
+        for x in range(0, len(neighbors)):
+            if self.tree.nodes[neighbors[x]]['colour'] == "blue":
+                blue_neighbors.append(neighbors[x])
+
+        return blue_neighbors
 
     def add_node_visit(self, node):
         '''The given node is added to the visited_nodes list.'''
@@ -191,7 +204,23 @@ class Ralley_Tree:
         # c  ... exploration parameter, usually sprt(2)
         c = math.sqrt(2)
         
-        for x in range(1, len(self.visited_nodes)):
+        for x in range(0, len(self.visited_nodes)):
+            child_nodes = []
+            child_nodes = self.get_neighbors(self.visited_nodes[x])
+
+            # This UCT Values of the visited_nodes children is updated
+            # for each visited node
+            if len(child_nodes) > 1:
+                print("Child Nodes: " + str(child_nodes))
+                for y in range(0, len(child_nodes)):
+                    wi = self.tree.nodes[child_nodes[y]]['n_wins']
+                    si = self.tree.nodes[child_nodes[y]]['n_visits']
+                    sp = self.tree.nodes[self.visited_nodes[x]]['n_visits']
+                    self.tree.nodes[child_nodes[y]][
+                        'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)
+            
+            #if x > 0:
+            # The UCT Value of the visited nodes are updated
             # wi ... current nodes number of simulations, that were won
             wi = self.tree.nodes[self.visited_nodes[x]]['n_wins']
             # si ... current nodes total number of simulations
@@ -207,10 +236,22 @@ class Ralley_Tree:
             #print("N_visits parent: " + str(sp))
             #print("UCT_value " + str((wi/si) + c*math.sqrt((np.log(sp))/si)))
 
+    def get_uct_values(self, node_list):
+        '''Return the UCT Values of a given List of nodes'''
+        uct_values = []
+        for x in range(0, len(node_list)):
+            uct_value = self.tree.nodes[node_list[x]]['uct_value']
+            uct_values.append(uct_value)
+
+        return uct_values
+    
     def get_uct_value(self, node):
-        '''Return the UCT Value of a given Node'''
+        '''Returns the UCT Value of a given Node'''
         return self.tree.nodes[node]['uct_value']
 
+    def get_n_nodes(self):
+        '''Returns the number of nodes in the tree'''
+        return self.tree.number_of_nodes()
 
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''
@@ -225,7 +266,7 @@ class Ralley_Tree:
                 pos,
                 node_color = colours,
                 node_size = 150,
-                labels=nx.get_node_attributes(self.tree, 'shot'), 
+                labels=nx.get_node_attributes(self.tree, 'uct_value'), 
                 with_labels=True, 
                 font_size=5,
                 font_weight='normal')

@@ -2885,8 +2885,9 @@ class Simple_Stat_Bot_Djokovic:
 
         current_ralley.add_shot_to_ralley(shot)
         shot = ""
-        print(current_ralley.get_ralley())
-
+        print("Ralley_after_statBotShot: " + str(current_ralley.get_ralley()))
+        print("----------------------------")
+        
     def set_turn(self, bool_var):
         self.turn = bool_var
 

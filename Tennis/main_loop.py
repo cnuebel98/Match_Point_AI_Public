@@ -768,7 +768,7 @@ def main_loop():
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colours.BLACK)
                     
-                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    ralley_tree.Ralley_Tree.show_tree(new_tree)
 
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),

@@ -90,6 +90,14 @@ class Ralley_Tree:
 
         return shots_of_neighbor_nodes
     
+    def get_shots_of_neighbors(self, node_list):
+        '''Return a list of shots of a given List of nodes'''
+        neighbor_shots = []
+        for x in range(0, len(node_list)):
+            neighbor_shot = self.tree.nodes[node_list[x]]['shot']
+            neighbor_shots.append(neighbor_shot)
+        return neighbor_shots
+    
     def get_colour_list_of_neighbors(self, node):
         '''This function returns a list of shots of the neighbor nodes
         of a given node'''
@@ -114,6 +122,11 @@ class Ralley_Tree:
 
         return shots_of_neighbor_nodes
 
+    def get_colour_of_node(self, node):
+        '''Returns the color of a given Node.'''
+        color = self.tree.nodes[node]['colour']
+        return color
+
     def get_colour_dict_of_neighbors(self, node):
         '''This function returns a dict of the colours of the neighbor
         nodes of a given node'''
@@ -127,7 +140,7 @@ class Ralley_Tree:
         return colours_of_neighbor_nodes
 
     def get_list_of_blue_neighbors(self, node):
-        '''Returns the list of neighbors, where color = "Blue", which 
+        '''Returns the list of neighbors, where colour = "Blue", which 
         means that player is bottom player'''
         blue_neighbors = []
         neighbors = self.get_neighbors(node)
@@ -137,6 +150,18 @@ class Ralley_Tree:
                 blue_neighbors.append(neighbors[x])
 
         return blue_neighbors
+    
+    def get_list_of_green_neighbors(self, node):
+        '''Returns the list of neighbors, where color = "Green", which 
+        means that player is top player'''
+        green_neighbors = []
+        neighbors = self.get_neighbors(node)
+
+        for x in range(0, len(neighbors)):
+            if self.tree.nodes[neighbors[x]]['colour'] == "green":
+                green_neighbors.append(neighbors[x])
+
+        return green_neighbors
 
     def add_node_visit(self, node):
         '''The given node is added to the visited_nodes list.'''
@@ -153,7 +178,7 @@ class Ralley_Tree:
         return self.visited_nodes
 
     def update_edge_visit_counts(self):
-        print("Visited_nodes: " + str(self.visited_nodes))
+        #print("Visited_nodes: " + str(self.visited_nodes))
         for x in range(0, len(self.visited_nodes)-1):
             self.tree[self.visited_nodes[x]][self.visited_nodes[x+1]][
                 'n_visits'] += 1

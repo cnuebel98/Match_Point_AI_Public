@@ -280,12 +280,58 @@ class MCTS_Agent:
         # Get neighbors of the leaf node
         children_of_leaf_node = current_tree.get_neighbors(self.leaf_node)
         
-        # Problem: When expanding the root node, we add a serve.
-        # That serve can be a fault and a second serve needs to be added
-        # So we have to treaat that case carefully:
+        # special case: we need to check if the leaf node was a first
+        # serve fault and then expand a second serve from there
+        shot_encoding = current_tree.get_shot_of_node(self.leaf_node)
+        if any("," in s for s in shot_encoding):
+            print("Leaf Node is 1st serve fault, need to expand 2nd serve")
+            
+            if children_of_leaf_node:
+                shots_of_children = current_tree.get_shots_of_neighbors(
+                    children_of_leaf_node)
+                print("Leaf node is first serve fault with children")
+                if (any("4" in s for s in shots_of_children) 
+                    and any("5" in s for s in shots_of_children)):
+                    print("4 and 5 were found in children of leaf node")
+                    self.set_expansion_shot("6", score, False)
+                elif (any("4" in s for s in shots_of_children)
+                    and any("6" in s for s in shots_of_children)):
+                    print("4 and 6 were found in children of leaf node")
+                    self.set_expansion_shot("5", score, False)
+                elif (any("5" in s for s in shots_of_children)
+                    and any("6" in s for s in shots_of_children)):
+                    print("5 and 6 were found in children of leaf node")
+                    self.set_expansion_shot("4", score, False)
+                elif (any("4" in s for s in shots_of_children)):
+                    print("4 was found in a child")
+                    i = random.randint(0, 99)
+                    if i < 50:
+                        self.set_expansion_shot("5", score, False)
+                    else: self.set_expansion_shot("6", score, False)
+                elif (any("5" in s for s in shots_of_children)):
+                    print("5 was found in a child")
+                    i = random.randint(0, 99)
+                    if i < 50:
+                        self.set_expansion_shot("4", score, False)
+                    else: self.set_expansion_shot("6", score, False)
+                elif (any("6" in s for s in shots_of_children)):
+                    print("6 was found in a child")
+                    i = random.randint(0, 99)
+                    if i < 50:
+                        self.set_expansion_shot("4", score, False)
+                    else: self.set_expansion_shot("5", score, False)
+            else:
+                print("2nd Serve & No children of leaf node found.")
+                i = random.randint(0, 99)
+                if i < 33: 
+                    self.set_expansion_shot("4", score, False)
+                elif i < 66:
+                    self.set_expansion_shot("5", score, False)
+                else:
+                    self.set_expansion_shot("6", score, False)
 
         # When the root is a leaf node, we expand a random direction
-        if self.leaf_node == 0:
+        elif self.leaf_node == 0:
             print("Adding a new first serve.")
             # When there are already first serves, we check to see which
             # ones were played already
@@ -296,42 +342,42 @@ class MCTS_Agent:
                 if (any("4" in s for s in shots_of_children) 
                     and any("5" in s for s in shots_of_children)):
                     print("4 and 5 were found in children of leaf node")
-                    self.set_expansion_shot("6", score)
+                    self.set_expansion_shot("6", score, True)
                 elif (any("4" in s for s in shots_of_children)
                     and any("6" in s for s in shots_of_children)):
                     print("4 and 6 were found in children of leaf node")
-                    self.set_expansion_shot("5", score)
+                    self.set_expansion_shot("5", score, True)
                 elif (any("5" in s for s in shots_of_children)
                     and any("6" in s for s in shots_of_children)):
                     print("5 and 6 were found in children of leaf node")
-                    self.set_expansion_shot("4", score)
+                    self.set_expansion_shot("4", score, True)
                 elif (any("4" in s for s in shots_of_children)):
                     print("4 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("5", score)
-                    else: self.set_expansion_shot("6", score)
+                        self.set_expansion_shot("5", score, True)
+                    else: self.set_expansion_shot("6", score, True)
                 elif (any("5" in s for s in shots_of_children)):
                     print("5 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("4", score)
-                    else: self.set_expansion_shot("6", score)
+                        self.set_expansion_shot("4", score, True)
+                    else: self.set_expansion_shot("6", score, True)
                 elif (any("6" in s for s in shots_of_children)):
                     print("6 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("4", score)
-                    else: self.set_expansion_shot("5", score)
+                        self.set_expansion_shot("4", score, True)
+                    else: self.set_expansion_shot("5", score, True)
             else:
                 print("No children of leaf node found.")
                 i = random.randint(0, 99)
                 if i < 33: 
-                    self.set_expansion_shot("4", score)
+                    self.set_expansion_shot("4", score, True)
                 elif i < 66:
-                    self.set_expansion_shot("5", score)
+                    self.set_expansion_shot("5", score, True)
                 else:
-                    self.set_expansion_shot("6", score)
+                    self.set_expansion_shot("6", score, True)
 
         elif children_of_leaf_node:
             # When the leaf node already has children, we need to
@@ -442,13 +488,13 @@ class MCTS_Agent:
         '''Returns the expansion_shot.'''
         return self.expansion_shot
     
-    def set_expansion_shot(self, shot, score):
+    def set_expansion_shot(self, shot, score, first_serve=True):
         '''Sets the value of the expansion_shot.'''
         # Adding the probabilites of errors and winners 
         # to the chosen action (One action can lead to differetn states)
         altered_shot = shot
 
-        if (shot == "4" or shot == "5" or shot == "6"):
+        if (shot == "4" or shot == "5" or shot == "6" and first_serve == True):
             # If serving from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
                 print("Expanding first serve from the deuce side")
@@ -491,6 +537,58 @@ class MCTS_Agent:
                         altered_shot = altered_shot + str("nwdx,")
                     elif k < (3527 + 897):
                         altered_shot = altered_shot + str("*")
+        
+        elif (shot == "4" or shot == "5" or shot == "6" 
+              and first_serve == False):
+            # Adding Winner & Error Probas to a second serve
+            if (score.get_point_count_per_game() % 2 == 0):
+                print("Expanding 2nd serve from the deuce side")
+                if (shot == "4"):
+                    i = random.randint(0, 9999)
+                    if i < 1240:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif i < (1240 + 149):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "5"):
+                    j = random.randint(0, 9999)
+                    if j < 737:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif j < (737 + 2):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "6"):
+                    k = random.randint(0, 9999)
+                    if k < 1068:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif k < (1068 + 94):
+                        altered_shot = altered_shot + str("*")
+            else:
+                print("Expanding 2nd serve from the ad side")
+                if (shot == "4"):
+                    i = random.randint(0, 9999)
+                    if i < 840:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif i < (840 + 61):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "5"):
+                    j = random.randint(0, 9999)
+                    if j < 755:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif j < (755 + 4):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "6"):
+                    k = random.randint(0, 9999)
+                    if k < 1373:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif k < (1373 + 299):
+                        altered_shot = altered_shot + str("*")
+
+        elif (shot == "1" or shot == "2" or shot == "3"):
+            print("ToDo: Adding probabilities for Winners/Errors for normal shots.")
+            ...
+
+
+
+
 
         print("Altered Shot from Expansion Phase: " + str(altered_shot))
         self.expansion_shot = altered_shot

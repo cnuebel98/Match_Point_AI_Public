@@ -128,6 +128,11 @@ class Ralley_Tree:
         '''Returns the color of a given Node.'''
         color = self.tree.nodes[node]['colour']
         return color
+    
+    def get_shot_of_node(self, node):
+        '''Returns the shot of a given Node.'''
+        shot = self.tree.nodes[node]['shot']
+        return shot
 
     def get_colour_dict_of_neighbors(self, node):
         '''This function returns a dict of the colours of the neighbor

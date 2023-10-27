@@ -578,22 +578,21 @@ def tree_update(new_ralley, new_tree, colour):
         
         # Here we add the edge between the new node and the active node
         # and also set the new node to active
+        dir = new_tree.get_dir_of_shot(new_tree.get_node_index())
         if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
             # If the Node is the first shot in a ralley, it's added to 
             # State 0
-            new_tree.add_new_edge(0, new_tree.get_node_index(), 0, 0, 0)
+            new_tree.add_new_edge(0, new_tree.get_node_index(), 0, 0, 0, dir)
             new_tree.set_active_node(new_tree.get_node_index())
             node_start = new_tree.get_active_node()
         else:
             # If the ralley is ongoing, here the Edges are added
             # print("Ralley length is not 1")
             node_start = new_tree.get_active_node()
-            new_tree.add_new_edge(node_start, 
-                                  new_tree.get_node_index(), 
-                                  0, 
-                                  0, 
-                                  0)
+            new_tree.add_new_edge(node_start,
+                                  new_tree.get_node_index(), 0, 0, 0, dir)
             new_tree.set_active_node(new_tree.get_node_index())
+            
     #print("Active Node: " + str(new_tree.get_active_node()))
     new_tree.add_node_visit(new_tree.get_active_node())
     # If the added shot was a terminal shot, the initial state is set to

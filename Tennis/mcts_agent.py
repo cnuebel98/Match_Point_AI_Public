@@ -1,4 +1,6 @@
 import random
+import simpler_stat_bot_djoko
+import scoring
 
 class MCTS_Agent:
     '''In this class, the MCTS Algorithm is used to find the next shot 
@@ -10,6 +12,7 @@ class MCTS_Agent:
         self.active_mcts_node = 0
         self.leaf_node = 0
         self.shot = ""
+        self.expansion_shot = ""
 
     def add_shot(self, current_ralley, score, current_tree):
         '''This function is calling the different phases of MCTS'''
@@ -53,8 +56,9 @@ class MCTS_Agent:
             # Selection phase:
             #selected_node = self.selection_phase(current_tree)
             ...
+        print("--------------------------------")
         print("Starting selection Phase!")
-        self.selection_phase(current_tree)
+        self.selection_phase(current_ralley, score, current_tree)
 
         if current_ralley.get_len_ralley() == 0:
             i = random.randint(0, 99)
@@ -73,15 +77,13 @@ class MCTS_Agent:
             else:
                 self.shot = "f38"
         
-        print("Adding MCTS Shot to ralley: " + str(self.shot))
+        print("Adding MCTS Shot to ralley (not learned): " + str(self.shot))
         current_ralley.add_shot_to_ralley(self.shot)
         print("Ralley: " + str(current_ralley.get_ralley()))
         print("-------------------------------")
-        
-        # 2. Expansion phase
 
 
-    def selection_phase(self, current_tree):
+    def selection_phase(self, current_ralley, score, current_tree):
         '''In the selection Phase, we traverse through the current tree,
         always taking the child node with the highest UCT Value until a
         leaf node is reached'''
@@ -157,9 +159,10 @@ class MCTS_Agent:
                 dir_6_found = True
                 #print("6 was found in blue neighbors shots.")
             
-            print("Color of Active MCTS Node: " + str(color_of_mcts_active_node))
+            print("Color of Active MCTS Node: " + 
+                  str(color_of_mcts_active_node))
             
-            # If the color is red, we are still at the root
+            # If the color is red, we are still at the root node
             if (color_of_mcts_active_node == "red"):
                 # If its the MCTS Agents turn to serve, maybe start with
                 # a blue node else, start with a random green one
@@ -251,8 +254,9 @@ class MCTS_Agent:
             # leaf node
             
             i += 1
+            print("--------------------------")
         print("Starting Expansion Phase!")
-        self.expansion_phase()
+        self.expansion_phase(current_ralley, score, current_tree)
         self.reset_active_mcts_node()
         self.reset_leaf_node()
 
@@ -266,21 +270,143 @@ class MCTS_Agent:
         # because Djokovic Bot also only looks at the last shots
         # direction to make a choice
     
-    def expansion_phase(self):
+    def expansion_phase(self, current_ralley, score, current_tree):
         # We take the leave node and check the direction, which is
         # not yet in the leaf nodes children, and that is expanded and
         # is the node we start the simulation form
         print("The Leaf Node from the Selection Phase is: " 
               + str(self.leaf_node))
-        # ToDo: check directions in the children of the leaf node
-        # ToDo: choose a direction and add that as a new node/shot
+        
+        # Get neighbors of the leaf node
+        children_of_leaf_node = current_tree.get_neighbors(self.leaf_node)
+        
+        # Problem: When expanding the root node, we add a serve.
+        # That serve can be a fault and a second serve needs to be added
+        # So we have to treaat that case carefully:
+
+        # When the root is a leaf node, we expand a random direction
+        if self.leaf_node == 0:
+            print("Adding a new first serve.")
+            # When there are already first serves, we check to see which
+            # ones were played already
+            if children_of_leaf_node:
+                shots_of_children = current_tree.get_shots_of_neighbors(
+                    children_of_leaf_node)
+                
+                if (any("4" in s for s in shots_of_children) 
+                    and any("5" in s for s in shots_of_children)):
+                    print("4 and 5 were found in children of leaf node")
+                    self.set_expansion_shot("6", score)
+                elif (any("4" in s for s in shots_of_children)
+                    and any("6" in s for s in shots_of_children)):
+                    print("4 and 6 were found in children of leaf node")
+                    self.set_expansion_shot("5", score)
+                elif (any("5" in s for s in shots_of_children)
+                    and any("6" in s for s in shots_of_children)):
+                    print("5 and 6 were found in children of leaf node")
+                    self.set_expansion_shot("4", score)
+                elif (any("4" in s for s in shots_of_children)):
+                    print("4 was found in a child")
+                    i = random.randint(0, 99)
+                    if i < 50:
+                        self.set_expansion_shot("5", score)
+                    else: self.set_expansion_shot("6", score)
+                elif (any("5" in s for s in shots_of_children)):
+                    print("5 was found in a child")
+                    i = random.randint(0, 99)
+                    if i < 50:
+                        self.set_expansion_shot("4", score)
+                    else: self.set_expansion_shot("6", score)
+                elif (any("6" in s for s in shots_of_children)):
+                    print("6 was found in a child")
+                    i = random.randint(0, 99)
+                    if i < 50:
+                        self.set_expansion_shot("4", score)
+                    else: self.set_expansion_shot("5", score)
+            else:
+                print("No children of leaf node found.")
+                i = random.randint(0, 99)
+                if i < 33: 
+                    self.set_expansion_shot("4", score)
+                elif i < 66:
+                    self.set_expansion_shot("5", score)
+                else:
+                    self.set_expansion_shot("6", score)
+
+        elif children_of_leaf_node:
+            # When the leaf node already has children, we need to
+            # check their directions and add a shot with a direction,
+            # that is'nt in the tree yet
+            shots_of_children = current_tree.get_shots_of_neighbors(
+                children_of_leaf_node)
+            
+            if (any("1" in s for s in shots_of_children) 
+                and any("2" in s for s in shots_of_children)):
+                print("1 and 2 were found in children of leaf node")
+                self.set_expansion_shot("3", score)
+            elif (any("1" in s for s in shots_of_children)
+                and any("3" in s for s in shots_of_children)):
+                print("1 and 3 were found in children of leaf node")
+                self.set_expansion_shot("2", score)
+            elif (any("2" in s for s in shots_of_children)
+                and any("3" in s for s in shots_of_children)):
+                print("2 and 3 were found in children of leaf node")
+                self.set_expansion_shot("1", score)
+            elif (any("1" in s for s in shots_of_children)):
+                print("1 was found in a child")
+                i = random.randint(0, 99)
+                if i < 50:
+                    self.set_expansion_shot("2", score)
+                else: self.set_expansion_shot("3", score)
+            elif (any("2" in s for s in shots_of_children)):
+                print("2 was found in a child")
+                i = random.randint(0, 99)
+                if i < 50:
+                    self.set_expansion_shot("1", score)
+                else: self.set_expansion_shot("3", score)
+            elif (any("3" in s for s in shots_of_children)):
+                print("3 was found in a child")
+                i = random.randint(0, 99)
+                if i < 50:
+                    self.set_expansion_shot("1", score)
+                else: self.set_expansion_shot("2", score)
+            else:
+                i = random.randint(0, 99)
+                if i < 33: 
+                    self.set_expansion_shot("1", score)
+                elif i < 66:
+                    self.set_expansion_shot("2", score)
+                else:
+                    self.set_expansion_shot("3", score)
+
         # ToDo: start Simulation Phase from that new node
     
-    def simulation_phase(self):
+    def simulation_phase(self, current_ralley, score, current_tree):
         # starting from that unexplored child node, simulation is done.
         # Djoko Bot and MCTS Simulation Strategy (e.g. Random,
         # MC-Evaluation, or others) take turns in adding a shot until
         # terminal state is reached
+        
+        # to call the add_shot function of the opponent, we need the
+        # the current_ralley, score and current_tree
+        #simpler_stat_bot_djoko.Simple_Stat_Bot_Djokovic.add_shot(
+        #    current_ralley, score, current_tree)
+
+
+        # while (active_simu_shot not terminal):
+        # active_simu_shot = ""    
+        # Firstly, we need to see if the expanded shot or the active 
+        # simu_shot was terminal
+        # if ("nwdx," or "*" in self.get_expansion_shot()):
+        #   if it was terminal: backpropagation phase
+        # 
+        # elif (its mcts agents turn to take a shot):
+        #   "4", "5", "6" add at random and the probabilites for
+        #   error/winner
+        # elif (its the opponents turn to take a shot):
+        #   call add_shot function of top_bot
+
+        
         ...
     
     def backpropagation_phase(self):
@@ -311,3 +437,64 @@ class MCTS_Agent:
     def reset_leaf_node(self):
         '''Resets the node, that was active during the MCTS process.'''
         self.leaf_node = 0
+
+    def get_expansion_shot(self):
+        '''Returns the expansion_shot.'''
+        return self.expansion_shot
+    
+    def set_expansion_shot(self, shot, score):
+        '''Sets the value of the expansion_shot.'''
+        # Adding the probabilites of errors and winners 
+        # to the chosen action (One action can lead to differetn states)
+        altered_shot = shot
+
+        if (shot == "4" or shot == "5" or shot == "6"):
+            # If serving from deuce side
+            if (score.get_point_count_per_game() % 2 == 0):
+                print("Expanding first serve from the deuce side")
+                if (shot == "4"):
+                    i = random.randint(0, 9999)
+                    if i < 3310:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif i < (3310 + 779):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "5"):
+                    j = random.randint(0, 9999)
+                    if j < 2548:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif j < (2548 + 14):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "6"):
+                    k = random.randint(0, 9999)
+                    if k < 3965:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif k < (3965 + 973):
+                        altered_shot = altered_shot + str("*")
+            # Else serving from ad side
+            else: 
+                print("Expanding first serve from the ad side")
+                if (shot == "4"):
+                    i = random.randint(0, 9999)
+                    if i < 3896:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif i < (3896 + 664):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "5"):
+                    j = random.randint(0, 9999)
+                    if j < 2793:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif j < (2793 + 14):
+                        altered_shot = altered_shot + str("*")
+                elif (shot == "6"):
+                    k = random.randint(0, 9999)
+                    if k < 3527:
+                        altered_shot = altered_shot + str("nwdx,")
+                    elif k < (3527 + 897):
+                        altered_shot = altered_shot + str("*")
+
+        print("Altered Shot from Expansion Phase: " + str(altered_shot))
+        self.expansion_shot = altered_shot
+
+    def reset_expansion_shot(self):
+        '''Resets the expansion_shot.'''
+        self.expansion_shot = 0

@@ -22,12 +22,14 @@ class Ralley_Tree:
         self.active_node = 0
         self.visited_nodes = [0]
 
-    def add_new_edge(self, node_A, node_B, n_visits, uct_value, win_count):
+    def add_new_edge(self, node_A, node_B, n_visits, uct_value, win_count,
+                     direction):
         '''Adds a new edge between two given nodes'''
         self.tree.add_edge(node_A, node_B,
                            n_visits=n_visits,
                            uct_value=uct_value,
-                           win_count=win_count)
+                           win_count=win_count,
+                           direction=direction)
 
     def add_new_node(self, index, colour, node_type, shot_string, depth,
                      n_visits, n_wins, uct_value):
@@ -162,6 +164,27 @@ class Ralley_Tree:
                 green_neighbors.append(neighbors[x])
 
         return green_neighbors
+    
+    def get_dir_of_shot(self, node):
+        '''Returns the direction of a shot od a given Node'''
+        direction = ""
+        node_shot = self.tree.nodes[node]['shot']
+
+        if any('1' in s for s in node_shot):
+            direction = '1'
+        elif any('2' in s for s in node_shot):
+            direction = '2'
+        elif any('3' in s for s in node_shot):
+            direction = '3'
+        elif any('4' in s for s in node_shot):
+            direction = '4'
+        elif any('5' in s for s in node_shot):
+            direction = '5'
+        elif any('6' in s for s in node_shot):
+            direction = '6'
+
+        return direction
+
 
     def add_node_visit(self, node):
         '''The given node is added to the visited_nodes list.'''
@@ -291,7 +314,7 @@ class Ralley_Tree:
                 pos,
                 node_color = colours,
                 node_size = 150,
-                labels=nx.get_node_attributes(self.tree, 'uct_value'), 
+                labels=nx.get_node_attributes(self.tree, 'shot'), 
                 with_labels=True, 
                 font_size=5,
                 font_weight='normal')
@@ -300,7 +323,7 @@ class Ralley_Tree:
         # edge_labels = dict([((n1, n2), f'{n1}->{n2}') for n1, n2 in self.tree.edges])
         
         # Edge_Labels are the number of visits
-        edge_labels = dict([((n1, n2), d['n_visits'])
+        edge_labels = dict([((n1, n2), d['direction'])
                             for n1, n2, d in self.tree.edges(data=True)])
         
         nx.draw_networkx_edge_labels(self.tree, 

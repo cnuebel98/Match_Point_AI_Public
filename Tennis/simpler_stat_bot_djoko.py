@@ -45,7 +45,7 @@ class Simple_Stat_Bot_Djokovic:
                 # Error and Ace Probabilities for Serve Direction 5
                 j = random.randint(0, 9999)
                 if (j < (766 + 1626 + 19)):
-                    shot = shot + "ndx,"
+                    shot = shot + "nwdx,"
                 elif (j < (766 + 1626 + 19 + 19)):
                     shot = shot + "*"
             else:

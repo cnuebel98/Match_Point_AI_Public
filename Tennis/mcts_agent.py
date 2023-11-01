@@ -13,6 +13,7 @@ class MCTS_Agent:
         self.leaf_node = 0
         self.shot = ""
         self.expansion_shot = ""
+        self.expansion_path = [0]
 
     def add_shot(self, current_ralley, score, current_tree):
         '''This function is calling the different phases of MCTS'''
@@ -76,7 +77,7 @@ class MCTS_Agent:
                 self.shot = "f28"
             else:
                 self.shot = "f38"
-        
+
         print("Adding MCTS Shot to ralley (not learned): " + str(self.shot))
         current_ralley.add_shot_to_ralley(self.shot)
         print("Ralley: " + str(current_ralley.get_ralley()))
@@ -175,6 +176,7 @@ class MCTS_Agent:
                     print("We pick random from green neighbor children")
                     i = random.randint(0, len(green_neighbors)-1)
                     self.set_active_mcts_node(green_neighbors[i])
+                    self.add_node_to_expansion_path(green_neighbors[i])
                 # If there are no green neighbors or in 50% of the cases 
                 # we traverse to a blue node
                 else:
@@ -197,6 +199,7 @@ class MCTS_Agent:
                                 <= current_tree.get_uct_value(blue_neighbors[x])):
                                 highest_uct_neighbor = blue_neighbors[x]
                         self.set_active_mcts_node(highest_uct_neighbor)
+                        self.add_node_to_expansion_path(highest_uct_neighbor)
                         print("New MCTS Active node hast UCT = " + str(
                             current_tree.get_uct_value(highest_uct_neighbor)))
                     else:
@@ -226,6 +229,7 @@ class MCTS_Agent:
                             <= current_tree.get_uct_value(blue_neighbors[x])):
                             highest_uct_neighbor = blue_neighbors[x]
                     self.set_active_mcts_node(highest_uct_neighbor)
+                    self.add_node_to_expansion_path(highest_uct_neighbor)
                     print("New MCTS Active node hast UCT = " + str(
                         current_tree.get_uct_value(highest_uct_neighbor)))
                 else:
@@ -245,6 +249,7 @@ class MCTS_Agent:
                     print("we have green neighbors and pick one at random.")
                     i = random.randint(0, len(green_neighbors)-1)
                     self.set_active_mcts_node(green_neighbors[i])
+                    self.add_node_to_expansion_path(green_neighbors[i])
                 else: print("No green neighbors to choose from, term?")
 
             # else: we do: get_mcts_active_node and set that one to leaf
@@ -255,10 +260,12 @@ class MCTS_Agent:
             
             i += 1
             print("--------------------------")
+        print("Path of Selection Phase: " + str(self.expansion_path))
         print("Starting Expansion Phase!")
         self.expansion_phase(current_ralley, score, current_tree)
         self.reset_active_mcts_node()
         self.reset_leaf_node()
+        self.clear_expansion_path()
 
         #print(str(current_tree.get_uct_value(self.active_mcts_node)))
 
@@ -452,7 +459,6 @@ class MCTS_Agent:
         # elif (its the opponents turn to take a shot):
         #   call add_shot function of top_bot
 
-        
         ...
     
     def backpropagation_phase(self):
@@ -584,15 +590,45 @@ class MCTS_Agent:
 
         elif (shot == "1" or shot == "2" or shot == "3"):
             print("ToDo: Adding probabilities for Winners/Errors for normal shots.")
-            ...
-
-
-
-
-
+            # we need to cover 4 cases here:
+            print("First Serve? " + str(first_serve))
+            print("Server: " + str(score.get_serving_player()))
+            
+            # MCTS Agent is serving 
+            if (score.get_serving_player() == 1):
+                
+                # 1st was MCTS Agent serving 1st in the ralley?
+                if ():
+                    print("A ralley, where MCTS was serving a 1st.")
+                
+                # 2nd was MCTS Agent serving 2nd in the ralley?
+                elif ():
+                    print("A ralley, where MCTS was serving a 2nd.")
+            
+            # MCTS Agent is returing
+            elif (score.get_serving_player() == 2):
+                
+                # 3rd was MCTS Agent returning 1st in the ralley?
+                if ():
+                    print("A ralley, where MCTS was returning a 1st.")
+                
+                # 4th was MCTS Agent returning 2nd in the ralley?
+                elif ():
+                    print("A ralley, where MCTS was returning a 2nd.")
+        
         print("Altered Shot from Expansion Phase: " + str(altered_shot))
+        #print("Path of Selection Phase: " + str(self.expansion_path))
         self.expansion_shot = altered_shot
 
     def reset_expansion_shot(self):
         '''Resets the expansion_shot.'''
         self.expansion_shot = 0
+
+    def add_node_to_expansion_path(self, node):
+        '''Adds Node to Expansion Path'''
+        self.expansion_path.append(node)
+
+    def clear_expansion_path(self):
+        '''Clears all Nodes from Expansion Path'''
+        self.expansion_path.clear()
+        self.expansion_path = [0]

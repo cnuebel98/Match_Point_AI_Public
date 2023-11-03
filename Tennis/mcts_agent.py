@@ -74,7 +74,7 @@ class MCTS_Agent:
             if j < 33:
                 self.shot ="f18"
             elif j < 66:
-                self.shot = "f28"
+                self.shot = "f28*"
             else:
                 self.shot = "f38"
 
@@ -88,7 +88,6 @@ class MCTS_Agent:
         '''In the selection Phase, we traverse through the current tree,
         always taking the child node with the highest UCT Value until a
         leaf node is reached'''
-        
         
         # Then get the UCT Values of the neighboring nodes 
         # Then pick the neighbor with the highest uct value and go there
@@ -117,6 +116,10 @@ class MCTS_Agent:
             green_neighbors = current_tree.get_list_of_green_neighbors(
                 self.get_active_mcts_node())
             
+            green_neighbor_shots = []
+            green_neighbor_shots = current_tree.get_shots_of_neighbors(
+                green_neighbors)
+
             # Check who is serving in the current_ralley
 
             # Each neighbors shot encoding is looked at
@@ -127,6 +130,9 @@ class MCTS_Agent:
             print("Blue Neighbors from Active Node: " + str(blue_neighbors))
             print("Blue Neighbors Shot Encodings: " + str(blue_neighbor_shots))
             
+            print("Green Neighbors from active Node: " + str(green_neighbors))
+            print("Green Neighbor Shots from acitve Node" + str(green_neighbor_shots))
+
             # Color of the MCTS Active node is saved
             color_of_mcts_active_node = current_tree.get_colour_of_node(
                 self.get_active_mcts_node())
@@ -170,11 +176,12 @@ class MCTS_Agent:
                 
                 # if root node has green children there is a 50% chance
                 # that one of the green neighbors is traversed
-                print("Color of active node is red")
                 j = random.randint(0, 99)
-                if (j < 50 and green_neighbors):
+                if (j < 98 and green_neighbors):
                     print("We pick random from green neighbor children")
+                    
                     i = random.randint(0, len(green_neighbors)-1)
+                    print("The picked green Node is: " + str(green_neighbors[i]))
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
                 # If there are no green neighbors or in 50% of the cases 
@@ -209,11 +216,24 @@ class MCTS_Agent:
             # If the color is green, we need to check the blue neighbors
             # and either go to highest uct or set it as leaf
             elif (color_of_mcts_active_node == "green"):
-                print("Color of active node is green")
-                print("UCT process is done for the blue children")
+                # If active green node is first serve fault we check his 
+                # neighbors and either pick one at random (He should 
+                # always have at least 1 neighbor)
+                shot_encoding_active = current_tree.get_shot_of_node(
+                    self.active_mcts_node)
+                if (any("," in s for s in shot_encoding_active)):
+                    print("The current active MCTS Node is a first serve fault of green: " + str(shot_encoding_active))
+                    # When this is the case, we go to one of the second serves at random
+                    i = random.randint(0, len(green_neighbors)-1)
+                    print("The picked second serve is: " + str(green_neighbors[i]))
+                    self.set_active_mcts_node(green_neighbors[i])
+                    self.add_node_to_expansion_path(green_neighbors[i])
+
+
+
                 # If all three directions are found, then we go the the 
                 # child with the highest UCT Value and go again from there
-                if (dir_1_found and dir_2_found and dir_3_found
+                elif (dir_1_found and dir_2_found and dir_3_found
                     or dir_4_found and dir_5_found and dir_6_found):
                     
                     uct_values = current_tree.get_uct_values(blue_neighbors)
@@ -230,7 +250,7 @@ class MCTS_Agent:
                             highest_uct_neighbor = blue_neighbors[x]
                     self.set_active_mcts_node(highest_uct_neighbor)
                     self.add_node_to_expansion_path(highest_uct_neighbor)
-                    print("New MCTS Active node hast UCT = " + str(
+                    print("New MCTS Active node has UCT = " + str(
                         current_tree.get_uct_value(highest_uct_neighbor)))
                 else:
                     print("Leaf Node was set at i = " + str(i))
@@ -240,14 +260,15 @@ class MCTS_Agent:
             # green neighbors. If it does, just pick a green neighbor at
             # random, if not we should be at a terminal node
             elif (color_of_mcts_active_node == "blue"):
-                print("Color of active node is blue")
                 print("Green Neighbors from Active MCTS Node: " + 
                       str(green_neighbors))
                 # One of the Green Neighbors is taken at random and set
                 # to active
                 if green_neighbors:
-                    print("we have green neighbors and pick one at random.")
+                    print("There are green neighbors and we pick one at random.")
+                    print("ToDo: make sure that no terminal nodes are picked")
                     i = random.randint(0, len(green_neighbors)-1)
+                    print("Green neighbor that was picked: " + str(green_neighbors[i]))
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
                 else: print("No green neighbors to choose from, term?")
@@ -260,7 +281,7 @@ class MCTS_Agent:
             
             i += 1
             print("--------------------------")
-        print("Path of Selection Phase: " + str(self.expansion_path))
+        #print("Path of Selection Phase: " + str(self.expansion_path))
         print("Starting Expansion Phase!")
         self.expansion_phase(current_ralley, score, current_tree)
         self.reset_active_mcts_node()
@@ -283,6 +304,7 @@ class MCTS_Agent:
         # is the node we start the simulation form
         print("The Leaf Node from the Selection Phase is: " 
               + str(self.leaf_node))
+        print("Leaf Node Shot encoding: " + str(current_tree.get_shot_of_node(self.leaf_node)))
         
         # Get neighbors of the leaf node
         children_of_leaf_node = current_tree.get_neighbors(self.leaf_node)
@@ -300,42 +322,42 @@ class MCTS_Agent:
                 if (any("4" in s for s in shots_of_children) 
                     and any("5" in s for s in shots_of_children)):
                     print("4 and 5 were found in children of leaf node")
-                    self.set_expansion_shot("6", score, False)
+                    self.set_expansion_shot("6", score, current_tree, False)
                 elif (any("4" in s for s in shots_of_children)
                     and any("6" in s for s in shots_of_children)):
                     print("4 and 6 were found in children of leaf node")
-                    self.set_expansion_shot("5", score, False)
+                    self.set_expansion_shot("5", score, current_tree, False)
                 elif (any("5" in s for s in shots_of_children)
                     and any("6" in s for s in shots_of_children)):
                     print("5 and 6 were found in children of leaf node")
-                    self.set_expansion_shot("4", score, False)
+                    self.set_expansion_shot("4", score, current_tree, False)
                 elif (any("4" in s for s in shots_of_children)):
                     print("4 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("5", score, False)
-                    else: self.set_expansion_shot("6", score, False)
+                        self.set_expansion_shot("5", score, current_tree, False)
+                    else: self.set_expansion_shot("6", score, current_tree, False)
                 elif (any("5" in s for s in shots_of_children)):
                     print("5 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("4", score, False)
-                    else: self.set_expansion_shot("6", score, False)
+                        self.set_expansion_shot("4", score, current_tree, False)
+                    else: self.set_expansion_shot("6", score, current_tree, False)
                 elif (any("6" in s for s in shots_of_children)):
                     print("6 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("4", score, False)
-                    else: self.set_expansion_shot("5", score, False)
+                        self.set_expansion_shot("4", score, current_tree, False)
+                    else: self.set_expansion_shot("5", score, current_tree, False)
             else:
                 print("2nd Serve & No children of leaf node found.")
                 i = random.randint(0, 99)
                 if i < 33: 
-                    self.set_expansion_shot("4", score, False)
+                    self.set_expansion_shot("4", score, current_tree, False)
                 elif i < 66:
-                    self.set_expansion_shot("5", score, False)
+                    self.set_expansion_shot("5", score, current_tree, False)
                 else:
-                    self.set_expansion_shot("6", score, False)
+                    self.set_expansion_shot("6", score, current_tree, False)
 
         # When the root is a leaf node, we expand a random direction
         elif self.leaf_node == 0:
@@ -349,42 +371,42 @@ class MCTS_Agent:
                 if (any("4" in s for s in shots_of_children) 
                     and any("5" in s for s in shots_of_children)):
                     print("4 and 5 were found in children of leaf node")
-                    self.set_expansion_shot("6", score, True)
+                    self.set_expansion_shot("6", score, current_tree)
                 elif (any("4" in s for s in shots_of_children)
                     and any("6" in s for s in shots_of_children)):
                     print("4 and 6 were found in children of leaf node")
-                    self.set_expansion_shot("5", score, True)
+                    self.set_expansion_shot("5", score, current_tree)
                 elif (any("5" in s for s in shots_of_children)
                     and any("6" in s for s in shots_of_children)):
                     print("5 and 6 were found in children of leaf node")
-                    self.set_expansion_shot("4", score, True)
+                    self.set_expansion_shot("4", score, current_tree)
                 elif (any("4" in s for s in shots_of_children)):
                     print("4 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("5", score, True)
-                    else: self.set_expansion_shot("6", score, True)
+                        self.set_expansion_shot("5", score, current_tree)
+                    else: self.set_expansion_shot("6", score, current_tree)
                 elif (any("5" in s for s in shots_of_children)):
                     print("5 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("4", score, True)
-                    else: self.set_expansion_shot("6", score, True)
+                        self.set_expansion_shot("4", score, current_tree)
+                    else: self.set_expansion_shot("6", score, current_tree)
                 elif (any("6" in s for s in shots_of_children)):
                     print("6 was found in a child")
                     i = random.randint(0, 99)
                     if i < 50:
-                        self.set_expansion_shot("4", score, True)
-                    else: self.set_expansion_shot("5", score, True)
+                        self.set_expansion_shot("4", score, current_tree)
+                    else: self.set_expansion_shot("5", score, current_tree)
             else:
                 print("No children of leaf node found.")
                 i = random.randint(0, 99)
                 if i < 33: 
-                    self.set_expansion_shot("4", score, True)
+                    self.set_expansion_shot("4", score, current_tree)
                 elif i < 66:
-                    self.set_expansion_shot("5", score, True)
+                    self.set_expansion_shot("5", score, current_tree)
                 else:
-                    self.set_expansion_shot("6", score, True)
+                    self.set_expansion_shot("6", score, current_tree)
 
         elif children_of_leaf_node:
             # When the leaf node already has children, we need to
@@ -396,41 +418,41 @@ class MCTS_Agent:
             if (any("1" in s for s in shots_of_children) 
                 and any("2" in s for s in shots_of_children)):
                 print("1 and 2 were found in children of leaf node")
-                self.set_expansion_shot("3", score)
+                self.set_expansion_shot("3", score, current_tree)
             elif (any("1" in s for s in shots_of_children)
                 and any("3" in s for s in shots_of_children)):
                 print("1 and 3 were found in children of leaf node")
-                self.set_expansion_shot("2", score)
+                self.set_expansion_shot("2", score, current_tree)
             elif (any("2" in s for s in shots_of_children)
                 and any("3" in s for s in shots_of_children)):
                 print("2 and 3 were found in children of leaf node")
-                self.set_expansion_shot("1", score)
+                self.set_expansion_shot("1", score, current_tree)
             elif (any("1" in s for s in shots_of_children)):
                 print("1 was found in a child")
                 i = random.randint(0, 99)
                 if i < 50:
-                    self.set_expansion_shot("2", score)
-                else: self.set_expansion_shot("3", score)
+                    self.set_expansion_shot("2", score, current_tree)
+                else: self.set_expansion_shot("3", score, current_tree)
             elif (any("2" in s for s in shots_of_children)):
                 print("2 was found in a child")
                 i = random.randint(0, 99)
                 if i < 50:
-                    self.set_expansion_shot("1", score)
-                else: self.set_expansion_shot("3", score)
+                    self.set_expansion_shot("1", score, current_tree)
+                else: self.set_expansion_shot("3", score, current_tree)
             elif (any("3" in s for s in shots_of_children)):
                 print("3 was found in a child")
                 i = random.randint(0, 99)
                 if i < 50:
-                    self.set_expansion_shot("1", score)
-                else: self.set_expansion_shot("2", score)
+                    self.set_expansion_shot("1", score, current_tree)
+                else: self.set_expansion_shot("2", score, current_tree)
             else:
                 i = random.randint(0, 99)
                 if i < 33: 
-                    self.set_expansion_shot("1", score)
+                    self.set_expansion_shot("1", score, current_tree)
                 elif i < 66:
-                    self.set_expansion_shot("2", score)
+                    self.set_expansion_shot("2", score, current_tree)
                 else:
-                    self.set_expansion_shot("3", score)
+                    self.set_expansion_shot("3", score, current_tree)
 
         # ToDo: start Simulation Phase from that new node
     
@@ -494,12 +516,14 @@ class MCTS_Agent:
         '''Returns the expansion_shot.'''
         return self.expansion_shot
     
-    def set_expansion_shot(self, shot, score, first_serve=True):
-        '''Sets the value of the expansion_shot.'''
+    def set_expansion_shot(self, shot, score, current_tree, first_serve=True):
+        '''Sets the value of the expansion_shot. Called during the 
+        Expansion Phase to alter the shot direction with the 
+        corresponding probabilities'''
         # Adding the probabilites of errors and winners 
-        # to the chosen action (One action can lead to differetn states)
-        altered_shot = shot
-
+        # to the chosen action (One action can lead to different states)
+        #shot = shot
+        
         if (shot == "4" or shot == "5" or shot == "6" and first_serve == True):
             # If serving from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
@@ -507,42 +531,42 @@ class MCTS_Agent:
                 if (shot == "4"):
                     i = random.randint(0, 9999)
                     if i < 3310:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx,")
                     elif i < (3310 + 779):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "5"):
                     j = random.randint(0, 9999)
                     if j < 2548:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx,")
                     elif j < (2548 + 14):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "6"):
                     k = random.randint(0, 9999)
                     if k < 3965:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx,")
                     elif k < (3965 + 973):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
             # Else serving from ad side
             else: 
                 print("Expanding first serve from the ad side")
                 if (shot == "4"):
                     i = random.randint(0, 9999)
                     if i < 3896:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx,")
                     elif i < (3896 + 664):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "5"):
                     j = random.randint(0, 9999)
                     if j < 2793:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx,")
                     elif j < (2793 + 14):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "6"):
                     k = random.randint(0, 9999)
                     if k < 3527:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx,")
                     elif k < (3527 + 897):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
         
         elif (shot == "4" or shot == "5" or shot == "6" 
               and first_serve == False):
@@ -552,73 +576,995 @@ class MCTS_Agent:
                 if (shot == "4"):
                     i = random.randint(0, 9999)
                     if i < 1240:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx")
                     elif i < (1240 + 149):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "5"):
                     j = random.randint(0, 9999)
                     if j < 737:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx")
                     elif j < (737 + 2):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "6"):
                     k = random.randint(0, 9999)
                     if k < 1068:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx")
                     elif k < (1068 + 94):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
             else:
                 print("Expanding 2nd serve from the ad side")
                 if (shot == "4"):
                     i = random.randint(0, 9999)
                     if i < 840:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx")
                     elif i < (840 + 61):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "5"):
                     j = random.randint(0, 9999)
                     if j < 755:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx")
                     elif j < (755 + 4):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
                 elif (shot == "6"):
                     k = random.randint(0, 9999)
                     if k < 1373:
-                        altered_shot = altered_shot + str("nwdx,")
+                        shot = shot + str("nwdx")
                     elif k < (1373 + 299):
-                        altered_shot = altered_shot + str("*")
+                        shot = shot + str("*")
 
         elif (shot == "1" or shot == "2" or shot == "3"):
-            print("ToDo: Adding probabilities for Winners/Errors for normal shots.")
-            # we need to cover 4 cases here:
-            print("First Serve? " + str(first_serve))
-            print("Server: " + str(score.get_serving_player()))
             
-            # MCTS Agent is serving 
-            if (score.get_serving_player() == 1):
-                
-                # 1st was MCTS Agent serving 1st in the ralley?
-                if ():
-                    print("A ralley, where MCTS was serving a 1st.")
-                
-                # 2nd was MCTS Agent serving 2nd in the ralley?
-                elif ():
-                    print("A ralley, where MCTS was serving a 2nd.")
+            print("Serving (1 for bottom, 2 for top): " + str(score.get_serving_player()))
+            print("Path till expanded shot: " + str(self.expansion_path))
+            print("Shot of first serve in selected Ralley: " + str(current_tree.get_shot_of_node(self.expansion_path[1])))
+            print("Shot of Parent Node (Leaf Node): " + str(current_tree.get_shot_of_node(self.leaf_node)))
             
-            # MCTS Agent is returing
-            elif (score.get_serving_player() == 2):
-                
-                # 3rd was MCTS Agent returning 1st in the ralley?
-                if ():
-                    print("A ralley, where MCTS was returning a 1st.")
-                
-                # 4th was MCTS Agent returning 2nd in the ralley?
-                elif ():
-                    print("A ralley, where MCTS was returning a 2nd.")
-        
-        print("Altered Shot from Expansion Phase: " + str(altered_shot))
+            # Are we expanding a return?
+            if (current_tree.get_shot_of_node(self.leaf_node) == "4" 
+                or current_tree.get_shot_of_node(self.leaf_node) == "5" 
+                or current_tree.get_shot_of_node(self.leaf_node) == "6"):
+                print("We are expanding a return.")
+                # How to figure out if its a first or second serve??
+                # Look at depth of leaf node. If it is 1 then it was a 
+                # first serve and if its two it was a second serve
+
+                if (current_tree.get_depth(self.leaf_node) == 1):
+                    print("Depth of leaf Node: 1, so we add the return Probas for return on first serve")
+                    # Depending on the direction of the first serve, we 
+                    # take different Probabilities for the return
+                    if (current_tree.get_shot_of_node(self.leaf_node) == "4"):
+                        if (shot == "1"):
+                            i = random.randint(0, 9999)
+                            if i < 2737:
+                                shot = shot + "7"
+                            elif (i < 2737 + 4565):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 3005:
+                                shot = shot + "nwdx"
+                            elif (j < 3005 + 390):
+                                shot = shot + "*"
+                            
+                        elif (shot == "2"):
+                            i = random.randint(0, 9999)
+                            if i < 2137:
+                                shot = shot + "7"
+                            elif (i < 4406 + 4406):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1942:
+                                shot = shot + "nwdx"
+                            elif (j < 1942 + 21):
+                                shot = shot + "*"
+                        else:
+                            i = random.randint(0, 9999)
+                            if i < 3165:
+                                shot = shot + "7"
+                            elif (i < 3165 + 4354):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 2574:
+                                shot = shot + "nwdx"
+                            elif (j < 2574 + 147):
+                                shot = shot + "*"
+
+                    elif(current_tree.get_shot_of_node(self.leaf_node) == "5"):
+                        if (shot == "1"):
+                            i = random.randint(0, 9999)
+                            if i < 2682:
+                                shot = shot + "7"
+                            elif (i < 2682 + 4506):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 2604:
+                                shot = shot + "nwdx"
+                            elif (j < 2604 + 317):
+                                shot = shot + "*"
+
+                        elif (shot == "2"):
+                            i = random.randint(0, 9999)
+                            if i < 2222:
+                                shot = shot + "7"
+                            elif (i < 2222 + 4521):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1443:
+                                shot = shot + "nwdx"
+                            elif (j < 1443 + 14):
+                                shot = shot + "*"
+
+                        else:
+                            i = random.randint(0, 9999)
+                            if i < 2770:
+                                shot = shot + "7"
+                            elif (i < 2770 + 4693):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 2230:
+                                shot = shot + "nwdx"
+                            elif (j < 2230 + 95):
+                                shot = shot + "*"
+
+                    else:
+                        if (shot == "1"):
+                            i = random.randint(0, 9999)
+                            if i < 3042:
+                                shot = shot + "7"
+                            elif (i < 3042 + 4132):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 3089:
+                                shot = shot + "nwdx"
+                            elif (j < 3089 + 238):
+                                shot = shot + "*"
+
+                        elif (shot == "2"):
+                            i = random.randint(0, 9999)
+                            if i < 2724:
+                                shot = shot + "7"
+                            elif (i < 2724 + 4427):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1675:
+                                shot = shot + "nwdx"
+                            elif (j < 1675 + 10):
+                                shot = shot + "*"
+
+                        else:
+                            i = random.randint(0, 9999)
+                            if i < 3158:
+                                shot = shot + "7"
+                            elif (i < 3158 + 4320):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 2507:
+                                shot = shot + "nwdx"
+                            elif (j < 2507 + 46):
+                                shot = shot + "*"
+
+                elif (current_tree.get_depth(self.leaf_node) == 2):
+                    print("Depth of leaf Node: 2, so we add the return Probas for return on second serve")
+
+                    if (current_tree.get_shot_of_node(self.leaf_node) == "4"):
+                        if (shot == "1"):
+                            i = random.randint(0, 9999)
+                            if i < 2237:
+                                shot = shot + "7"
+                            elif (i < 2237 + 4899):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 2641:
+                                shot = shot + "nwdx"
+                            elif (j < 2641 + 899):
+                                shot = shot + "*"
+                            
+                        elif (shot == "2"):
+                            i = random.randint(0, 9999)
+                            if i < 1519:
+                                shot = shot + "7"
+                            elif (i < 1519 + 4903):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1510:
+                                shot = shot + "nwdx"
+                            elif (j < 1510 + 21):
+                                shot = shot + "*"
+
+                        else:
+                            i = random.randint(0, 9999)
+                            if i < 2601:
+                                shot = shot + "7"
+                            elif (i < 2601 + 5046):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1513:
+                                shot = shot + "nwdx"
+                            elif (j < 1513 + 195):
+                                shot = shot + "*"
+
+                    elif(current_tree.get_shot_of_node(self.leaf_node) == "5"):
+                        if (shot == "1"):
+                            i = random.randint(0, 9999)
+                            if i < 2107:
+                                shot = shot + "7"
+                            elif (i < 2107 + 5037):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 2223:
+                                shot = shot + "nwdx"
+                            elif (j < 2223 + 744):
+                                shot = shot + "*"
+
+                        elif (shot == "2"):
+                            i = random.randint(0, 9999)
+                            if i < 1823:
+                                shot = shot + "7"
+                            elif (i < 1823 + 4877):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1114:
+                                shot = shot + "nwdx"
+                            elif (j < 1114 + 16):
+                                shot = shot + "*"
+
+                        else:
+                            i = random.randint(0, 9999)
+                            if i < 2452:
+                                shot = shot + "7"
+                            elif (i < 2452 + 5109):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1481:
+                                shot = shot + "nwdx"
+                            elif (j < 1481 + 232):
+                                shot = shot + "*"
+
+                    else:
+                        if (shot == "1"):
+                            i = random.randint(0, 9999)
+                            if i < 2077:
+                                shot = shot + "7"
+                            elif (i < 2077 + 5096):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 2316:
+                                shot = shot + "nwdx"
+                            elif (j < 2316 + 787):
+                                shot = shot + "*"
+
+                        elif (shot == "2"):
+                            i = random.randint(0, 9999)
+                            if i < 2037:
+                                shot = shot + "7"
+                            elif (i < 2037 + 4912):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1164:
+                                shot = shot + "nwdx"
+                            elif (j < 1164 + 14):
+                                shot = shot + "*"
+
+                        else:
+                            i = random.randint(0, 9999)
+                            if i < 2277:
+                                shot = shot + "7"
+                            elif (i < 2277 + 5185):
+                                shot = shot + "8"
+                            else:
+                                shot = shot + "9" 
+
+                            j = random.randint(0, 9999)
+                            if j < 1685:
+                                shot = shot + "nwdx"
+                            elif (j < 1685 + 219):
+                                shot = shot + "*"
+
+            # We are not expanding a return
+            else:
+                print("We are expanding a normal shot.")
+                if (score.get_serving_player() == 1):
+
+                    # 1st was MCTS Agent serving 2nd in the ralley?
+                    if (any("," in s for s in current_tree.get_shot_of_node(
+                        self.expansion_path[1]))):
+                        print("In a ralley, where MCTS was serving a 2nd.")
+                        if (any("1" in s for s in current_tree.
+                                get_shot_of_node(self.leaf_node))):
+                            print("Opponents shot was in direction 1.")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 2395:
+                                    shot = shot + "7"
+                                elif (i < 2395 + 4580):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1509:
+                                    shot = shot + "nwdx"
+                                elif j < (1509 + 577):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1728:
+                                    shot = shot + "7"
+                                elif (i < 1728 + 4390):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1411:
+                                    shot = shot + "nwdx"
+                                elif j < (1411 + 114):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1449:
+                                    shot = shot + "7"
+                                elif (i < 1449 + 4448):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 2271:
+                                    shot = shot + "nwdx"
+                                elif j < (2271 + 1025):
+                                    shot = shot + "*"
+
+                        elif (any("2" in s for s in current_tree.
+                                  get_shot_of_node(self.leaf_node))):
+                            print("2 fount in Leaf Node")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1734:
+                                    shot = shot + "7"
+                                elif (i < 1734 + 4789):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1500:
+                                    shot = shot + "nwdx"
+                                elif j < (1500 + 1126):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1487:
+                                    shot = shot + "7"
+                                elif (i < 1487 + 4702):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1046:
+                                    shot = shot + "nwdx"
+                                elif j < (1046 + 102):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1570:
+                                    shot = shot + "7"
+                                elif (i < 1570 + 5010):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1334:
+                                    shot = shot + "nwdx"
+                                elif j < (1334 + 733):
+                                    shot = shot + "*"
+                        else: 
+                            print("3 found in Leaf Node.")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1478:
+                                    shot = shot + "7"
+                                elif (i < 1478 + 4324):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 2399:
+                                    shot = shot + "nwdx"
+                                elif j < (2399 + 1451):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1332:
+                                    shot = shot + "7"
+                                elif (i < 1332 + 4481):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1233:
+                                    shot = shot + "nwdx"
+                                elif j < (1233 + 74):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1830:
+                                    shot = shot + "7"
+                                elif (i < 1830 + 4784):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1167:
+                                    shot = shot + "nwdx"
+                                elif j < (1167 + 317):
+                                    shot = shot + "*"
+
+                    # Was MCTS Agent serving 1st in the ralley?
+                    else:
+                        print("In a ralley, where MCTS was serving a 1st.")
+                        if (any("1" in s for s in current_tree.
+                                get_shot_of_node(self.leaf_node))):
+                            print("1 found in Leaf Node")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 2697:
+                                    shot = shot + "7"
+                                elif (i < 2697 + 4507):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1425:
+                                    shot = shot + "nwdx"
+                                elif j < (1425 + 1094):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1882:
+                                    shot = shot + "7"
+                                elif (i < 1882 + 4457):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1323:
+                                    shot = shot + "nwdx"
+                                elif j < (1323 + 233):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1616:
+                                    shot = shot + "7"
+                                elif (i < 1616 + 4478):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1979:
+                                    shot = shot + "nwdx"
+                                elif j < (1979 + 1501):
+                                    shot = shot + "*"
+
+                        elif (any("2" in s for s in current_tree.
+                                  get_shot_of_node(self.leaf_node))):
+                            print("2 fount in Leaf Node")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1834:
+                                    shot = shot + "7"
+                                elif (i < 1834 + 4817):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1263:
+                                    shot = shot + "nwdx"
+                                elif j < (1263 + 1758):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1604:
+                                    shot = shot + "7"
+                                elif (i < 1604 + 4689):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 975:
+                                    shot = shot + "nwdx"
+                                elif j < (975 + 291):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1701:
+                                    shot = shot + "7"
+                                elif (i < 1701 + 4970):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1229:
+                                    shot = shot + "nwdx"
+                                elif j < (1229 + 1320):
+                                    shot = shot + "*"
+                        else: 
+                            print("3 found in Leaf Node.")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1705:
+                                    shot = shot + "7"
+                                elif (i < 1705 + 4102):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 2043:
+                                    shot = shot + "nwdx"
+                                elif j < (2043 + 1985):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1440:
+                                    shot = shot + "7"
+                                elif (i < 1440 + 4439):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1175:
+                                    shot = shot + "nwdx"
+                                elif j < (1175 + 217):
+                                    shot = shot + "*"
+
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 2046:
+                                    shot = shot + "7"
+                                elif (i < 2046 + 4818):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1114:
+                                    shot = shot + "nwdx"
+                                elif j < (1114 + 660):
+                                    shot = shot + "*"
+
+                # MCTS Agent is returing
+                elif (score.get_serving_player() == 2):
+                    
+                    # 3rd was MCTS Agent returning 2nd in the ralley?
+                    if (any("," in s for s in current_tree.get_shot_of_node(
+                        self.expansion_path[1]))):
+                        print("In a ralley, where MCTS was returning a 2nd.")
+                        if (any("1" in s for s in current_tree.
+                                get_shot_of_node(self.leaf_node))):
+                            print("1 found in Leaf Node")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 2347:
+                                    shot = shot + "7"
+                                elif (i < 2347 + 4746):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1516:
+                                    shot = shot + "nwdx"
+                                elif j < (1516 + 506):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1856:
+                                    shot = shot + "7"
+                                elif (i < 1856 + 4224):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1420:
+                                    shot = shot + "nwdx"
+                                elif j < (1420 + 80):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1447:
+                                    shot = shot + "7"
+                                elif (i < 1447 + 4398):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 2375:
+                                    shot = shot + "nwdx"
+                                elif j < (2375 + 892):
+                                    shot = shot + "*"
+
+                        elif (any("2" in s for s in current_tree.
+                                  get_shot_of_node(self.leaf_node))):
+                            print("2 fount in Leaf Node")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1713:
+                                    shot = shot + "7"
+                                elif (i < 1713 + 4879):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1531:
+                                    shot = shot + "nwdx"
+                                elif j < (1531 + 1123):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1373:
+                                    shot = shot + "7"
+                                elif (i < 1373 + 4816):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 936:
+                                    shot = shot + "nwdx"
+                                elif j < (936 + 99):
+                                    shot = shot + "*"
+
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1528:
+                                    shot = shot + "7"
+                                elif (i < 1528 + 5039):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1258:
+                                    shot = shot + "nwdx"
+                                elif j < (1258 + 734):
+                                    shot = shot + "*"
+                        else: 
+                            print("3 found in Leaf Node.")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1277:
+                                    shot = shot + "7"
+                                elif (i < 1277 + 4271):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 2493:
+                                    shot = shot + "nwdx"
+                                elif j < (2493 + 1221):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1355:
+                                    shot = shot + "7"
+                                elif (i < 1355 + 4429):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1171:
+                                    shot = shot + "nwdx"
+                                elif j < (1171 + 67):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1837:
+                                    shot = shot + "7"
+                                elif (i < 1837 + 4803):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1155:
+                                    shot = shot + "nwdx"
+                                elif j < (1155 + 271):
+                                    shot = shot + "*"
+
+                    # 4th was MCTS Agent returning 1st in the ralley?
+                    else:
+                        print("In a ralley, where MCTS was returning a 1st.")
+                        if (any("1" in s for s in current_tree.
+                                get_shot_of_node(self.leaf_node))):
+                            print("1 found in Leaf Node")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 2587:
+                                    shot = shot + "7"
+                                elif (i < 2587 + 4533):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1780:
+                                    shot = shot + "nwdx"
+                                elif j < (1780 + 598):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1915:
+                                    shot = shot + "7"
+                                elif (i < 1915 + 4308):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1568:
+                                    shot = shot + "nwdx"
+                                elif j < (1568 + 91):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1632:
+                                    shot = shot + "7"
+                                elif (i < 1632 + 4177):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 2566:
+                                    shot = shot + "nwdx"
+                                elif j < (2566 + 976):
+                                    shot = shot + "*"
+
+                        elif (any("2" in s for s in current_tree.
+                                  get_shot_of_node(self.leaf_node))):
+                            print("2 fount in Leaf Node")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1710:
+                                    shot = shot + "7"
+                                elif (i < 1710 + 4779):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1613:
+                                    shot = shot + "nwdx"
+                                elif j < (1613 + 1142):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1363:
+                                    shot = shot + "7"
+                                elif (i < 1363 + 4751):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1047:
+                                    shot = shot + "nwdx"
+                                elif j < (1047 + 114):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1489:
+                                    shot = shot + "7"
+                                elif (i < 1489 + 4974):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1309:
+                                    shot = shot + "nwdx"
+                                elif j < (1309 + 824):
+                                    shot = shot + "*"
+                        else: 
+                            print("3 found in Leaf Node.")
+                            if (shot == "1"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1404:
+                                    shot = shot + "7"
+                                elif (i < 1404 + 4112):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 2780:
+                                    shot = shot + "nwdx"
+                                elif j < (2780 + 1314):
+                                    shot = shot + "*"
+
+                            elif (shot == "2"):
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1556:
+                                    shot = shot + "7"
+                                elif (i < 1556 + 4265):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1366:
+                                    shot = shot + "nwdx"
+                                elif j < (1366 + 71):
+                                    shot = shot + "*"
+                            else: 
+                                # Adding Depth encoding
+                                i = random.randint(0, 9999)
+                                if i < 1978:
+                                    shot = shot + "7"
+                                elif (i < 1978 + 4724):
+                                    shot = shot + "8"
+                                else: 
+                                    shot = shot + "9"
+                                    
+                                # Adding Winner/Error encoding
+                                j = random.randint(0, 9999)
+                                if j < 1325:
+                                    shot = shot + "nwdx"
+                                elif j < (1325 + 349):
+                                    shot = shot + "*"
+
+        print("Altered Shot from Expansion Phase: " + str(shot))
         #print("Path of Selection Phase: " + str(self.expansion_path))
-        self.expansion_shot = altered_shot
+        self.expansion_shot = shot
 
     def reset_expansion_shot(self):
         '''Resets the expansion_shot.'''

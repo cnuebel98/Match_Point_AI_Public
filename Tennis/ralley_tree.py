@@ -35,7 +35,7 @@ class Ralley_Tree:
                      n_visits, n_wins, uct_value):
         '''A new node is added to the tree, with an unique index, a type
         (action or state node), a shot encoding string and a depth'''
-        self.tree.add_node(index,
+        self.tree.add_node(node_for_adding=index,
                            colour=colour,
                            type=node_type,
                            shot=shot_string,
@@ -74,6 +74,10 @@ class Ralley_Tree:
         node n'''
         x = nx.node_connected_component(self.tree, n)
         return str(x)
+    
+    def get_parent_of_node(self, n):
+        '''Returns the Predecessor of a given Node'''
+        return self.tree.predecessors(n)
     
     def get_neighbors(self, n):
         '''Returns a list of the neighbor nodes of a given node'''
@@ -301,6 +305,10 @@ class Ralley_Tree:
     def get_uct_value(self, node):
         '''Returns the UCT Value of a given Node'''
         return self.tree.nodes[node]['uct_value']
+    
+    def get_depth(self, node):
+        '''Returns the Depth of a given Node'''
+        return self.tree.nodes[node]['depth']
 
     def get_n_nodes(self):
         '''Returns the number of nodes in the tree'''
@@ -318,23 +326,23 @@ class Ralley_Tree:
         nx.draw(self.tree,
                 pos,
                 node_color = colours,
-                node_size = 150,
+                node_size = 170,
                 labels=nx.get_node_attributes(self.tree, 'shot'), 
                 with_labels=True, 
-                font_size=5,
-                font_weight='normal')
+                font_size=6,
+                font_weight='bold')
         
         # edge_labels here are the node indices added together with "->"
         # edge_labels = dict([((n1, n2), f'{n1}->{n2}') for n1, n2 in self.tree.edges])
         
         # Edge_Labels are the number of visits
-        edge_labels = dict([((n1, n2), d['direction'])
+        edge_labels = dict([((n1, n2), d['n_visits'])
                             for n1, n2, d in self.tree.edges(data=True)])
         
         nx.draw_networkx_edge_labels(self.tree, 
                                      pos, 
                                      edge_labels=edge_labels, 
-                                     font_size=5)
+                                     font_size=6)
 
         # draw the tree
         plt.show()

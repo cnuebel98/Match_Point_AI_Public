@@ -313,6 +313,9 @@ class Ralley_Tree:
     def get_n_nodes(self):
         '''Returns the number of nodes in the tree'''
         return self.tree.number_of_nodes()
+    
+    def get_index_of_node(self, serving, shot, depth):
+        ...
 
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''

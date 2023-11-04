@@ -97,7 +97,53 @@ class MCTS_Agent:
         # Blue_neighbors are only the neighbors nodes with color blue,
         # so the actions that have been taken by the MCTS Agent
         # from that node
+        print("Current_ralley in start of selection Phase: " + str(current_ralley.get_ralley()))
 
+        # The root node is always the node in the tree which represents 
+        # the last shot in the current Ralley
+        if (current_ralley.get_len_ralley() == 0):
+            # If there is no shot in the ralley, root node is 0
+            self.set_active_mcts_node(0)
+            print("Root Node is: " + str(self.get_active_mcts_node()) + " , should be 0.")
+        else:
+            # We have to find the ralley in the current tree and go to 
+            # last node/last shot of ralley and find the index of that
+            # node and set it to root node
+            serving = score.get_serving_player()
+            ralley = current_ralley.get_ralley()
+            index = 0
+            # from the Red Node, there can be 2x "6" encoding, we have 
+            # to look at the current_ralley, to see who is serving to 
+            # take the right "6"
+            if (serving == 1):
+                neighbors = current_tree.get_list_of_blue_neighbors(index)
+            elif (serving == 2):
+                neighbors = current_tree.get_list_of_green_neighbors(index)
+            
+            # We look at each shot in the ralley and find the enconding 
+            # in the tree
+            for i in range(0, len(ralley)):
+                ralley_shot = ""
+                ralley_shot = ralley[i]
+
+                neighbor_shots = current_tree.get_shots_of_neighbors(neighbors)
+                neighbors_index = neighbor_shots.index(ralley_shot)
+                index = neighbors[neighbors_index]
+                self.expansion_path.append(index)
+                neighbors = current_tree.get_neighbors(index)
+                        
+            # the index in the end is the node, which represetns the
+            # last shot in the ralley
+            self.set_active_mcts_node(index)     
+
+            print("Root Node is " 
+                  + str(self.get_active_mcts_node()) 
+                  + " with shot encondging: " 
+                  + str(current_tree.get_shot_of_node(self.
+                                                      get_active_mcts_node())))
+
+        # Now that we have the root node we can look for the leaf node 
+        # from there
         self.leaf_node = -1
         i = 0
 
@@ -177,7 +223,7 @@ class MCTS_Agent:
                 # if root node has green children there is a 50% chance
                 # that one of the green neighbors is traversed
                 j = random.randint(0, 99)
-                if (j < 98 and green_neighbors):
+                if (j < 50 and green_neighbors):
                     print("We pick random from green neighbor children")
                     
                     i = random.randint(0, len(green_neighbors)-1)
@@ -453,6 +499,8 @@ class MCTS_Agent:
                     self.set_expansion_shot("2", score, current_tree)
                 else:
                     self.set_expansion_shot("3", score, current_tree)
+
+        else: print("ToDo: No children of leaf node found, expanding a random direction")
 
         # ToDo: start Simulation Phase from that new node
     

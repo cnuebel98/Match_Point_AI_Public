@@ -761,13 +761,13 @@ def main_loop():
                 new_ralley.score_update(new_score, new_ball)
                 if (new_score.get_set_count() != set_counting_for_tree):
                     set_counting_for_tree = new_score.get_set_count()
-                    ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
 
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colours.BLACK)
                     
-                    ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
 
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),
@@ -824,7 +824,7 @@ def main_loop():
                 
                 if (new_score.get_match_count() != match_count_for_tree):
                     match_count_for_tree = new_score.get_match_count()
-                    ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 
                 if const.Changing.ralley_terminated:

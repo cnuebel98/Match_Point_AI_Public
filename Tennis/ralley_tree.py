@@ -33,8 +33,7 @@ class Ralley_Tree:
 
     def add_new_node(self, index, colour, node_type, shot_string, depth,
                      n_visits, n_wins, uct_value):
-        '''A new node is added to the tree, with an unique index, a type
-        (action or state node), a shot encoding string and a depth'''
+        '''A new node is added to the tree.'''
         self.tree.add_node(node_for_adding=index,
                            colour=colour,
                            type=node_type,

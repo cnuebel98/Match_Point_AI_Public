@@ -1,4 +1,7 @@
 import random
+import networkx as nx
+from networkx.drawing.nx_pydot import graphviz_layout
+import matplotlib.pyplot as plt
 import simpler_stat_bot_djoko
 import scoring
 
@@ -14,16 +17,16 @@ class MCTS_Agent:
         self.shot = ""
         self.expansion_shot = ""
         self.expansion_path = [0]
+        self.mcts_tree = nx.DiGraph()
 
     def add_shot(self, current_ralley, score, current_tree):
         '''This function is calling the different phases of MCTS'''
 
-        # Get the data to work with (current_tree, current_ralley,
-        # score, and so on)
-        #print("Ralley: " + str(current_ralley.get_ralley()))
-        #print("Score: " + str(score.get_score()))
-        #print("Number of Nodes: " + str(current_tree.get_n_nodes()))
-        #print("Active Node: " + str(current_tree.get_active_node()))
+        # We save a deep copy of the current_tree from the actual game
+        self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
+        
+        print("Initial Tree from the real game is displayed.")
+        self.show_mcts_tree()
 
         # 1. Tree selection phase with UCT Formular:
         
@@ -58,7 +61,7 @@ class MCTS_Agent:
             #selected_node = self.selection_phase(current_tree)
             ...
         print("--------------------------------")
-        print("Starting selection Phase!")
+        print("-> Starting selection Phase!")
         self.selection_phase(current_ralley, score, current_tree)
 
         if current_ralley.get_len_ralley() == 0:
@@ -83,7 +86,6 @@ class MCTS_Agent:
         print("Ralley: " + str(current_ralley.get_ralley()))
         print("-------------------------------")
 
-
     def selection_phase(self, current_ralley, score, current_tree):
         '''In the selection Phase, we traverse through the current tree,
         always taking the child node with the highest UCT Value until a
@@ -101,6 +103,8 @@ class MCTS_Agent:
 
         # The root node is always the node in the tree which represents 
         # the last shot in the current Ralley
+
+        print("-> Setting the root node according to current ralley.")
         if (current_ralley.get_len_ralley() == 0):
             # If there is no shot in the ralley, root node is 0
             self.set_active_mcts_node(0)
@@ -136,12 +140,17 @@ class MCTS_Agent:
             # last shot in the ralley
             self.set_active_mcts_node(index)     
 
+            
+            self.mcts_tree.nodes[self.active_mcts_node]['colour'] = 'red'
+            
             print("Root Node is " 
                   + str(self.get_active_mcts_node()) 
                   + " with shot encondging: " 
                   + str(current_tree.get_shot_of_node(self.
                                                       get_active_mcts_node())))
-
+        
+        print("MCTS_tree with new root node is displayed.")
+        self.show_mcts_tree()
         # Now that we have the root node we can look for the leaf node 
         # from there
         self.leaf_node = -1
@@ -275,8 +284,6 @@ class MCTS_Agent:
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
 
-
-
                 # If all three directions are found, then we go the the 
                 # child with the highest UCT Value and go again from there
                 elif (dir_1_found and dir_2_found and dir_3_found
@@ -352,6 +359,10 @@ class MCTS_Agent:
               + str(self.leaf_node))
         print("Leaf Node Shot encoding: " + str(current_tree.get_shot_of_node(self.leaf_node)))
         
+        self.mcts_tree.nodes[self.leaf_node]['colour'] = 'orange'
+        print("Displaying the MCTS_Tree with orange Leaf Node.")
+        self.show_mcts_tree()
+
         # Get neighbors of the leaf node
         children_of_leaf_node = current_tree.get_neighbors(self.leaf_node)
         
@@ -500,7 +511,38 @@ class MCTS_Agent:
                 else:
                     self.set_expansion_shot("3", score, current_tree)
 
-        else: print("ToDo: No children of leaf node found, expanding a random direction")
+        else: 
+            #print("ToDo: No children of leaf node found, expanding a random direction")
+            i = random.randint(0, 99)
+            if i < 33: 
+                self.set_expansion_shot("1", score, current_tree)
+            elif i < 66:
+                self.set_expansion_shot("2", score, current_tree)
+            else:
+                self.set_expansion_shot("3", score, current_tree)
+
+        # Now we should have a shot encoding for the expansion and we
+        # add it to the mcts tree.
+        
+        exp_shot = self.get_expansion_shot()
+        exp_shot_index = current_tree.get_next_node_index()
+        exp_shot_depth = current_ralley.get_len_ralley() + 1
+        
+
+        self.add_node_to_mcts_tree(exp_shot_index, colour="yellow", 
+                                   node_type="Expansion", shot_string=exp_shot,
+                                   depth=exp_shot_depth, n_visits=0, n_wins=0, 
+                                   uct_value=0)
+        
+        exp_shot_dir = self.get_dir_of_shot_in_mcts_tree(exp_shot_index)
+
+        self.add_edge_to_mcts_tree(node_A=self.get_leaf_node(), 
+                                   node_B=exp_shot_index, 
+                                   n_visits=0, uct_value=0,
+                                   win_count=0, direction=exp_shot_dir)
+
+        print("Displaying MCTS Tree with yellow expansion Shot.")
+        self.show_mcts_tree()
 
         # ToDo: start Simulation Phase from that new node
     
@@ -1626,3 +1668,66 @@ class MCTS_Agent:
         '''Clears all Nodes from Expansion Path'''
         self.expansion_path.clear()
         self.expansion_path = [0]
+
+    def add_node_to_mcts_tree(self, index, colour, node_type, shot_string, depth,
+                     n_visits, n_wins, uct_value):
+        '''A new node is added to the mcts tree.'''
+        self.mcts_tree.add_node(node_for_adding=index,
+                           colour=colour,
+                           type=node_type,
+                           shot=shot_string,
+                           depth=depth,
+                           n_visits=n_visits,
+                           n_wins=n_wins,
+                           uct_value=uct_value)
+        
+    def add_edge_to_mcts_tree(self, node_A, node_B, n_visits, uct_value,
+                              win_count, direction):
+        '''Adds a new edge between two given nodes'''
+        self.mcts_tree.add_edge(node_A, node_B,
+                           n_visits=n_visits,
+                           uct_value=uct_value,
+                           win_count=win_count,
+                           direction=direction)
+        
+    def get_dir_of_shot_in_mcts_tree(self, node):
+        '''Returns the direction of a shot od a given Node'''
+        direction = ""
+        node_shot = self.mcts_tree.nodes[node]['shot']
+
+        if any('1' in s for s in node_shot):
+            direction = '1'
+        elif any('2' in s for s in node_shot):
+            direction = '2'
+        elif any('3' in s for s in node_shot):
+            direction = '3'
+        elif any('4' in s for s in node_shot):
+            direction = '4'
+        elif any('5' in s for s in node_shot):
+            direction = '5'
+        elif any('6' in s for s in node_shot):
+            direction = '6'
+
+        return direction
+
+    def show_mcts_tree(self):
+        '''When this function is called, it will draw the mcts tree.'''
+        colours = list(nx.get_node_attributes(self.mcts_tree,'colour').values())
+        pos = graphviz_layout(self.mcts_tree, prog="dot")
+        nx.draw(self.mcts_tree,
+                pos,
+                node_color = colours,
+                node_size = 170,
+                labels=nx.get_node_attributes(self.mcts_tree, 'shot'), 
+                with_labels=True, 
+                font_size=6,
+                font_weight='bold')
+        edge_labels = dict([((n1, n2), d['n_visits'])
+                            for n1, n2, d in self.mcts_tree.edges(data=True)])
+        nx.draw_networkx_edge_labels(self.mcts_tree, 
+                                     pos, 
+                                     edge_labels=edge_labels, 
+                                     font_size=6)
+
+        # draw the tree
+        plt.show()

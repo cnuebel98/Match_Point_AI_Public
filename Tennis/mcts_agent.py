@@ -2,7 +2,9 @@ import random
 import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 import matplotlib.pyplot as plt
-import simpler_stat_bot_djoko
+import simpler_stat_bot_djoko as djoko
+import ralley
+import copy
 import scoring
 
 class MCTS_Agent:
@@ -18,13 +20,18 @@ class MCTS_Agent:
         self.expansion_shot = ""
         self.expansion_path = [0]
         self.mcts_tree = nx.DiGraph()
+        self.mcts_ralley = ralley.Ralley()
+        self.opponent = djoko.Simple_Stat_Bot_Djokovic("Simple_Djoko")
 
     def add_shot(self, current_ralley, score, current_tree):
         '''This function is calling the different phases of MCTS'''
 
         # We save a deep copy of the current_tree from the actual game
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
-        
+        print(type(self.mcts_ralley))
+        # We safe a copy of the current_ralley from the actual game
+        self.copy_ralley_to_mcts_ralley(current_ralley)
+        print(type(self.mcts_ralley))
         print("Initial Tree from the real game is displayed.")
         self.show_mcts_tree()
 
@@ -528,7 +535,7 @@ class MCTS_Agent:
         exp_shot_index = current_tree.get_next_node_index()
         exp_shot_depth = current_ralley.get_len_ralley() + 1
         
-
+        # Here we add the expansion shot to the leaf node of the tree
         self.add_node_to_mcts_tree(exp_shot_index, colour="yellow", 
                                    node_type="Expansion", shot_string=exp_shot,
                                    depth=exp_shot_depth, n_visits=0, n_wins=0, 
@@ -541,21 +548,59 @@ class MCTS_Agent:
                                    n_visits=0, uct_value=0,
                                    win_count=0, direction=exp_shot_dir)
 
+
+        self.add_shot_to_mcts_ralley(self.get_expansion_shot())
         print("Displaying MCTS Tree with yellow expansion Shot.")
         self.show_mcts_tree()
+
+        print("-----------------------------")
+        print("Starting Simulation Phase!")
+        self.simulation_phase(current_ralley, score, current_tree)
+
 
         # ToDo: start Simulation Phase from that new node
     
     def simulation_phase(self, current_ralley, score, current_tree):
-        # starting from that unexplored child node, simulation is done.
+        # starting from the expansion node, simulation is done.
         # Djoko Bot and MCTS Simulation Strategy (e.g. Random,
         # MC-Evaluation, or others) take turns in adding a shot until
         # terminal state is reached
+
+        # We start with the expansion shot.
+
+        # first we check if the Expansion Shot is terminal or not or
+        # wether its a first serve fault.
+        
+        x = self.shot_terminated(self.expansion_shot)
+        if (x == "in_play"):
+            print("The expanded shot is in play.")
+            # The Expansion shot is always a Shot of the MCTS agent, so we 
+            # need to add a shot of the opponent first
+            print("the problem mcts ralley: " + str(self.mcts_ralley))
+            
+
+            bot_shot = self.opponent.add_shot(
+                current_ralley=self.mcts_ralley,
+                score=score,
+                current_tree=current_tree,
+                simulation_phase=True)
+            
+            print("The simulated shot of Djoko: " + str(bot_shot))
+
+
+        elif (x == "terminal"):
+            print("The expanded shot is terminal.")
+            print("ToDo: start backpropagation from here")
+
+        elif (x == "second_serve"):
+            print("The expanded serve is a first serve fault.")
+
+
+
         
         # to call the add_shot function of the opponent, we need the
         # the current_ralley, score and current_tree
-        #simpler_stat_bot_djoko.Simple_Stat_Bot_Djokovic.add_shot(
-        #    current_ralley, score, current_tree)
+        
 
 
         # while (active_simu_shot not terminal):
@@ -577,6 +622,17 @@ class MCTS_Agent:
         # Either only update the values between root node and unexplored
         # expanded child node, or all of the simulated stuff
         ...
+
+    def shot_terminated(self, shot):
+        '''Checks wether a given shot encoding is a terminal shot or 
+        not, or if it's a first serve fault.'''
+        x = "in_play"
+        
+        if ('nwdx,' in shot):
+            x = "second_serve"
+        elif ('nwdx' in shot or '*' in shot):
+            x = 'terminal'
+        return x
 
     def get_active_mcts_node(self):
         '''Returns the node, that is active during the MCTS process.'''
@@ -1709,6 +1765,15 @@ class MCTS_Agent:
             direction = '6'
 
         return direction
+
+    def copy_ralley_to_mcts_ralley(self, current_ralley):
+        '''Copys current_ralley to the mcts ralley'''
+        for i in range(0, current_ralley.get_len_ralley()):
+            self.mcts_ralley.add_shot_to_ralley(current_ralley[i])
+
+    def add_shot_to_mcts_ralley(self, shot):
+        '''Adds a shot (Expansion shot&Simu shots) to the mcts ralley'''
+        self.mcts_ralley.add_shot_to_ralley(shot)
 
     def show_mcts_tree(self):
         '''When this function is called, it will draw the mcts tree.'''

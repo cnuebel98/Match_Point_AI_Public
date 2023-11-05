@@ -21,7 +21,7 @@ class Simple_Stat_Bot_Djokovic:
         self.name = name
         self.turn = turn
 
-    def add_shot(self, current_ralley, score, current_tree):
+    def add_shot(self, current_ralley, score, current_tree, simulation_phase=False):
         '''Adds the most likely shot based on djokovic data'''
 
         # Serve from deuce side
@@ -2881,9 +2881,11 @@ class Simple_Stat_Bot_Djokovic:
 
             else: 
                 shot = "123"
-                print("Error: Szenario under development")
+                print("Error: Szenario not covered.")
 
-        current_ralley.add_shot_to_ralley(shot)
+        if simulation_phase == False:
+            current_ralley.add_shot_to_ralley(shot)
+        else: return shot
         shot = ""
         print("Ralley_after_statBotShot: " + str(current_ralley.get_ralley()))
         print("----------------------------")

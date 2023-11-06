@@ -32,10 +32,10 @@ class MCTS_Agent:
         # We save a deep copy of the current_tree from the actual game
         self.mcts_node_index = current_tree.get_node_index()
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
-        #print(type(self.mcts_ralley))
+        
         # We safe a copy of the current_ralley from the actual game
         self.copy_ralley_to_mcts_ralley(current_ralley)
-        #print(type(self.mcts_ralley))
+
         #print("Initial Tree from the real game is displayed.")
         #self.show_mcts_tree()
 
@@ -158,8 +158,7 @@ class MCTS_Agent:
             print("Root Node is " 
                   + str(self.get_active_mcts_node()) 
                   + " with shot encondging: " 
-                  + str(self.get_shot_of_node(self.
-                                                      get_active_mcts_node())))
+                  + str(self.get_shot_of_node(self.get_active_mcts_node())))
         
         #print("MCTS_tree with new root node is displayed.")
         #self.show_mcts_tree()
@@ -576,227 +575,242 @@ class MCTS_Agent:
 
         # We start with the expansion shot.
 
-        # first we check if the Expansion Shot is terminal or not or
-        # wether its a first serve fault.
-        ralley_ongoing = True
-        mcts_agents_turn = False
+        print("Expanded shot: " + str(self.expansion_shot))
         
-        i = 0
-
-        x = self.shot_terminated(self.expansion_shot)
-        if (x == "second_serve"):
-            mcts_agents_turn = True
         
-        # This while loop runs until the ralley is over, by checking if
-        # a terminal shot was played
-        while (ralley_ongoing == True and i < 100): 
+        for _ in range(3):
+            print("----------------------------------")
+            # for each simualtion we set thon "ongoing" bool to true and
+            # the mcts agents turn to false
+            ralley_ongoing = True
+            mcts_agents_turn = False
+            # self.mcts_ralley.clear_ralley()
             
-            # We go through 3 if statements here: 
-            print("Agents turn? : " + str(mcts_agents_turn) + "---> i: " + str(i))
-            if (x == "in_play"and mcts_agents_turn == False):
-                print("The expanded shot is in play.")
-                # The Expansion shot is always a Shot of the MCTS agent, so we 
-                # need to add a shot of the opponent first
+            simulation_ralley = self.get_mcts_ralley()
+            
+            # init failsafe for while loop
+            i = 0
 
-                bot_shot = self.opponent.add_shot(
-                    current_ralley=self.mcts_ralley,
-                    score=score,
-                    current_tree=current_tree,
-                    simulation_phase=True)
-                
-                simu_bot_node_index = self.get_next_mcts_node_index()
-                simu_bot_shot_depth = current_ralley.get_len_ralley() + 1
-                
-                print("The simulated shot of Djoko: " + str(bot_shot))
-
-                self.add_node_to_mcts_tree(index=simu_bot_node_index, 
-                                        colour="springgreen", 
-                                        node_type="Simu_Djoko", 
-                                        shot_string=bot_shot, 
-                                        depth=simu_bot_shot_depth,
-                                        n_visits=0, n_wins=0, uct_value=0)
-                
-                direction = self.get_dir_of_shot_in_mcts_tree(simu_bot_node_index)
-
-                self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
-                                        node_B=simu_bot_node_index, 
-                                        n_visits=0, uct_value=0, win_count=0,
-                                        direction=direction)
-                
-                self.add_shot_to_mcts_ralley(bot_shot)
-                self.set_active_simu_node(simu_bot_node_index)
+            # first we check if the Expansion Shot is terminal or not or
+            # wether its a first serve fault.
+            x = self.shot_terminated(self.expansion_shot)
+            if (x == "second_serve"):
                 mcts_agents_turn = True
-                #print("The MCTS_Tree with the first simu shot from expanded node is displayed.")
-                #self.show_mcts_tree()
+
+            # This while loop runs until the ralley is over, by checking if
+            # a terminal shot was played
+            while (ralley_ongoing == True and i < 500): 
                 
-            elif (x == "second_serve" and mcts_agents_turn == True):
-                print("The expanded shot is a first serve fault.")
-                # Here we need to start simulation with a second serve of 
-                # the mcts agent
+                # We go through 3 if statements here: 
+                print("Agents turn? : " + str(mcts_agents_turn) + "---> i: " + str(i))
+                if (x == "in_play" and mcts_agents_turn == False):
+                    print("The expanded shot is in play.")
+                    # The Expansion shot is always a Shot of the MCTS agent, so we 
+                    # need to add a shot of the opponent first
 
-                # Therefore we check if there are children in the mcts tree 
-                # of the expanded first serve fault
-                children = self.mcts_tree.neighbors(self.get_expansion_node())
-                children_lst = list(children)
-                # print(children_lst)
+                    print("hiho" + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
 
-                if (len(children_lst) != 0):
-                    # If expansion node has children, we need to look at the
-                    # directions, that already have been explored and add
-                    # a new one
-                    shots_of_children = self.get_shots_of_neighbor_nodes(children_lst)
-                    print("Shots of children of first serve fault: " + str(shots_of_children))
+                    bot_shot = self.opponent.add_shot(
+                        current_ralley=simulation_ralley,
+                        score=score,
+                        current_tree=self.mcts_tree,
+                        simulation_phase=True)
                     
-                    dir_4_found = False
-                    dir_5_found = False
-                    dir_6_found = False
+                    simu_bot_node_index = self.get_next_mcts_node_index()
+                    simu_bot_shot_depth = current_ralley.get_len_ralley() + 1
+                    
+                    print("The simulated shot of Djoko: " + str(bot_shot))
 
-                    for i in range(0, len(shots_of_children)):
-                        if (any("4" in s for s in shots_of_children[i])):
-                            dir_4_found = True
-                        if (any("5" in s for s in shots_of_children[i])):
-                            dir_5_found = True
-                        if (any("6" in s for s in shots_of_children[i])):
-                            dir_6_found = True
-
-                    if dir_4_found and dir_5_found:
-                        second_simu_serve = "6"
-                    elif dir_4_found and dir_6_found:
-                        second_simu_serve = "5"
-                    elif dir_5_found and dir_6_found:
-                        second_simu_serve = "4"
-                    elif dir_4_found:
-                        i = random.randint(0, 99)
-                        if i < 50:
-                            second_simu_serve = "5"
-                        else: second_simu_serve = "6"
-                    elif dir_5_found:
-                        i = random.randint(0, 99)
-                        if i < 50:
-                            second_simu_serve = "4"
-                        else: second_simu_serve = "6"
-                    elif dir_6_found:
-                        i = random.randint(0, 99)
-                        if i < 50:
-                            second_simu_serve = "4"
-                        else: second_simu_serve = "5"
-
-                else:
-                    # Add a second serve direction from mcts bot to the
-                    # simulation at random
-                    print("No children of first serve fault mcts found.")
-                    i = random.randint(0, 99)
-                    if i < 33:
-                        second_simu_serve = "4"
-                    elif i < 66:
-                        second_simu_serve = "5"
-                    else: 
-                        second_simu_serve = "6"
-                
-                sec_serve_sim = self.add_probs_to_shot(shot=second_simu_serve,
-                                                       score=score,
-                                                       current_tree=self.mcts_tree,
-                                                       first_serve=True,
-                                                       expansion=False)
-                
-                print("2nd serve shot enconding for simu phase is: " + str(sec_serve_sim))
-                
-                sec_serve_index = self.get_next_mcts_node_index()
-                depth = current_ralley.get_len_ralley() + 1
-                self.add_node_to_mcts_tree(index=sec_serve_index,
-                                        colour="lightskyblue", 
-                                        node_type="MCTS_2nd", 
-                                        shot_string=sec_serve_sim, 
-                                        depth=depth,
-                                        n_visits=0, n_wins=0, uct_value=0)
-                
-                direction = self.get_dir_of_shot_in_mcts_tree(sec_serve_index)
-
-                self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
-                                        node_B=sec_serve_index, 
-                                        n_visits=0, uct_value=0, win_count=0,
-                                        direction=direction)
-
-                self.add_shot_to_mcts_ralley(sec_serve_sim)
-                self.set_active_simu_node(sec_serve_index)
-                mcts_agents_turn = False
-                #print("test")
-                #self.show_mcts_tree()
-
-            elif (x == "in_play" and mcts_agents_turn == True):
-                # we need to add a normal shot from mcts agent to the 
-                # simulation phase
-                print("Add a simulation shot from the mcts agent to the ralley")
-                
-
-
-                children_of_active_sim = self.mcts_tree.neighbors(
-                    self.get_active_simu_node())
-                child_lst = list(children_of_active_sim)
-                if (len(child_lst)==0):
-                    print("No Children of active simu node found.")
-
-                    i = random.randint(0, 99)
-                    if i < 33:
-                        simu_shot = "1"
-                    elif i < 66:
-                        simu_shot = "2"
-                    else: 
-                        simu_shot = "3"
-
-                    altered_simu_shot = self.add_probs_to_shot(shot=simu_shot,
-                                                    score=score, 
-                                                    current_tree=self.mcts_tree,
-                                                    expansion=False)
-
-                    print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
-
-
-                    altered_simu_shot_index = self.get_next_mcts_node_index()
-                    depth_mcts_simu = current_ralley.get_len_ralley() + 1
-
-                    self.add_node_to_mcts_tree(index=altered_simu_shot_index,
-                                        colour="lightskyblue", 
-                                        node_type="MCTS_Simu_Shot", 
-                                        shot_string=altered_simu_shot, 
-                                        depth=depth_mcts_simu,
-                                        n_visits=0, n_wins=0, uct_value=0)
-
-                    dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
-                        altered_simu_shot_index)
+                    self.add_node_to_mcts_tree(index=simu_bot_node_index, 
+                                            colour="springgreen", 
+                                            node_type="Simu_Djoko", 
+                                            shot_string=bot_shot, 
+                                            depth=simu_bot_shot_depth,
+                                            n_visits=0, n_wins=0, uct_value=0)
+                    
+                    direction = self.get_dir_of_shot_in_mcts_tree(simu_bot_node_index)
 
                     self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
-                                        node_B=altered_simu_shot_index, 
-                                        n_visits=0, uct_value=0, win_count=0,
-                                        direction=dir_simu_shot)
-
-                    self.add_shot_to_mcts_ralley(altered_simu_shot)
-                    self.set_active_simu_node(altered_simu_shot_index)
+                                            node_B=simu_bot_node_index, 
+                                            n_visits=0, uct_value=0, win_count=0,
+                                            direction=direction)
                     
+                    simulation_ralley.add_shot_to_ralley(bot_shot)
+                    self.set_active_simu_node(simu_bot_node_index)
+                    mcts_agents_turn = True
+                    #print("The MCTS_Tree with the first simu shot from expanded node is displayed.")
+                    #self.show_mcts_tree()
+                    
+                elif (x == "second_serve" and mcts_agents_turn == True):
+                    print("The expanded shot is a first serve fault.")
+                    # Here we need to start simulation with a second serve of 
+                    # the mcts agent
+
+                    # Therefore we check if there are children in the mcts tree 
+                    # of the expanded first serve fault
+                    children = self.mcts_tree.neighbors(self.get_expansion_node())
+                    children_lst = list(children)
+                    # print(children_lst)
+
+                    if (len(children_lst) != 0):
+                        # If expansion node has children, we need to look at the
+                        # directions, that already have been explored and add
+                        # a new one
+                        shots_of_children = self.get_shots_of_neighbor_nodes(children_lst)
+                        print("Shots of children of first serve fault: " + str(shots_of_children))
+                        
+                        dir_4_found = False
+                        dir_5_found = False
+                        dir_6_found = False
+
+                        for i in range(0, len(shots_of_children)):
+                            if (any("4" in s for s in shots_of_children[i])):
+                                dir_4_found = True
+                            if (any("5" in s for s in shots_of_children[i])):
+                                dir_5_found = True
+                            if (any("6" in s for s in shots_of_children[i])):
+                                dir_6_found = True
+
+                        if dir_4_found and dir_5_found:
+                            second_simu_serve = "6"
+                        elif dir_4_found and dir_6_found:
+                            second_simu_serve = "5"
+                        elif dir_5_found and dir_6_found:
+                            second_simu_serve = "4"
+                        elif dir_4_found:
+                            i = random.randint(0, 99)
+                            if i < 50:
+                                second_simu_serve = "5"
+                            else: second_simu_serve = "6"
+                        elif dir_5_found:
+                            i = random.randint(0, 99)
+                            if i < 50:
+                                second_simu_serve = "4"
+                            else: second_simu_serve = "6"
+                        elif dir_6_found:
+                            i = random.randint(0, 99)
+                            if i < 50:
+                                second_simu_serve = "4"
+                            else: second_simu_serve = "5"
+
+                    else:
+                        # Add a second serve direction from mcts bot to the
+                        # simulation at random
+                        print("No children of first serve fault mcts found.")
+                        i = random.randint(0, 99)
+                        if i < 33:
+                            second_simu_serve = "4"
+                        elif i < 66:
+                            second_simu_serve = "5"
+                        else: 
+                            second_simu_serve = "6"
+                    
+                    sec_serve_sim = self.add_probs_to_shot(shot=second_simu_serve,
+                                                        score=score,
+                                                        current_tree=self.mcts_tree,
+                                                        first_serve=False,
+                                                        expansion=False)
+                    
+                    print("2nd serve shot enconding for simu phase is: " + str(sec_serve_sim))
+                    
+                    sec_serve_index = self.get_next_mcts_node_index()
+                    depth = current_ralley.get_len_ralley() + 1
+                    self.add_node_to_mcts_tree(index=sec_serve_index,
+                                            colour="lightskyblue", 
+                                            node_type="MCTS_2nd", 
+                                            shot_string=sec_serve_sim, 
+                                            depth=depth,
+                                            n_visits=0, n_wins=0, uct_value=0)
+                    
+                    direction = self.get_dir_of_shot_in_mcts_tree(sec_serve_index)
+
+                    self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
+                                            node_B=sec_serve_index, 
+                                            n_visits=0, uct_value=0, win_count=0,
+                                            direction=direction)
+
+                    simulation_ralley.add_shot_to_ralley(sec_serve_sim)
+                    self.set_active_simu_node(sec_serve_index)
                     mcts_agents_turn = False
-                    #print("testing")
+                    x = "in_play"
+                    #print("test")
                     #self.show_mcts_tree()
 
-                else: 
-                    print("Children of active simu node found.")
+                elif (x == "in_play" and mcts_agents_turn == True):
+                    # we need to add a normal shot from mcts agent to the 
+                    # simulation phase
+                    print("Add a simulation shot from the mcts agent to the ralley")
+                    
 
-                mcts_agents_turn = False
 
-            elif (x == "terminal"):
-                print("The expanded shot is terminal.")
-                print("ToDo: start backpropagation from here")
-                self.set_active_simu_node(self.get_expansion_node())
-                print("Ralley Ongoing = " + str(ralley_ongoing))
-                ralley_ongoing = False
+                    children_of_active_sim = self.mcts_tree.neighbors(
+                        self.get_active_simu_node())
+                    child_lst = list(children_of_active_sim)
+                    if (len(child_lst)==0):
+                        print("No Children of active simu node found.")
 
-            # Testing wether the last added shot was terminal or not:
-            if ("nwdx" in self.get_shot_of_node(self.get_active_simu_node())
-                and "nwdx," not in self.get_shot_of_node(self.get_active_simu_node())
-                or "*" in self.get_shot_of_node(self.get_active_simu_node())):
-                ralley_ongoing = False
-                print("The last added simushot was terminal.")
+                        i = random.randint(0, 99)
+                        if i < 33:
+                            simu_shot = "1"
+                        elif i < 66:
+                            simu_shot = "2"
+                        else: 
+                            simu_shot = "3"
 
-            i += 1
+                        altered_simu_shot = self.add_probs_to_shot(shot=simu_shot,
+                                                        score=score, 
+                                                        current_tree=self.mcts_tree,
+                                                        expansion=False)
+
+                        print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
+
+
+                        altered_simu_shot_index = self.get_next_mcts_node_index()
+                        depth_mcts_simu = current_ralley.get_len_ralley() + 1
+
+                        self.add_node_to_mcts_tree(index=altered_simu_shot_index,
+                                            colour="lightskyblue", 
+                                            node_type="MCTS_Simu_Shot", 
+                                            shot_string=altered_simu_shot, 
+                                            depth=depth_mcts_simu,
+                                            n_visits=0, n_wins=0, uct_value=0)
+
+                        dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
+                            altered_simu_shot_index)
+
+                        self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
+                                            node_B=altered_simu_shot_index, 
+                                            n_visits=0, uct_value=0, win_count=0,
+                                            direction=dir_simu_shot)
+
+                        simulation_ralley.add_shot_to_ralley(altered_simu_shot)
+                        self.set_active_simu_node(altered_simu_shot_index)
+                        
+                        mcts_agents_turn = False
+                        #print("testing")
+                        #self.show_mcts_tree()
+
+                    else: 
+                        print("Children of active simu node found.")
+
+                    mcts_agents_turn = False
+
+                
+
+                # Testing wether the last added shot was terminal or not:
+                if ("nwdx" in self.get_shot_of_node(self.get_active_simu_node())
+                    and "nwdx," not in self.get_shot_of_node(self.get_active_simu_node())
+                    or "*" in self.get_shot_of_node(self.get_active_simu_node())
+                    or x == "terminal"):
+                    
+                    if x == "terminal": print("Exp Shot was terminal.")
+                    else: print("Last shot was terminal.")
+                    print("ToDo: start backpropagation from here")
+                    self.set_active_simu_node(self.get_expansion_node())
+                    ralley_ongoing = False
+                
+                i += 1
+            
 
         self.show_mcts_tree()
         # if (self.shot_terminated(self.get_active_simu_node()) == "terminal"):
@@ -902,6 +916,9 @@ class MCTS_Agent:
         # to the chosen action (One action can lead to different states)
         #shot = shot
         
+        print("First serve: " + str(first_serve))
+        print("shot encoding parent node: " + str(self.get_shot_of_node(self.get_expansion_node())))
+
         if (shot == "4" or shot == "5" or shot == "6" and first_serve == True):
             # If serving from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
@@ -946,8 +963,7 @@ class MCTS_Agent:
                     elif k < (3527 + 897):
                         shot = shot + str("*")
         
-        elif (shot == "4" or shot == "5" or shot == "6" 
-              and first_serve == False):
+        elif (shot == "4" or shot == "5" or shot == "6" and first_serve == False):
             # Adding Winner & Error Probas to a second serve
             if (score.get_point_count_per_game() % 2 == 0):
                 print("Expanding 2nd serve from the deuce side")
@@ -2033,6 +2049,10 @@ class MCTS_Agent:
         for i in range(0, current_ralley.get_len_ralley()):
             x = current_ralley.return_shot_at_pos(i)
             self.mcts_ralley.add_shot_to_ralley(x)
+
+    def get_mcts_ralley(self):
+        '''Returns the MCTS Ralley.'''
+        return self.mcts_ralley
 
     def add_shot_to_mcts_ralley(self, shot):
         '''Adds a shot (Expansion shot&Simu shots) to the mcts ralley'''

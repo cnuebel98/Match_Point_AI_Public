@@ -17,6 +17,8 @@ class MCTS_Agent:
         self.active_mcts_node = 0
         self.leaf_node = 0
         self.shot = ""
+        self.active_simu_node = 0
+        self.expansion_node = 0
         self.expansion_shot = ""
         self.expansion_path = [0]
         self.mcts_tree = nx.DiGraph()
@@ -28,10 +30,10 @@ class MCTS_Agent:
 
         # We save a deep copy of the current_tree from the actual game
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
-        print(type(self.mcts_ralley))
+        #print(type(self.mcts_ralley))
         # We safe a copy of the current_ralley from the actual game
         self.copy_ralley_to_mcts_ralley(current_ralley)
-        print(type(self.mcts_ralley))
+        #print(type(self.mcts_ralley))
         print("Initial Tree from the real game is displayed.")
         self.show_mcts_tree()
 
@@ -543,6 +545,8 @@ class MCTS_Agent:
         
         exp_shot_dir = self.get_dir_of_shot_in_mcts_tree(exp_shot_index)
 
+        self.set_expansion_node(exp_shot_index)
+
         self.add_edge_to_mcts_tree(node_A=self.get_leaf_node(), 
                                    node_B=exp_shot_index, 
                                    n_visits=0, uct_value=0,
@@ -555,6 +559,8 @@ class MCTS_Agent:
 
         print("-----------------------------")
         print("Starting Simulation Phase!")
+
+        self.set_active_simu_node(self.get_expansion_node())
         self.simulation_phase(current_ralley, score, current_tree)
 
 
@@ -576,8 +582,6 @@ class MCTS_Agent:
             print("The expanded shot is in play.")
             # The Expansion shot is always a Shot of the MCTS agent, so we 
             # need to add a shot of the opponent first
-            print("the problem mcts ralley: " + str(self.mcts_ralley))
-            
 
             bot_shot = self.opponent.add_shot(
                 current_ralley=self.mcts_ralley,
@@ -585,17 +589,39 @@ class MCTS_Agent:
                 current_tree=current_tree,
                 simulation_phase=True)
             
+            simu_bot_node_index = current_tree.get_next_node_index()
+            simu_bot_shot_depth = current_ralley.get_len_ralley() + 1
+            
             print("The simulated shot of Djoko: " + str(bot_shot))
 
+            self.add_node_to_mcts_tree(index=simu_bot_node_index, 
+                                       colour="springgreen", 
+                                       node_type="Simu_Djoko", 
+                                       shot_string=bot_shot, 
+                                       depth=simu_bot_shot_depth,
+                                       n_visits=0, n_wins=0, uct_value=0)
+            
+            direction = self.get_dir_of_shot_in_mcts_tree(simu_bot_node_index)
+
+            self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
+                                       node_B=simu_bot_node_index, 
+                                       n_visits=0, uct_value=0, win_count=0,
+                                       direction=direction)
+            
+            self.add_shot_to_mcts_ralley(bot_shot)
+            self.set_active_simu_node(simu_bot_node_index)
+
+            print("The MCTS_Tree with the first simu shot from expanded node is displayed.")
+            self.show_mcts_tree()
+            
+        elif (x == "second_serve"):
+            print("ToDo: The expanded serve is a first serve fault.")
+            # Here we need to start simulation with a second serve of 
+            # the mcts agent
 
         elif (x == "terminal"):
             print("The expanded shot is terminal.")
             print("ToDo: start backpropagation from here")
-
-        elif (x == "second_serve"):
-            print("The expanded serve is a first serve fault.")
-
-
 
         
         # to call the add_shot function of the opponent, we need the
@@ -622,6 +648,26 @@ class MCTS_Agent:
         # Either only update the values between root node and unexplored
         # expanded child node, or all of the simulated stuff
         ...
+
+    def get_active_simu_node(self):
+        '''Returns the active simu Node'''
+        return self.active_simu_node
+
+    def set_active_simu_node(self, node):
+        '''Sets the active Simu node to the given node'''
+        self.active_simu_node = node
+
+    def reset_active_simu_node(self):
+        '''Resets the active Simu Node to Expansion Node'''
+        self.active_simu_node = self.get_expansion_node()
+
+    def get_expansion_node(self):
+        '''Returns teh current Expansion Node'''
+        return self.expansion_node
+    
+    def set_expansion_node(self, node):
+        '''Sets the expansion Node to the given Node'''
+        self.expansion_node = node
 
     def shot_terminated(self, shot):
         '''Checks wether a given shot encoding is a terminal shot or 
@@ -1768,8 +1814,11 @@ class MCTS_Agent:
 
     def copy_ralley_to_mcts_ralley(self, current_ralley):
         '''Copys current_ralley to the mcts ralley'''
+        
         for i in range(0, current_ralley.get_len_ralley()):
-            self.mcts_ralley.add_shot_to_ralley(current_ralley[i])
+            x = current_ralley.return_shot_at_pos(i)
+            self.mcts_ralley.add_shot_to_ralley(x)
+        print("test mcts_ralley: " + str(self.mcts_ralley))
 
     def add_shot_to_mcts_ralley(self, shot):
         '''Adds a shot (Expansion shot&Simu shots) to the mcts ralley'''

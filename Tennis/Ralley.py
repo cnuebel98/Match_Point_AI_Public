@@ -66,6 +66,10 @@ class Ralley:
         last_char = last_shot[len(last_shot)-1]
         return last_char
 
+    def return_shot_at_pos(self, pos):
+        '''Returns the shot enconding at a given position of a ralley'''
+        return str(self.ralley[pos])
+
     def score_update(self, score, current_ball):
         # If the last char in ralley is a terminal shot,
         # add a point to the score accordingly

@@ -4,8 +4,6 @@ from networkx.drawing.nx_pydot import graphviz_layout
 import matplotlib.pyplot as plt
 import simpler_stat_bot_djoko as djoko
 import ralley
-import copy
-import scoring
 
 class MCTS_Agent:
     '''In this class, the MCTS Algorithm is used to find the next shot 
@@ -21,9 +19,11 @@ class MCTS_Agent:
         self.active_simu_node = 0
         self.expansion_node = 0
         self.expansion_shot = ""
+        self.len_of_current_ralley = 0
         self.expansion_path = [0]
         self.mcts_tree = nx.DiGraph()
         self.mcts_ralley = ralley.Ralley()
+        self.simulation_ralley = ralley.Ralley()
         self.opponent = djoko.Simple_Stat_Bot_Djokovic("Simple_Djoko")
 
     def add_shot(self, current_ralley, score, current_tree):
@@ -34,8 +34,14 @@ class MCTS_Agent:
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
         
         # We safe a copy of the current_ralley from the actual game
+
+        
+        print("Len of the current ralley without expanded node: " + str(self.len_of_current_ralley))
         self.copy_ralley_to_mcts_ralley(current_ralley)
 
+        print("mcts ralley before the phases: " + str(self.mcts_ralley.get_ralley()))
+        self.simulation_ralley = self.get_mcts_ralley()
+        
         #print("Initial Tree from the real game is displayed.")
         #self.show_mcts_tree()
 
@@ -92,10 +98,10 @@ class MCTS_Agent:
             else:
                 self.shot = "f38"
 
-        print("Adding MCTS Shot to ralley (not learned): " + str(self.shot))
-        current_ralley.add_shot_to_ralley(self.shot)
-        print("MCTS_Ralley: " + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
-        print("Real_Ralley: " + str(current_ralley.get_ralley()))
+        #print("Adding MCTS Shot to ralley (not learned): " + str(self.shot))
+        current_ralley.add_shot_to_ralley(self.expansion_shot)
+        #print("MCTS_Ralley: " + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
+        #print("Real_Ralley: " + str(current_ralley.get_ralley()))
         print("-------------------------------")
 
     def selection_phase(self, current_ralley, score, current_tree):
@@ -373,7 +379,7 @@ class MCTS_Agent:
         self.mcts_tree.nodes[self.leaf_node]['colour'] = 'orange'
         #print("Displaying the MCTS_Tree with orange Leaf Node.")
         #self.show_mcts_tree()
-
+        
         # Get neighbors of the leaf node
         children_of_leaf_node = self.get_neighbors(self.leaf_node)
         
@@ -382,6 +388,8 @@ class MCTS_Agent:
         # special case: we need to check if the leaf node was a first
         # serve fault and then expand a second serve from there
         shot_encoding = self.get_shot_of_node(self.leaf_node)
+
+
         if any("," in s for s in shot_encoding):
             print("Leaf Node is 1st serve fault, need to expand 2nd serve")
             
@@ -558,6 +566,9 @@ class MCTS_Agent:
 
         self.expansion_path.append(self.get_expansion_node())
         self.add_shot_to_mcts_ralley(self.get_expansion_shot())
+        self.len_of_current_ralley = current_ralley.get_len_ralley()
+
+        #self.add_shot_to_simulation_ralley(self.get_expansion_shot())
         print("Displaying MCTS Tree with yellow expansion Shot.")
         self.show_mcts_tree()
 
@@ -575,18 +586,23 @@ class MCTS_Agent:
 
         # We start with the expansion shot.
 
+        print("Current_mcts_ralley: " + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
+        print("current simlation ralley: " + str(ralley.Ralley.get_ralley(self.simulation_ralley)))
+        
+
         print("Expanded shot: " + str(self.expansion_shot))
         
         
-        for _ in range(3):
+        for _ in range(30):
             print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
             # the mcts agents turn to false
             ralley_ongoing = True
             mcts_agents_turn = False
-            # self.mcts_ralley.clear_ralley()
-            
-            simulation_ralley = self.get_mcts_ralley()
+
+            self.simulation_ralley = self.mcts_ralley
+            print(">>>>>>>>> MCTS Ralley in the beginning of new simulation: " + str(current_ralley.get_ralley()))
+            print(">>>>>>>>> Simu Ralley in the beginning of new simulation: " + str(current_ralley.get_ralley()))
             
             # init failsafe for while loop
             i = 0
@@ -601,42 +617,79 @@ class MCTS_Agent:
             # a terminal shot was played
             while (ralley_ongoing == True and i < 500): 
                 
+                shot_dict = self.get_shot_dict_of_neighbors(
+                    self.get_active_simu_node())
+                colour_dict = self.get_colour_dict_of_neighbors(
+                    self.get_active_simu_node())
+
+                shot_in_tree = False
+
                 # We go through 3 if statements here: 
-                print("Agents turn? : " + str(mcts_agents_turn) + "---> i: " + str(i))
+                #print("Agents turn? : " + str(mcts_agents_turn) + "---> i: " + str(i))
                 if (x == "in_play" and mcts_agents_turn == False):
                     print("The expanded shot is in play.")
                     # The Expansion shot is always a Shot of the MCTS agent, so we 
                     # need to add a shot of the opponent first
 
-                    print("hiho" + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
-
+                    # here we get the next simulated shot encoding of 
+                    # the opponents shot
+                    #print("simulation_ralley, which is given to bot: " + str(simulation_ralley))
                     bot_shot = self.opponent.add_shot(
-                        current_ralley=simulation_ralley,
+                        current_ralley=self.simulation_ralley,
                         score=score,
                         current_tree=self.mcts_tree,
                         simulation_phase=True)
                     
-                    simu_bot_node_index = self.get_next_mcts_node_index()
-                    simu_bot_shot_depth = current_ralley.get_len_ralley() + 1
-                    
-                    print("The simulated shot of Djoko: " + str(bot_shot))
+                    # Then we set the next index
+                    # only if shot not in children of current node!!!
 
-                    self.add_node_to_mcts_tree(index=simu_bot_node_index, 
-                                            colour="springgreen", 
-                                            node_type="Simu_Djoko", 
-                                            shot_string=bot_shot, 
-                                            depth=simu_bot_shot_depth,
-                                            n_visits=0, n_wins=0, uct_value=0)
-                    
-                    direction = self.get_dir_of_shot_in_mcts_tree(simu_bot_node_index)
+                    # We check the shot encodings of the neighbors of 
+                    # the active simu node and see if one matches the 
+                    # bot_shot
 
-                    self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
-                                            node_B=simu_bot_node_index, 
-                                            n_visits=0, uct_value=0, win_count=0,
-                                            direction=direction)
+                    print("Bot_shot: " + str(bot_shot))
+                    neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
+                    #print("------------------> children_shot_list: " + str(neighbor_lst))
                     
-                    simulation_ralley.add_shot_to_ralley(bot_shot)
-                    self.set_active_simu_node(simu_bot_node_index)
+                    if bot_shot in neighbor_lst:
+                        index_lst = []
+                        for x in neighbor_lst:
+                            if (x == bot_shot):
+                                matching_shot = x
+                                index_lst = [k for k,v in shot_dict.items()
+                                             if v == matching_shot]
+                                for h in range(len(index_lst)):
+                                    if colour_dict[index_lst[h]] == "springgreen":
+                                        shot_in_tree = True
+                                        self.set_active_simu_node(index_lst[h])
+
+                    # --------------------------------------
+                    elif (shot_in_tree == False):
+                        simu_bot_node_index = self.get_next_mcts_node_index()
+                        simu_bot_shot_depth = current_ralley.get_len_ralley() + 1
+                        
+                        #print("The simulated shot of Djoko: " + str(bot_shot))
+
+                        self.add_node_to_mcts_tree(index=simu_bot_node_index, 
+                                                colour="springgreen", 
+                                                node_type="Simu_Djoko", 
+                                                shot_string=bot_shot, 
+                                                depth=simu_bot_shot_depth,
+                                                n_visits=0, n_wins=0, uct_value=0)
+                        
+                        direction = self.get_dir_of_shot_in_mcts_tree(simu_bot_node_index)
+
+                        self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
+                                                node_B=simu_bot_node_index, 
+                                                n_visits=0, uct_value=0, win_count=0,
+                                                direction=direction)
+                        
+                        self.set_active_simu_node(simu_bot_node_index)
+
+                    # ----------------------------------------
+                    
+                    self.add_shot_to_simu_ralley(bot_shot)
+
                     mcts_agents_turn = True
                     #print("The MCTS_Tree with the first simu shot from expanded node is displayed.")
                     #self.show_mcts_tree()
@@ -706,31 +759,57 @@ class MCTS_Agent:
                             second_simu_serve = "6"
                     
                     sec_serve_sim = self.add_probs_to_shot(shot=second_simu_serve,
-                                                        score=score,
-                                                        current_tree=self.mcts_tree,
-                                                        first_serve=False,
-                                                        expansion=False)
+                                                           score=score,
+                                                           current_tree=self.mcts_tree,
+                                                           first_serve=False,
+                                                           expansion=False)
                     
                     print("2nd serve shot enconding for simu phase is: " + str(sec_serve_sim))
                     
-                    sec_serve_index = self.get_next_mcts_node_index()
-                    depth = current_ralley.get_len_ralley() + 1
-                    self.add_node_to_mcts_tree(index=sec_serve_index,
-                                            colour="lightskyblue", 
-                                            node_type="MCTS_2nd", 
-                                            shot_string=sec_serve_sim, 
-                                            depth=depth,
-                                            n_visits=0, n_wins=0, uct_value=0)
+                    # -----------------------------------------------
+                    #print("------------------> children_shot_list: " + str(self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())))
                     
-                    direction = self.get_dir_of_shot_in_mcts_tree(sec_serve_index)
+                    neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
+                    #print("----------------------->> Second Serve MCTS Shot: " + str(sec_serve_sim))
+                    
+                    
+                    if sec_serve_sim in neighbor_lst:
+                        index_lst = []
+                        for x in neighbor_lst:
+                            if (x == sec_serve_sim):
+                                matching_shot = x
+                                index_lst = [k for k,v in shot_dict.items()
+                                             if v == matching_shot]
+                                for h in range(len(index_lst)):
+                                    if colour_dict[index_lst[h]] == "lightskyblue":
+                                        shot_in_tree = True
+                                        self.set_active_simu_node(index_lst[h])
+                    
+                    elif (shot_in_tree == False):
+                    
+                        sec_serve_index = self.get_next_mcts_node_index()
+                        depth = current_ralley.get_len_ralley() + 1
 
-                    self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
-                                            node_B=sec_serve_index, 
-                                            n_visits=0, uct_value=0, win_count=0,
-                                            direction=direction)
+                        self.add_node_to_mcts_tree(index=sec_serve_index,
+                                                colour="lightskyblue", 
+                                                node_type="MCTS_2nd", 
+                                                shot_string=sec_serve_sim, 
+                                                depth=depth,
+                                                n_visits=0, n_wins=0, uct_value=0)
+                        
+                        direction = self.get_dir_of_shot_in_mcts_tree(sec_serve_index)
 
-                    simulation_ralley.add_shot_to_ralley(sec_serve_sim)
-                    self.set_active_simu_node(sec_serve_index)
+                        self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
+                                                node_B=sec_serve_index, 
+                                                n_visits=0, uct_value=0, win_count=0,
+                                                direction=direction)
+                        self.set_active_simu_node(sec_serve_index)
+                    # -----------------------------------------
+
+                    self.add_shot_to_simu_ralley(sec_serve_sim)
+                    # -------------------
+                    
+                    # -------------------
                     mcts_agents_turn = False
                     x = "in_play"
                     #print("test")
@@ -741,8 +820,6 @@ class MCTS_Agent:
                     # simulation phase
                     print("Add a simulation shot from the mcts agent to the ralley")
                     
-
-
                     children_of_active_sim = self.mcts_tree.neighbors(
                         self.get_active_simu_node())
                     child_lst = list(children_of_active_sim)
@@ -758,39 +835,59 @@ class MCTS_Agent:
                             simu_shot = "3"
 
                         altered_simu_shot = self.add_probs_to_shot(shot=simu_shot,
-                                                        score=score, 
-                                                        current_tree=self.mcts_tree,
-                                                        expansion=False)
+                                                                   score=score, 
+                                                                   current_tree=self.mcts_tree,
+                                                                   expansion=False)
 
                         print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
 
+                        # -------------------------------------------
+                        print("children_shot_list: " + str(self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())))
+                        print("simu shot MCTS Shot: " + str(altered_simu_shot))
 
-                        altered_simu_shot_index = self.get_next_mcts_node_index()
-                        depth_mcts_simu = current_ralley.get_len_ralley() + 1
+                        neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
 
-                        self.add_node_to_mcts_tree(index=altered_simu_shot_index,
-                                            colour="lightskyblue", 
-                                            node_type="MCTS_Simu_Shot", 
-                                            shot_string=altered_simu_shot, 
-                                            depth=depth_mcts_simu,
-                                            n_visits=0, n_wins=0, uct_value=0)
+                        if altered_simu_shot in neighbor_lst:
+                            index_lst = []
+                            for x in neighbor_lst:
+                                if (x == altered_simu_shot):
+                                    matching_shot = x
+                                    index_lst = [k for k,v in shot_dict.items()
+                                                if v == matching_shot]
+                                    for h in range(len(index_lst)):
+                                        if colour_dict[index_lst[h]] == "lightskyblue":
+                                            shot_in_tree = True
+                                            self.set_active_simu_node(index_lst[h])
 
-                        dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
-                            altered_simu_shot_index)
+                        elif (shot_in_tree == False):
+                            altered_simu_shot_index = self.get_next_mcts_node_index()
+                            depth_mcts_simu = current_ralley.get_len_ralley() + 1
 
-                        self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
-                                            node_B=altered_simu_shot_index, 
-                                            n_visits=0, uct_value=0, win_count=0,
-                                            direction=dir_simu_shot)
+                            self.add_node_to_mcts_tree(index=altered_simu_shot_index,
+                                                colour="lightskyblue", 
+                                                node_type="MCTS_Simu_Shot", 
+                                                shot_string=altered_simu_shot, 
+                                                depth=depth_mcts_simu,
+                                                n_visits=0, n_wins=0, uct_value=0)
 
-                        simulation_ralley.add_shot_to_ralley(altered_simu_shot)
-                        self.set_active_simu_node(altered_simu_shot_index)
+                            dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
+                                altered_simu_shot_index)
+
+                            self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
+                                                node_B=altered_simu_shot_index, 
+                                                n_visits=0, uct_value=0, win_count=0,
+                                                direction=dir_simu_shot)
+
+                            self.set_active_simu_node(altered_simu_shot_index)
+                        # -----------------------------------------
+
+                        self.add_shot_to_simu_ralley(altered_simu_shot)
                         
                         mcts_agents_turn = False
                         #print("testing")
                         #self.show_mcts_tree()
 
-                    else: 
+                    else:
                         print("Children of active simu node found.")
 
                     mcts_agents_turn = False
@@ -805,7 +902,15 @@ class MCTS_Agent:
                     
                     if x == "terminal": print("Exp Shot was terminal.")
                     else: print("Last shot was terminal.")
+
                     print("ToDo: start backpropagation from here")
+                    print("The Simuralley after 1 ralley: " + str(self.simulation_ralley.get_ralley()))
+                    #print("The MCTS Ralley after 1 simuralley: " + str(self.mcts_ralley.get_ralley()))
+                    print("Len to cut it off to: " + str(self.len_of_current_ralley))
+                    self.simulation_ralley.remove_last_n_elements_of_ralley(self.len_of_current_ralley)
+                    #self.simulation_ralley = self.get_mcts_ralley()
+
+                    print("The Simuralley after cutting it off: " + str(self.simulation_ralley.get_ralley()))
                     self.set_active_simu_node(self.get_expansion_node())
                     ralley_ongoing = False
                 
@@ -1309,9 +1414,8 @@ class MCTS_Agent:
                 print("We are expanding/simulating a normal shot.")
                 if (score.get_serving_player() == 1):
 
-                    # 1st was MCTS Agent serving 2nd in the ralley?
-                    if (any("," in s for s in self.get_shot_of_node(
-                        self.expansion_path[1]))):
+                    # firstly was MCTS Agent serving 2nd in the ralley?
+                    if (first_serve == False):
                         print("In a ralley, where MCTS was serving a 2nd.")
                         if (any("1" in s for s in self.get_shot_of_node(self.leaf_node))):
                             print("Opponents shot was in direction 1.")
@@ -1416,7 +1520,8 @@ class MCTS_Agent:
                                     shot = shot + "nwdx"
                                 elif j < (1334 + 733):
                                     shot = shot + "*"
-                        else: 
+                        elif (any("3" in s for s in self.get_shot_of_node(
+                            self.leaf_node))): 
                             print("3 found in Leaf Node.")
                             if (shot == "1"):
                                 # Adding Depth encoding
@@ -1524,7 +1629,7 @@ class MCTS_Agent:
                                     shot = shot + "*"
 
                         elif (any("2" in s for s in self.get_shot_of_node(self.leaf_node))):
-                            print("2 fount in Leaf Node")
+                            print("2 found in Leaf Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1994,6 +2099,18 @@ class MCTS_Agent:
     def get_mcts_tree(self):
         return self.mcts_tree
     
+    def get_shot_list_of_simu_neighbors(self, node):
+        '''This function returns a list of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = []
+        neighbor_nodes = list(self.mcts_tree.neighbors(node))
+        shots_of_all_nodes = nx.get_node_attributes(self.mcts_tree, 'shot')
+        
+        for n in neighbor_nodes:
+            shots_of_neighbor_nodes.append(shots_of_all_nodes[n])
+
+        return shots_of_neighbor_nodes
+
     def get_shots_of_neighbors(self, node_list):
         '''Return a list of shots of a given List of nodes'''
         neighbor_shots = []
@@ -2001,6 +2118,30 @@ class MCTS_Agent:
             neighbor_shot = self.mcts_tree.nodes[node_list[x]]['shot']
             neighbor_shots.append(neighbor_shot)
         return neighbor_shots
+    
+    def get_shot_dict_of_neighbors(self, node):
+        '''This function returns a dict of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.mcts_tree.neighbors(node))
+        shots_of_all_nodes = nx.get_node_attributes(self.mcts_tree, 'shot')
+        
+        for n in neighbor_nodes:
+            shots_of_neighbor_nodes[n] = shots_of_all_nodes[n]
+
+        return shots_of_neighbor_nodes
+    
+    def get_colour_dict_of_neighbors(self, node):
+        '''This function returns a dict of the colours of the neighbor
+        nodes of a given node'''
+        colours_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.mcts_tree.neighbors(node))
+        colour_of_all_nodes = nx.get_node_attributes(self.mcts_tree, 'colour')
+        
+        for i in neighbor_nodes:
+            colours_of_neighbor_nodes[i] = colour_of_all_nodes[i]
+
+        return colours_of_neighbor_nodes
 
     def add_node_to_mcts_tree(self, index, colour, node_type, shot_string, depth,
                      n_visits, n_wins, uct_value):
@@ -2024,7 +2165,7 @@ class MCTS_Agent:
                            direction=direction)
         
     def get_dir_of_shot_in_mcts_tree(self, node):
-        '''Returns the direction of a shot od a given Node'''
+        '''Returns the direction of a shot of a given Node'''
         direction = ""
         node_shot = self.mcts_tree.nodes[node]['shot']
 
@@ -2050,9 +2191,22 @@ class MCTS_Agent:
             x = current_ralley.return_shot_at_pos(i)
             self.mcts_ralley.add_shot_to_ralley(x)
 
+    
+
+    def copy_ralley_to_simu_ralley(self, current_ralley):
+        '''Copys current_ralley to the mcts ralley'''
+        
+        for i in range(0, current_ralley.get_len_ralley()):
+            x = current_ralley.return_shot_at_pos(i)
+            self.simulation_ralley.add_shot_to_ralley(x)
+
     def get_mcts_ralley(self):
         '''Returns the MCTS Ralley.'''
         return self.mcts_ralley
+
+    def add_shot_to_simu_ralley(self, shot):
+        self.simulation_ralley.add_shot_to_ralley(shot)
+
 
     def add_shot_to_mcts_ralley(self, shot):
         '''Adds a shot (Expansion shot&Simu shots) to the mcts ralley'''

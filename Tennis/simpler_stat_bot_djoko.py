@@ -87,6 +87,7 @@ class Simple_Stat_Bot_Djokovic:
         # First Serve is returned
         elif (ralley.Ralley.get_len_ralley(current_ralley) == 1):
             # Add return to the first Serve
+            print("Adding return to a first serve.")
             self.Serving = False
             self.Returning = True
             x = score.get_point_count_per_game()
@@ -651,11 +652,11 @@ class Simple_Stat_Bot_Djokovic:
                         else:
                             shot = "s" + shot
 
-
         elif (ralley.Ralley.get_len_ralley(current_ralley) == 2
               and "," in 
               ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
             # Add return to the Second Serve
+            print("Adding return to a second serve.")
             # shot = "SecondServeReturn"
             self.Serving = False
             self.Returning = True
@@ -1193,7 +1194,7 @@ class Simple_Stat_Bot_Djokovic:
         else:
             # We need to seperate between serving and returning in the
             # ralley and also between first and second serves
-            shot = "123"
+
             # If Djoko was starting the ralley with a first serve
             if(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
                 and self.Serving == True
@@ -1609,8 +1610,7 @@ class Simple_Stat_Bot_Djokovic:
                         elif (l < (772 + 7703 + 1069 + 124 + 41 + 14 + 172 
                                    + 90 + 14)):
                             shot = "i" + shot
-
-                
+  
             # ElIf Djoko started Ralley with a first Serve
             elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
                 and self.Serving == True):
@@ -2882,11 +2882,15 @@ class Simple_Stat_Bot_Djokovic:
             else: 
                 shot = "123"
                 print("Error: Szenario not covered.")
+                print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
+
+        if shot == "123": print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
 
         if simulation_phase == False:
             current_ralley.add_shot_to_ralley(shot)
         else: return shot
         shot = ""
+        
         print("Ralley_after_statBotShot: " + str(current_ralley.get_ralley()))
         print("----------------------------")
         

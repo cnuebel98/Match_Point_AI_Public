@@ -36,6 +36,12 @@ class Ralley:
         # returns the length of a ralley
         return len(self.ralley)
     
+
+    def remove_last_n_elements_of_ralley(self, n):
+        # n is the number of elements to keep
+        x = len(self.ralley) - n
+        del self.ralley[-x:]
+    
     def set_last_ralley(self, ralley):
         self.LAST_RALLEY = ralley
 

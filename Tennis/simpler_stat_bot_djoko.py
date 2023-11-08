@@ -57,7 +57,7 @@ class Simple_Stat_Bot_Djokovic:
                 elif (j < (1265 + 598 + 1347 + 100 + 848)):
                     shot = shot + "*"
         
-        
+
         elif (ralley.Ralley.get_len_ralley(current_ralley) == 1
               and current_ralley.get_last_char_of_last_shot() == ","):
             # Add Second Serve
@@ -2885,7 +2885,7 @@ class Simple_Stat_Bot_Djokovic:
                 print("Error: Szenario not covered.")
                 print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
 
-        if shot == "123": print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
+        #if shot == "123": print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
 
         if simulation_phase == False:
             current_ralley.add_shot_to_ralley(shot)

@@ -16,7 +16,9 @@ class MCTS_Agent:
         self.mcts_node_index = 0
         self.leaf_node = 0
         self.shot = ""
+        self.x = "in_play"
         self.active_simu_node = 0
+        self.first_service = True
         self.mcts_agents_turn = False
         self.expansion_node = 0
         self.expansion_shot = ""
@@ -590,10 +592,10 @@ class MCTS_Agent:
         print("Current_mcts_ralley: " + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
         print("current simlation ralley: " + str(ralley.Ralley.get_ralley(self.simulation_ralley)))
         
-
         print("Expanded shot: " + str(self.expansion_shot))
         
-        
+        # Range(x) x is number of simulations we do from the expanded 
+        # Node
         for _ in range(50):
             print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
@@ -602,20 +604,20 @@ class MCTS_Agent:
             
 
             self.simulation_ralley = self.mcts_ralley
-            print(">>>>>>>>> MCTS Ralley in the beginning of new simulation: " + str(current_ralley.get_ralley()))
-            print(">>>>>>>>> Simu Ralley in the beginning of new simulation: " + str(current_ralley.get_ralley()))
+            #print(">>>>>>>>> MCTS Ralley in the beginning of new simulation: " + str(current_ralley.get_ralley()))
+            print("Simu Ralley in the beginning of new simulation: " + str(current_ralley.get_ralley()))
             
             # init failsafe for while loop
             i = 0
 
             # first we check if the Expansion Shot is terminal or not or
             # wether its a first serve fault.
-            x = self.shot_terminated(self.expansion_shot)
-            if (x == "second_serve"):
+            self.x = self.shot_terminated(self.expansion_shot)
+            if (self.x == "second_serve"):
                 self.mcts_agents_turn = True
 
             print("mcts_agents_turn: " + str(self.mcts_agents_turn))
-            print("x Value: " + str(x))
+            print("x Value: " + str(self.x))
 
             # This while loop runs until the ralley is over, by checking if
             # a terminal shot was played
@@ -631,7 +633,7 @@ class MCTS_Agent:
                 
                 # We go through 3 if statements here: 
                 
-                if (x == "in_play" and self.mcts_agents_turn == False):
+                if (self.x == "in_play" and self.mcts_agents_turn == False):
                     print("The expanded shot is in play and MCTS Agents turn is False.")
                     # The Expansion shot is always a Shot of the MCTS agent, so we 
                     # need to add a shot of the opponent first
@@ -653,7 +655,6 @@ class MCTS_Agent:
                     # bot_shot
 
                     print("Bot_shot: " + str(bot_shot))
-                    print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
                     neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
                     #print("------------------> children_shot_list: " + str(neighbor_lst))
                     
@@ -700,7 +701,7 @@ class MCTS_Agent:
                     #print("The MCTS_Tree with the first simu shot from expanded node is displayed.")
                     #self.show_mcts_tree()
                     
-                elif (x == "second_serve" and self.mcts_agents_turn == True):
+                elif (self.x == "second_serve" and self.mcts_agents_turn == True):
                     print("The expanded shot is a first serve fault and its the mcts agents turn = True.")
                     # Here we need to start simulation with a second serve of 
                     # the mcts agent
@@ -752,6 +753,15 @@ class MCTS_Agent:
                                 second_simu_serve = "4"
                             else: second_simu_serve = "5"
 
+                        if dir_4_found and dir_5_found and dir_6_found:
+                            i = random.randint(0, 99)
+                            if i < 33:
+                                second_simu_serve = "4"
+                            elif i < 66:
+                                second_simu_serve = "5"
+                            else: 
+                                second_simu_serve = "6"
+
                     else:
                         # Add a second serve direction from mcts bot to the
                         # simulation at random
@@ -764,12 +774,14 @@ class MCTS_Agent:
                         else: 
                             second_simu_serve = "6"
                     
-                    sec_serve_sim = self.add_probs_to_shot(shot=second_simu_serve,
-                                                           score=score,
-                                                           current_tree=self.mcts_tree,
-                                                           first_serve=False,
-                                                           expansion=False)
+                    #sec_serve_sim = self.add_probs_to_shot(shot=second_simu_serve,
+                    #                                       score=score,
+                    #                                       current_tree=self.mcts_tree,
+                    #                                       first_serve=False,
+                    #                                       expansion=False)
                     
+                    sec_serve_sim = self.add_probs_to_2nd_serve(shot=second_simu_serve, score=score)
+
                     print("2nd serve shot enconding for simu phase is: " + str(sec_serve_sim))
                     
                     # -----------------------------------------------
@@ -817,19 +829,19 @@ class MCTS_Agent:
                     self.add_shot_to_simu_ralley(sec_serve_sim)
                     # -------------------
                     
-                    x = "in_play"
+                    self.x = "in_play"
                     #print("test")
                     #self.show_mcts_tree()
 
-                elif (x == "in_play" and self.mcts_agents_turn == True):
+                elif (self.x == "in_play" and self.mcts_agents_turn == True):
                     # we need to add a normal shot from mcts agent to the 
                     # simulation phase
-                    print("Add a simulation shot from the mcts agent to the ralley. MCTS Agents Turn = True")
+                    #print("Add a simulation shot from the mcts agent to the ralley. MCTS Agents Turn = True")
                     
-                    children_of_active_sim = self.mcts_tree.neighbors(
-                        self.get_active_simu_node())
-                    child_lst = list(children_of_active_sim)
-                    print("Child_list_when its MCTS Agents Turn: " + str(child_lst) + "<----------------------------")
+                    #children_of_active_sim = self.mcts_tree.neighbors(
+                    #    self.get_active_simu_node())
+                    #child_lst = list(children_of_active_sim)
+                    #print("Child_list_when its MCTS Agents Turn: " + str(child_lst) + "<----------------------------")
                     
                     #if (len(child_lst)==0):
                         #print("No Children of active simu node found.")
@@ -847,11 +859,11 @@ class MCTS_Agent:
                                                                 current_tree=self.mcts_tree,
                                                                 expansion=False)
 
-                    print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
+                    #print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
 
                     # -------------------------------------------
-                    print("children_shot_list: " + str(self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())))
-                    print("simu shot MCTS Shot: " + str(altered_simu_shot))
+                    #print("children_shot_list: " + str(self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())))
+                    #print("simu shot MCTS Shot: " + str(altered_simu_shot))
 
                     neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
 
@@ -905,9 +917,9 @@ class MCTS_Agent:
                 if ("nwdx" in self.get_shot_of_node(self.get_active_simu_node())
                     and "nwdx," not in self.get_shot_of_node(self.get_active_simu_node())
                     or "*" in self.get_shot_of_node(self.get_active_simu_node())
-                    or x == "terminal"):
+                    or self.x == "terminal"):
                     
-                    if x == "terminal": print("Exp Shot was terminal.")
+                    if self.x == "terminal": print("Exp Shot was terminal.")
                     else: print("Last shot was terminal.")
 
                     print("ToDo: start backpropagation from here")
@@ -1006,7 +1018,14 @@ class MCTS_Agent:
         # Adding the probabilites of errors and winners 
         # to the chosen action (One action can lead to different states)
         #shot = shot
-        
+
+        self.first_service = True
+        if self.simulation_ralley.get_shot_count() != 0:
+            first_serve_encoding = self.simulation_ralley.get_first_shot_of_ralley()
+            if "," in first_serve_encoding:
+                print("first serve is set to false because ,  was found")
+                self.first_service = False
+
         # if we add probas to an expansion shot, the shot of parent node
         # is the shot encoding of the leaf node 
         if expansion == True:
@@ -1017,11 +1036,11 @@ class MCTS_Agent:
             parent_node_depth = self.get_depth(self.get_active_simu_node())
 
         print("Parent_Node_Shot = " + str(parent_node_shot))
-
-        print("First serve: " + str(first_serve))
+        #print("First shot of Simuralley, before adding probs to a shot: " + str(self.simulation_ralley.get_ralley()))
+        print("First serve: " + str(self.first_service))
         print("shot encoding expansion node before alterations: " + str(shot))
-
-        if (shot == "4" or shot == "5" or shot == "6" and first_serve == True):
+        
+        if (shot == "4" or shot == "5" or shot == "6" and self.first_service == True):
             # If serving from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
                 print("Expanding/simulation first serve from the deuce side")
@@ -1065,48 +1084,7 @@ class MCTS_Agent:
                     elif k < (3527 + 897):
                         shot = shot + str("*")
         
-        elif (shot == "4" or shot == "5" or shot == "6" and first_serve == False):
-            # Adding Winner & Error Probas to a second serve
-            if (score.get_point_count_per_game() % 2 == 0):
-                print("Expanding 2nd serve from the deuce side")
-                if (shot == "4"):
-                    i = random.randint(0, 9999)
-                    if i < 1240:
-                        shot = shot + str("nwdx")
-                    elif i < (1240 + 149):
-                        shot = shot + str("*")
-                elif (shot == "5"):
-                    j = random.randint(0, 9999)
-                    if j < 737:
-                        shot = shot + str("nwdx")
-                    elif j < (737 + 2):
-                        shot = shot + str("*")
-                elif (shot == "6"):
-                    k = random.randint(0, 9999)
-                    if k < 1068:
-                        shot = shot + str("nwdx")
-                    elif k < (1068 + 94):
-                        shot = shot + str("*")
-            else:
-                print("Expanding 2nd serve from the ad side")
-                if (shot == "4"):
-                    i = random.randint(0, 9999)
-                    if i < 840:
-                        shot = shot + str("nwdx")
-                    elif i < (840 + 61):
-                        shot = shot + str("*")
-                elif (shot == "5"):
-                    j = random.randint(0, 9999)
-                    if j < 755:
-                        shot = shot + str("nwdx")
-                    elif j < (755 + 4):
-                        shot = shot + str("*")
-                elif (shot == "6"):
-                    k = random.randint(0, 9999)
-                    if k < 1373:
-                        shot = shot + str("nwdx")
-                    elif k < (1373 + 299):
-                        shot = shot + str("*")
+        
 
         elif (shot == "1" or shot == "2" or shot == "3"):
             
@@ -2049,7 +2027,55 @@ class MCTS_Agent:
             self.expansion_shot = shot
         else: 
             return shot
-            
+    
+    def add_probs_to_2nd_serve(self, shot, score):
+        if (shot == "4" or shot == "5" or shot == "6"):
+            # Adding Winner & Error Probas to a second serve
+            if (score.get_point_count_per_game() % 2 == 0):
+                print("Expanding/simulating 2nd serve from the deuce side")
+                if (shot == "4"):
+                    i = random.randint(0, 9999)
+                    if i < 1240:
+                        shot = shot + str("nwdx")
+                    elif i < (1240 + 149):
+                        shot = shot + str("*")
+                elif (shot == "5"):
+                    j = random.randint(0, 9999)
+                    if j < 737:
+                        shot = shot + str("nwdx")
+                    elif j < (737 + 2):
+                        shot = shot + str("*")
+                elif (shot == "6"):
+                    k = random.randint(0, 9999)
+                    if k < 1068:
+                        shot = shot + str("nwdx")
+                    elif k < (1068 + 94):
+                        shot = shot + str("*")
+            else:
+                print("Expanding/Simulation 2nd serve from the ad side")
+                if (shot == "4"):
+                    i = random.randint(0, 9999)
+                    if i < 840:
+                        shot = shot + str("nwdx")
+                    elif i < (840 + 61):
+                        shot = shot + str("*")
+                elif (shot == "5"):
+                    j = random.randint(0, 9999)
+                    if j < 755:
+                        shot = shot + str("nwdx")
+                    elif j < (755 + 4):
+                        shot = shot + str("*")
+                elif (shot == "6"):
+                    k = random.randint(0, 9999)
+                    if k < 1373:
+                        shot = shot + str("nwdx")
+                    elif k < (1373 + 299):
+                        shot = shot + str("*")
+        print("Altered 2nd Serve encoding: " + str(shot))
+        self.x = "in_play"
+        return shot
+
+
     def reset_expansion_shot(self):
         '''Resets the expansion_shot.'''
         self.expansion_shot = 0

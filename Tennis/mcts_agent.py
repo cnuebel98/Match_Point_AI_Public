@@ -17,6 +17,7 @@ class MCTS_Agent:
         self.leaf_node = 0
         self.shot = ""
         self.active_simu_node = 0
+        self.mcts_agents_turn = False
         self.expansion_node = 0
         self.expansion_shot = ""
         self.len_of_current_ralley = 0
@@ -593,12 +594,12 @@ class MCTS_Agent:
         print("Expanded shot: " + str(self.expansion_shot))
         
         
-        for _ in range(3):
+        for _ in range(50):
             print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
             # the mcts agents turn to false
             ralley_ongoing = True
-            mcts_agents_turn = False
+            
 
             self.simulation_ralley = self.mcts_ralley
             print(">>>>>>>>> MCTS Ralley in the beginning of new simulation: " + str(current_ralley.get_ralley()))
@@ -611,7 +612,10 @@ class MCTS_Agent:
             # wether its a first serve fault.
             x = self.shot_terminated(self.expansion_shot)
             if (x == "second_serve"):
-                mcts_agents_turn = True
+                self.mcts_agents_turn = True
+
+            print("mcts_agents_turn: " + str(self.mcts_agents_turn))
+            print("x Value: " + str(x))
 
             # This while loop runs until the ralley is over, by checking if
             # a terminal shot was played
@@ -624,9 +628,10 @@ class MCTS_Agent:
 
                 shot_in_tree = False
 
+                
                 # We go through 3 if statements here: 
                 
-                if (x == "in_play" and mcts_agents_turn == False):
+                if (x == "in_play" and self.mcts_agents_turn == False):
                     print("The expanded shot is in play and MCTS Agents turn is False.")
                     # The Expansion shot is always a Shot of the MCTS agent, so we 
                     # need to add a shot of the opponent first
@@ -663,9 +668,10 @@ class MCTS_Agent:
                                     if colour_dict[index_lst[h]] == "springgreen":
                                         shot_in_tree = True
                                         self.set_active_simu_node(index_lst[h])
+                                        self.switch_simu_turns()
 
                     # --------------------------------------
-                    elif (shot_in_tree == False):
+                    if (shot_in_tree == False):
                         simu_bot_node_index = self.get_next_mcts_node_index()
                         simu_bot_shot_depth = current_ralley.get_len_ralley() + 1
                         
@@ -686,16 +692,15 @@ class MCTS_Agent:
                                                 direction=direction)
                         
                         self.set_active_simu_node(simu_bot_node_index)
-
+                        self.switch_simu_turns()
                     # ----------------------------------------
                     
                     self.add_shot_to_simu_ralley(bot_shot)
 
-                    mcts_agents_turn = True
                     #print("The MCTS_Tree with the first simu shot from expanded node is displayed.")
                     #self.show_mcts_tree()
                     
-                elif (x == "second_serve" and mcts_agents_turn == True):
+                elif (x == "second_serve" and self.mcts_agents_turn == True):
                     print("The expanded shot is a first serve fault and its the mcts agents turn = True.")
                     # Here we need to start simulation with a second serve of 
                     # the mcts agent
@@ -785,8 +790,9 @@ class MCTS_Agent:
                                     if colour_dict[index_lst[h]] == "lightskyblue":
                                         shot_in_tree = True
                                         self.set_active_simu_node(index_lst[h])
+                                        self.switch_simu_turns()
                     
-                    elif (shot_in_tree == False):
+                    if (shot_in_tree == False):
                     
                         sec_serve_index = self.get_next_mcts_node_index()
                         depth = current_ralley.get_len_ralley() + 1
@@ -805,18 +811,17 @@ class MCTS_Agent:
                                                 n_visits=0, uct_value=0, win_count=0,
                                                 direction=direction)
                         self.set_active_simu_node(sec_serve_index)
+                        self.switch_simu_turns()
                     # -----------------------------------------
 
                     self.add_shot_to_simu_ralley(sec_serve_sim)
                     # -------------------
                     
-                    # -------------------
-                    mcts_agents_turn = False
                     x = "in_play"
                     #print("test")
                     #self.show_mcts_tree()
 
-                elif (x == "in_play" and mcts_agents_turn == True):
+                elif (x == "in_play" and self.mcts_agents_turn == True):
                     # we need to add a normal shot from mcts agent to the 
                     # simulation phase
                     print("Add a simulation shot from the mcts agent to the ralley. MCTS Agents Turn = True")
@@ -824,74 +829,77 @@ class MCTS_Agent:
                     children_of_active_sim = self.mcts_tree.neighbors(
                         self.get_active_simu_node())
                     child_lst = list(children_of_active_sim)
-                    if (len(child_lst)==0):
-                        print("No Children of active simu node found.")
+                    print("Child_list_when its MCTS Agents Turn: " + str(child_lst) + "<----------------------------")
+                    
+                    #if (len(child_lst)==0):
+                        #print("No Children of active simu node found.")
 
-                        i = random.randint(0, 99)
-                        if i < 33:
-                            simu_shot = "1"
-                        elif i < 66:
-                            simu_shot = "2"
-                        else: 
-                            simu_shot = "3"
+                    i = random.randint(0, 99)
+                    if i < 33:
+                        simu_shot = "1"
+                    elif i < 66:
+                        simu_shot = "2"
+                    else: 
+                        simu_shot = "3"
 
-                        altered_simu_shot = self.add_probs_to_shot(shot=simu_shot,
-                                                                   score=score, 
-                                                                   current_tree=self.mcts_tree,
-                                                                   expansion=False)
+                    altered_simu_shot = self.add_probs_to_shot(shot=simu_shot,
+                                                                score=score, 
+                                                                current_tree=self.mcts_tree,
+                                                                expansion=False)
 
-                        print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
+                    print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
 
-                        # -------------------------------------------
-                        print("children_shot_list: " + str(self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())))
-                        print("simu shot MCTS Shot: " + str(altered_simu_shot))
+                    # -------------------------------------------
+                    print("children_shot_list: " + str(self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())))
+                    print("simu shot MCTS Shot: " + str(altered_simu_shot))
 
-                        neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
+                    neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
 
-                        if altered_simu_shot in neighbor_lst:
-                            index_lst = []
-                            for x in neighbor_lst:
-                                if (x == altered_simu_shot):
-                                    matching_shot = x
-                                    index_lst = [k for k,v in shot_dict.items()
-                                                if v == matching_shot]
-                                    for h in range(len(index_lst)):
-                                        if colour_dict[index_lst[h]] == "lightskyblue":
-                                            shot_in_tree = True
-                                            self.set_active_simu_node(index_lst[h])
+                    if altered_simu_shot in neighbor_lst:
+                        index_lst = []
+                        for x in neighbor_lst:
+                            if (x == altered_simu_shot):
+                                matching_shot = x
+                                index_lst = [k for k,v in shot_dict.items()
+                                            if v == matching_shot]
+                                for h in range(len(index_lst)):
+                                    if colour_dict[index_lst[h]] == "lightskyblue":
+                                        shot_in_tree = True
+                                        self.set_active_simu_node(index_lst[h])
+                                        self.switch_simu_turns()
 
-                        elif (shot_in_tree == False):
-                            altered_simu_shot_index = self.get_next_mcts_node_index()
-                            depth_mcts_simu = current_ralley.get_len_ralley() + 1
+                    if (shot_in_tree == False):
+                        altered_simu_shot_index = self.get_next_mcts_node_index()
+                        depth_mcts_simu = current_ralley.get_len_ralley() + 1
 
-                            self.add_node_to_mcts_tree(index=altered_simu_shot_index,
-                                                colour="lightskyblue", 
-                                                node_type="MCTS_Simu_Shot", 
-                                                shot_string=altered_simu_shot, 
-                                                depth=depth_mcts_simu,
-                                                n_visits=0, n_wins=0, uct_value=0)
+                        self.add_node_to_mcts_tree(index=altered_simu_shot_index,
+                                            colour="lightskyblue", 
+                                            node_type="MCTS_Simu_Shot", 
+                                            shot_string=altered_simu_shot, 
+                                            depth=depth_mcts_simu,
+                                            n_visits=0, n_wins=0, uct_value=0)
 
-                            dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
-                                altered_simu_shot_index)
+                        dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
+                            altered_simu_shot_index)
 
-                            self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
-                                                node_B=altered_simu_shot_index, 
-                                                n_visits=0, uct_value=0, win_count=0,
-                                                direction=dir_simu_shot)
+                        self.add_edge_to_mcts_tree(node_A=self.get_active_simu_node(), 
+                                            node_B=altered_simu_shot_index, 
+                                            n_visits=0, uct_value=0, win_count=0,
+                                            direction=dir_simu_shot)
 
-                            self.set_active_simu_node(altered_simu_shot_index)
-                        # -----------------------------------------
+                        self.set_active_simu_node(altered_simu_shot_index)
+                        self.switch_simu_turns()
+                    # -----------------------------------------
 
-                        self.add_shot_to_simu_ralley(altered_simu_shot)
+                    self.add_shot_to_simu_ralley(altered_simu_shot)
                         
-                        mcts_agents_turn = False
+                        
                         #print("testing")
                         #self.show_mcts_tree()
 
-                    else:
-                        print("Children of active simu node found.")
+                    #elif (len(child_lst) > 0):
+                    #    print("Children of active simu node found.")
 
-                    mcts_agents_turn = False
 
                 # Testing wether the last added shot was terminal or not:
                 if ("nwdx" in self.get_shot_of_node(self.get_active_simu_node())
@@ -911,6 +919,7 @@ class MCTS_Agent:
 
                     print("The Simuralley after cutting it off: " + str(self.simulation_ralley.get_ralley()))
                     self.set_active_simu_node(self.get_expansion_node())
+                    self.mcts_agents_turn = False
                     ralley_ongoing = False
                 
                 i += 1
@@ -1007,7 +1016,7 @@ class MCTS_Agent:
             parent_node_shot = self.get_shot_of_node(self.get_active_simu_node())
             parent_node_depth = self.get_depth(self.get_active_simu_node())
 
-        print("Parent_Node_Shot = " + str(parent_node_shot) + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<--------------------------")
+        print("Parent_Node_Shot = " + str(parent_node_shot))
 
         print("First serve: " + str(first_serve))
         print("shot encoding expansion node before alterations: " + str(shot))
@@ -2184,6 +2193,11 @@ class MCTS_Agent:
     def add_shot_to_simu_ralley(self, shot):
         self.simulation_ralley.add_shot_to_ralley(shot)
 
+    def switch_simu_turns(self):
+        if self.mcts_agents_turn == False:
+            self.mcts_agents_turn = True
+        elif self.mcts_agents_turn == True:
+            self.mcts_agents_turn = False
 
     def add_shot_to_mcts_ralley(self, shot):
         '''Adds a shot (Expansion shot&Simu shots) to the mcts ralley'''

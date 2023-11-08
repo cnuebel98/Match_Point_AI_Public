@@ -56,7 +56,8 @@ class Simple_Stat_Bot_Djokovic:
                     shot = shot + "nwdx,"
                 elif (j < (1265 + 598 + 1347 + 100 + 848)):
                     shot = shot + "*"
-
+        
+        
         elif (ralley.Ralley.get_len_ralley(current_ralley) == 1
               and current_ralley.get_last_char_of_last_shot() == ","):
             # Add Second Serve

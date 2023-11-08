@@ -593,7 +593,7 @@ class MCTS_Agent:
         print("Expanded shot: " + str(self.expansion_shot))
         
         
-        for _ in range(30):
+        for _ in range(3):
             print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
             # the mcts agents turn to false
@@ -625,9 +625,9 @@ class MCTS_Agent:
                 shot_in_tree = False
 
                 # We go through 3 if statements here: 
-                #print("Agents turn? : " + str(mcts_agents_turn) + "---> i: " + str(i))
+                
                 if (x == "in_play" and mcts_agents_turn == False):
-                    print("The expanded shot is in play.")
+                    print("The expanded shot is in play and MCTS Agents turn is False.")
                     # The Expansion shot is always a Shot of the MCTS agent, so we 
                     # need to add a shot of the opponent first
 
@@ -648,6 +648,7 @@ class MCTS_Agent:
                     # bot_shot
 
                     print("Bot_shot: " + str(bot_shot))
+                    print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
                     neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
                     #print("------------------> children_shot_list: " + str(neighbor_lst))
                     
@@ -695,7 +696,7 @@ class MCTS_Agent:
                     #self.show_mcts_tree()
                     
                 elif (x == "second_serve" and mcts_agents_turn == True):
-                    print("The expanded shot is a first serve fault.")
+                    print("The expanded shot is a first serve fault and its the mcts agents turn = True.")
                     # Here we need to start simulation with a second serve of 
                     # the mcts agent
 
@@ -818,7 +819,7 @@ class MCTS_Agent:
                 elif (x == "in_play" and mcts_agents_turn == True):
                     # we need to add a normal shot from mcts agent to the 
                     # simulation phase
-                    print("Add a simulation shot from the mcts agent to the ralley")
+                    print("Add a simulation shot from the mcts agent to the ralley. MCTS Agents Turn = True")
                     
                     children_of_active_sim = self.mcts_tree.neighbors(
                         self.get_active_simu_node())
@@ -892,8 +893,6 @@ class MCTS_Agent:
 
                     mcts_agents_turn = False
 
-                
-
                 # Testing wether the last added shot was terminal or not:
                 if ("nwdx" in self.get_shot_of_node(self.get_active_simu_node())
                     and "nwdx," not in self.get_shot_of_node(self.get_active_simu_node())
@@ -918,29 +917,7 @@ class MCTS_Agent:
             
 
         self.show_mcts_tree()
-        # if (self.shot_terminated(self.get_active_simu_node()) == "terminal"):
-        #   ralley_ongoing = False
-
-        # to call the add_shot function of the opponent, we need the
-        # the current_ralley, score and current_tree
-        
-
-
-        # while (active_simu_shot not terminal):
-        # active_simu_shot = ""    
-        # Firstly, we need to see if the expanded shot or the active 
-        # simu_shot was terminal
-        # if ("nwdx," or "*" in self.get_expansion_shot()):
-        #   if it was terminal: backpropagation phase
-        # 
-        # elif (its mcts agents turn to take a shot):
-        #   "4", "5", "6" add at random and the probabilites for
-        #   error/winner
-        # elif (its the opponents turn to take a shot):
-        #   call add_shot function of top_bot
-
-        
-    
+            
     def backpropagation_phase(self):
         # Either only update the values between root node and unexplored
         # expanded child node, or all of the simulated stuff
@@ -1021,13 +998,24 @@ class MCTS_Agent:
         # to the chosen action (One action can lead to different states)
         #shot = shot
         
+        # if we add probas to an expansion shot, the shot of parent node
+        # is the shot encoding of the leaf node 
+        if expansion == True:
+            parent_node_shot = self.get_shot_of_node(self.leaf_node)
+            parent_node_depth = self.get_depth(self.leaf_node)
+        elif expansion == False:
+            parent_node_shot = self.get_shot_of_node(self.get_active_simu_node())
+            parent_node_depth = self.get_depth(self.get_active_simu_node())
+
+        print("Parent_Node_Shot = " + str(parent_node_shot) + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<--------------------------")
+
         print("First serve: " + str(first_serve))
-        print("shot encoding parent node: " + str(self.get_shot_of_node(self.get_expansion_node())))
+        print("shot encoding expansion node before alterations: " + str(shot))
 
         if (shot == "4" or shot == "5" or shot == "6" and first_serve == True):
             # If serving from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
-                print("Expanding first serve from the deuce side")
+                print("Expanding/simulation first serve from the deuce side")
                 if (shot == "4"):
                     i = random.randint(0, 9999)
                     if i < 3310:
@@ -1113,25 +1101,25 @@ class MCTS_Agent:
 
         elif (shot == "1" or shot == "2" or shot == "3"):
             
-            print("Serving (1 for bottom, 2 for top): " + str(score.get_serving_player()))
-            print("Path till expanded shot: " + str(self.expansion_path))
-            print("Shot of first serve in selected Ralley: " + str(self.get_shot_of_node(self.expansion_path[1])))
-            print("Shot of Parent Node (Leaf Node): " + str(self.get_shot_of_node(self.leaf_node)))
+            #print("Serving (1 for bottom, 2 for top): " + str(score.get_serving_player()))
+            #print("Path till expanded shot: " + str(self.expansion_path))
+            #print("Shot of first serve in selected Ralley: " + str(self.get_shot_of_node(self.expansion_path[1])))
+            #print("Shot of Leaf Node: " + str(self.get_shot_of_node(self.leaf_node)))
             
-            # Are we expanding a return?
-            if (self.get_shot_of_node(self.leaf_node) == "4" 
-                or self.get_shot_of_node(self.leaf_node) == "5" 
-                or self.get_shot_of_node(self.leaf_node) == "6"):
+            # Are we expanding/simulation a return?
+            if (parent_node_shot == "4" 
+                or parent_node_shot == "5" 
+                or parent_node_shot == "6"):
                 print("We are expanding a return.")
                 # How to figure out if its a first or second serve??
                 # Look at depth of leaf node. If it is 1 then it was a 
                 # first serve and if its two it was a second serve
 
-                if (self.get_depth(self.leaf_node) == 1):
+                if (parent_node_depth == 1):
                     print("Depth of leaf Node: 1, so we add the return Probas for return on first serve")
                     # Depending on the direction of the first serve, we 
                     # take different Probabilities for the return
-                    if (self.get_shot_of_node(self.leaf_node) == "4"):
+                    if (parent_node_shot == "4"):
                         if (shot == "1"):
                             i = random.randint(0, 9999)
                             if i < 2737:
@@ -1176,7 +1164,7 @@ class MCTS_Agent:
                             elif (j < 2574 + 147):
                                 shot = shot + "*"
 
-                    elif(self.get_shot_of_node(self.leaf_node) == "5"):
+                    elif(parent_node_shot == "5"):
                         if (shot == "1"):
                             i = random.randint(0, 9999)
                             if i < 2682:
@@ -1268,10 +1256,10 @@ class MCTS_Agent:
                             elif (j < 2507 + 46):
                                 shot = shot + "*"
 
-                elif (self.get_depth(self.leaf_node) == 2):
+                elif (parent_node_depth == 2):
                     print("Depth of leaf Node: 2, so we add the return Probas for return on second serve")
 
-                    if (self.get_shot_of_node(self.leaf_node) == "4"):
+                    if (parent_node_shot == "4"):
                         if (shot == "1"):
                             i = random.randint(0, 9999)
                             if i < 2237:
@@ -1317,7 +1305,7 @@ class MCTS_Agent:
                             elif (j < 1513 + 195):
                                 shot = shot + "*"
 
-                    elif(self.get_shot_of_node(self.leaf_node) == "5"):
+                    elif(parent_node_shot == "5"):
                         if (shot == "1"):
                             i = random.randint(0, 9999)
                             if i < 2107:
@@ -1417,8 +1405,8 @@ class MCTS_Agent:
                     # firstly was MCTS Agent serving 2nd in the ralley?
                     if (first_serve == False):
                         print("In a ralley, where MCTS was serving a 2nd.")
-                        if (any("1" in s for s in self.get_shot_of_node(self.leaf_node))):
-                            print("Opponents shot was in direction 1.")
+                        if ("1" in parent_node_shot):
+                            print("(0) Leaf Nodes shot was in direction 1.")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1468,9 +1456,8 @@ class MCTS_Agent:
                                     shot = shot + "nwdx"
                                 elif j < (2271 + 1025):
                                     shot = shot + "*"
-
-                        elif (any("2" in s for s in self.get_shot_of_node(self.leaf_node))):
-                            print("2 fount in Leaf Node")
+                        elif ("2" in parent_node_shot):
+                            print("(0) 2 found in Leaf Node when leaf node was: " + str(self.get_shot_of_node(self.leaf_node)))
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1519,10 +1506,9 @@ class MCTS_Agent:
                                 if j < 1334:
                                     shot = shot + "nwdx"
                                 elif j < (1334 + 733):
-                                    shot = shot + "*"
-                        elif (any("3" in s for s in self.get_shot_of_node(
-                            self.leaf_node))): 
-                            print("3 found in Leaf Node.")
+                                    shot = shot + "*"                        
+                        elif ("3" in parent_node_shot): 
+                            print("(1) 3 found in Leaf Node. When Leaf Node was: " + str(self.get_shot_of_node(self.leaf_node)))
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1574,10 +1560,10 @@ class MCTS_Agent:
                                     shot = shot + "*"
 
                     # Was MCTS Agent serving 1st in the ralley?
-                    else:
+                    elif (first_serve == True):
                         print("In a ralley, where MCTS was serving a 1st.")
-                        if (any("1" in s for s in self.get_shot_of_node(self.leaf_node))):
-                            print("1 found in Leaf Node")
+                        if ("1" in parent_node_shot):
+                            print("1 found in Parent Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1627,9 +1613,8 @@ class MCTS_Agent:
                                     shot = shot + "nwdx"
                                 elif j < (1979 + 1501):
                                     shot = shot + "*"
-
-                        elif (any("2" in s for s in self.get_shot_of_node(self.leaf_node))):
-                            print("2 found in Leaf Node")
+                        elif ("2" in parent_node_shot):
+                            print("2 found in Parent Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1678,9 +1663,9 @@ class MCTS_Agent:
                                 if j < 1229:
                                     shot = shot + "nwdx"
                                 elif j < (1229 + 1320):
-                                    shot = shot + "*"
-                        else: 
-                            print("3 found in Leaf Node.")
+                                    shot = shot + "*"                        
+                        elif ("3" in parent_node_shot): 
+                            print("3 found in parent node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1734,14 +1719,12 @@ class MCTS_Agent:
 
                 # MCTS Agent is returing
                 elif (score.get_serving_player() == 2):
-                    
                     # 3rd was MCTS Agent returning 2nd in the ralley?
                     if (any("," in s for s in self.get_shot_of_node(
                         self.expansion_path[1]))):
                         print("In a ralley, where MCTS was returning a 2nd.")
-                        if (any("1" in s for s in current_tree.
-                                get_shot_of_node(self.leaf_node))):
-                            print("1 found in Leaf Node")
+                        if ("1" in parent_node_shot):
+                            print("1 found in Parent Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1791,9 +1774,7 @@ class MCTS_Agent:
                                     shot = shot + "nwdx"
                                 elif j < (2375 + 892):
                                     shot = shot + "*"
-
-                        elif (any("2" in s for s in current_tree.
-                                  get_shot_of_node(self.leaf_node))):
+                        elif ("2" in parent_node_shot):
                             print("2 fount in Leaf Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
@@ -1845,8 +1826,8 @@ class MCTS_Agent:
                                     shot = shot + "nwdx"
                                 elif j < (1258 + 734):
                                     shot = shot + "*"
-                        else: 
-                            print("3 found in Leaf Node.")
+                        elif ("3" in parent_node_shot): 
+                            print("3 found in parent Node.")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1900,9 +1881,8 @@ class MCTS_Agent:
                     # 4th was MCTS Agent returning 1st in the ralley?
                     else:
                         print("In a ralley, where MCTS was returning a 1st.")
-                        if (any("1" in s for s in current_tree.
-                                get_shot_of_node(self.leaf_node))):
-                            print("1 found in Leaf Node")
+                        if ("1" in parent_node_shot):
+                            print("1 found in parent Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -1952,9 +1932,7 @@ class MCTS_Agent:
                                     shot = shot + "nwdx"
                                 elif j < (2566 + 976):
                                     shot = shot + "*"
-
-                        elif (any("2" in s for s in current_tree.
-                                  get_shot_of_node(self.leaf_node))):
+                        elif ("2" in parent_node_shot):
                             print("2 fount in Leaf Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
@@ -2005,8 +1983,8 @@ class MCTS_Agent:
                                     shot = shot + "nwdx"
                                 elif j < (1309 + 824):
                                     shot = shot + "*"
-                        else: 
-                            print("3 found in Leaf Node.")
+                        elif ("3" in parent_node_shot): 
+                            print("3 found in Parent Node.")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -2060,7 +2038,6 @@ class MCTS_Agent:
         print("Altered Shot: " + str(shot))
         if expansion == True:
             self.expansion_shot = shot
-
         else: 
             return shot
             

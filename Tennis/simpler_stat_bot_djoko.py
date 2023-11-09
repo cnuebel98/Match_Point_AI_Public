@@ -2883,7 +2883,7 @@ class Simple_Stat_Bot_Djokovic:
             else: 
                 shot = "123"
                 print("Error: Szenario not covered.")
-                print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
+                print("Error occured with ralley: " + str(current_ralley.get_ralley()))
 
         #if shot == "123": print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
 

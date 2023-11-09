@@ -621,7 +621,7 @@ def tree_update(new_ralley, new_tree, colour):
         node_start = 0
 
     #print("Visited_nodes: " + str(new_tree.get_visited_nodes()))
-    #ralley_tree.Ralley_Tree.show_tree(new_tree)
+    ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 def main_loop():
     run = True
@@ -736,7 +736,9 @@ def main_loop():
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         # The bottom bot adds a shot here
+                        print("Adding MCTS shot!")
                         bottom_bot.add_shot(new_ralley, new_score, new_tree)
+                        print("Ralley after mcts agents shot: " + str(new_ralley.get_ralley()))
                         tree_update(new_ralley, new_tree, "blue")
                         
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
@@ -747,6 +749,7 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
+                    print("Adding Bot shot!")
                     top_bot.add_shot(new_ralley, new_score, new_tree)
 
                     tree_update(new_ralley, new_tree, "green")

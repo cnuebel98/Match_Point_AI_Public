@@ -4,6 +4,7 @@ from networkx.drawing.nx_pydot import graphviz_layout
 import matplotlib.pyplot as plt
 import simpler_stat_bot_djoko as djoko
 import ralley
+import copy
 
 class MCTS_Agent:
     '''In this class, the MCTS Algorithm is used to find the next shot 
@@ -35,56 +36,28 @@ class MCTS_Agent:
         # We save a deep copy of the current_tree from the actual game
         self.mcts_node_index = current_tree.get_node_index()
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
-        
-        # We safe a copy of the current_ralley from the actual game
 
-        
         print("Len of the current ralley without expanded node: " + str(self.len_of_current_ralley))
-        self.copy_ralley_to_mcts_ralley(current_ralley)
+        #self.copy_ralley_to_mcts_ralley(current_ralley)
 
+        self.mcts_ralley = copy.deepcopy(current_ralley)
         print("mcts ralley before the phases: " + str(self.mcts_ralley.get_ralley()))
-        self.simulation_ralley = self.get_mcts_ralley()
         
+        self.simulation_ralley = copy.deepcopy(current_ralley)
+        print("simu ralley before the phases: " + str(self.simulation_ralley.get_ralley()))
+
+    
         #print("Initial Tree from the real game is displayed.")
         #self.show_mcts_tree()
 
-        # 1. Tree selection phase with UCT Formular:
-        
-        # The one with the largest UCT will be selected
-        # UCT = (wi/si) + c * sqrt(ln(sp)/si)
-        
-        # wi ... current nodes number of simulations, that were won
-        # si ... current nodes total number of simulations
-        # sp ... parent node's current number of simulations
-        # c  ... exploration parameter, usually sprt(2)
-
-        # (wi/si) ... exploitation term (gets larger, the better the 
-        # node has performed)
-        
-        # sqrt(ln(sp)/si) ... exploration term (gets larger, when the 
-        # node is picked less and less for simulation)
-        
-        # My plan: 
-        # - gets the current tree and the active node in that tree
-
-        # - here we start the selection phase: from that active node we 
-        # look at the next possible actions. If there is any action, 
-        # that has not yet been played, the selection phase is stopped 
-        # and one or more of them is expanded 
-        
-        # - when its a serve, the Agent can choose the hit in directions 4, 5, 6
-        # - when its in the ralley, the Agent can choose to hit in directions 1, 2, 3
-        
-        for _ in range(0, 10):
-            # repeat the 4 phases x times
-            # Selection phase:
-            #selected_node = self.selection_phase(current_tree)
-            ...
         print("--------------------------------")
         print("-> Starting selection Phase!")
-        self.selection_phase(current_ralley, score, current_tree)
+        print("Len of current ralley: " + str(current_ralley.get_len_ralley()))
 
-        if current_ralley.get_len_ralley() == 0:
+        print("real ralley before phases: " + str(current_ralley.get_ralley()))
+        self.selection_phase(current_ralley, score, current_tree)
+        
+        '''if current_ralley.get_len_ralley() == 0:
             i = random.randint(0, 99)
             if i < 33:
                 self.shot ="4"
@@ -99,12 +72,11 @@ class MCTS_Agent:
             elif j < 66:
                 self.shot = "f28*"
             else:
-                self.shot = "f38"
+                self.shot = "f38"'''
 
         #print("Adding MCTS Shot to ralley (not learned): " + str(self.shot))
         current_ralley.add_shot_to_ralley(self.expansion_shot)
-        #print("MCTS_Ralley: " + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
-        #print("Real_Ralley: " + str(current_ralley.get_ralley()))
+        #print("after phases: " + str(current_ralley.get_ralley()))
         print("-------------------------------")
 
     def selection_phase(self, current_ralley, score, current_tree):
@@ -120,7 +92,7 @@ class MCTS_Agent:
         # Blue_neighbors are only the neighbors nodes with color blue,
         # so the actions that have been taken by the MCTS Agent
         # from that node
-        print("Current_ralley in start of selection Phase: " + str(current_ralley.get_ralley()))
+        print("Current_ralley real in start of selection Phase: " + str(current_ralley.get_ralley()))
 
         # The root node is always the node in the tree which represents 
         # the last shot in the current Ralley
@@ -135,7 +107,17 @@ class MCTS_Agent:
             # last node/last shot of ralley and find the index of that
             # node and set it to root node
             serving = score.get_serving_player()
-            ralley = current_ralley.get_ralley()
+            ralley = copy.deepcopy(current_ralley.get_ralley())
+
+            print("-----------------------")
+            print("Type: " + str(type(ralley)))
+            print(str(ralley))
+            ralley = ralley[:len(ralley)//2]
+            #y = len(ralley)+1
+            #for _ in range(y//2):
+            #    ralley.pop()
+            print(str(ralley))
+            print("-----------------------")
             index = 0
             # from the Red Node, there can be 2x "6" encoding, we have 
             # to look at the current_ralley, to see who is serving to 
@@ -150,17 +132,16 @@ class MCTS_Agent:
             for i in range(0, len(ralley)):
                 ralley_shot = ""
                 ralley_shot = ralley[i]
-
                 neighbor_shots = current_tree.get_shots_of_neighbors(neighbors)
+                print("neighbor_shots: " + str(neighbor_shots))
                 neighbors_index = neighbor_shots.index(ralley_shot)
                 index = neighbors[neighbors_index]
                 self.expansion_path.append(index)
                 neighbors = current_tree.get_neighbors(index)
                         
-            # the index in the end is the node, which represetns the
+            # the index in the end is the node, which represents the
             # last shot in the ralley
             self.set_active_mcts_node(index)     
-
             
             self.mcts_tree.nodes[self.active_mcts_node]['colour'] = 'red'
             
@@ -332,7 +313,7 @@ class MCTS_Agent:
             # If the color is blue, we need to see if it has
             # green neighbors. If it does, just pick a green neighbor at
             # random, if not we should be at a terminal node
-            elif (color_of_mcts_active_node == "blue"):
+            elif (color_of_mcts_active_node == "blue" and len(green_neighbors) != 0):
                 print("Green Neighbors from Active MCTS Node: " + 
                       str(green_neighbors))
                 # One of the Green Neighbors is taken at random and set
@@ -346,6 +327,9 @@ class MCTS_Agent:
                     self.add_node_to_expansion_path(green_neighbors[i])
                 else: print("No green neighbors to choose from, term?")
 
+            else:
+                print("no neighbors found, setting leaf node to mcts active node.") 
+                self.set_leaf_node(self.get_active_mcts_node())
             # else: we do: get_mcts_active_node and set that one to leaf
             # node and we leave the while loop
 
@@ -569,7 +553,7 @@ class MCTS_Agent:
 
         self.expansion_path.append(self.get_expansion_node())
         self.add_shot_to_mcts_ralley(self.get_expansion_shot())
-        self.len_of_current_ralley = current_ralley.get_len_ralley()
+        self.len_of_current_ralley = current_ralley.get_len_ralley() + 1
 
         #self.add_shot_to_simulation_ralley(self.get_expansion_shot())
         print("Displaying MCTS Tree with yellow expansion Shot.")
@@ -596,7 +580,7 @@ class MCTS_Agent:
         
         # Range(x) x is number of simulations we do from the expanded 
         # Node
-        for _ in range(50):
+        for _ in range(10):
             print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
             # the mcts agents turn to false
@@ -926,8 +910,10 @@ class MCTS_Agent:
                     print("The Simuralley after 1 ralley: " + str(self.simulation_ralley.get_ralley()))
                     #print("The MCTS Ralley after 1 simuralley: " + str(self.mcts_ralley.get_ralley()))
                     print("Len to cut it off to: " + str(self.len_of_current_ralley))
+                    
+                    
                     self.simulation_ralley.remove_last_n_elements_of_ralley(self.len_of_current_ralley)
-                    #self.simulation_ralley = self.get_mcts_ralley()
+                    #self.simulation_ralley = copy.deepcopy(self.get_mcts_ralley())
 
                     print("The Simuralley after cutting it off: " + str(self.simulation_ralley.get_ralley()))
                     self.set_active_simu_node(self.get_expansion_node())
@@ -2202,8 +2188,6 @@ class MCTS_Agent:
         for i in range(0, current_ralley.get_len_ralley()):
             x = current_ralley.return_shot_at_pos(i)
             self.mcts_ralley.add_shot_to_ralley(x)
-
-    
 
     def copy_ralley_to_simu_ralley(self, current_ralley):
         '''Copys current_ralley to the mcts ralley'''

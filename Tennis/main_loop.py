@@ -621,7 +621,7 @@ def tree_update(new_ralley, new_tree, colour):
         node_start = 0
 
     #print("Visited_nodes: " + str(new_tree.get_visited_nodes()))
-    ralley_tree.Ralley_Tree.show_tree(new_tree)
+    #ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 def main_loop():
     run = True

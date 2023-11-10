@@ -35,7 +35,7 @@ class MCTS_Agent:
 
         # Here we take the actual game tree and put it on top of the 
         # mcts_game_tree and the mcts_node_index is 
-
+        self.mcts_tree = nx.DiGraph()
         self.mcts_node_index = current_tree.get_node_index()
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
 
@@ -75,6 +75,7 @@ class MCTS_Agent:
         # the last shot in the current Ralley
 
         print(" 1.1 Setting the root node according to current ralley.")
+        print("  1.1.1 Current_ralley is: " + str(current_ralley.get_ralley()))
         if (current_ralley.get_len_ralley() == 0):
             # If there is no shot in the ralley, root node is 0
             self.set_active_mcts_node(0)
@@ -85,7 +86,6 @@ class MCTS_Agent:
             # node and set it to root node
             serving = score.get_serving_player()
             ralley = copy.deepcopy(current_ralley.get_ralley())
-            ralley = ralley[:len(ralley)//2]
             index = 0
             # from the Red Node, there can be 2x "6" encoding, we have 
             # to look at the current_ralley, to see who is serving to 
@@ -97,6 +97,7 @@ class MCTS_Agent:
             
             # We look at each shot in the ralley and find the enconding 
             # in the tree
+            #print(" --> The ralley where we get the ")
             for i in range(0, len(ralley)):
                 ralley_shot = ""
                 ralley_shot = ralley[i]
@@ -106,14 +107,14 @@ class MCTS_Agent:
                 index = neighbors[neighbors_index]
                 self.expansion_path.append(index)
                 neighbors = current_tree.get_neighbors(index)
-                        
+            
             # the index in the end is the node, which represents the
             # last shot in the ralley
-            self.set_active_mcts_node(index)     
+            self.set_active_mcts_node(index)
             
             self.mcts_tree.nodes[self.active_mcts_node]['colour'] = 'red'
             
-            print(" 1.2 Root Node is " 
+            print(" 1.2 Root Node is "
                   + str(self.get_active_mcts_node()) 
                   + " with shot encondging: " 
                   + str(self.get_shot_of_node(self.get_active_mcts_node())))
@@ -152,7 +153,7 @@ class MCTS_Agent:
                 blue_neighbors)
             
             #print("Blue Neighbors from Active Node: " + str(blue_neighbors))
-            #print("Blue Neighbors Shot Encodings: " + str(blue_neighbor_shots))
+            print(" -- Blue Neighbors Shots: " + str(blue_neighbor_shots))
             
             #print("Green Neighbors from active Node: " + str(green_neighbors))
             #print("Green Neighbor Shots from acitve Node" + str(green_neighbor_shots))
@@ -190,7 +191,7 @@ class MCTS_Agent:
                 dir_6_found = True
                 #print("6 was found in blue neighbors shots.")
             
-            #print("Color of Active MCTS Node: " + str(color_of_mcts_active_node))
+            print(" -- Color of Active MCTS Node: " + str(color_of_mcts_active_node))
             
             # If the color is red, we are still at the root node
             if (color_of_mcts_active_node == "red"):
@@ -230,6 +231,7 @@ class MCTS_Agent:
                                 highest_uct_neighbor = blue_neighbors[x]
                         self.set_active_mcts_node(highest_uct_neighbor)
                         self.add_node_to_expansion_path(highest_uct_neighbor)
+                        print(" 1.3 Leaf Node was set at i = " + str(i))
                         #print("New MCTS Active node hast UCT = " + str(
                         #    current_tree.get_uct_value(highest_uct_neighbor)))
                     else:
@@ -274,7 +276,7 @@ class MCTS_Agent:
                     #print("New MCTS Active node has UCT = " + str(
                     #    current_tree.get_uct_value(highest_uct_neighbor)))
                 else:
-                    print("1.4 Leaf Node was set at i = " + str(i))
+                    print(" 1.4 Leaf Node was set at i = " + str(i))
                     self.leaf_node = self.get_active_mcts_node()
             
             # If the color is blue, we need to see if it has

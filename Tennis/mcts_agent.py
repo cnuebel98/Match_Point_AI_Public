@@ -62,13 +62,20 @@ class MCTS_Agent:
 
         current_ralley.add_shot_to_ralley(self.expansion_shot)
         #print("after phases: " + str(current_ralley.get_ralley()))
+        print("__________________________________________________________________________")
         print("------------------End of one MCTS iteration-------------------------------")
+        print("__________________________________________________________________________")
 
     def selection_phase(self, current_ralley, score, current_tree):
         '''In the selection Phase, we traverse through the current tree,
         always taking the child node with the highest UCT Value until a
         leaf node is reached'''
         
+        #self.reset_active_mcts_node()
+        #self.reset_leaf_node()
+        #self.clear_expansion_path()
+
+
         # Blue_neighbors are only the neighbors nodes with color blue,
         # so the actions that have been taken by the MCTS Agent
         # from that node
@@ -109,7 +116,7 @@ class MCTS_Agent:
                 index = neighbors[neighbors_index]
                 self.expansion_path.append(index)
                 neighbors = current_tree.get_neighbors(index)
-            
+
             # the index in the end is the node, which represents the
             # last shot in the ralley
             self.set_active_mcts_node(index)
@@ -199,7 +206,14 @@ class MCTS_Agent:
                 # If its the MCTS Agents turn to serve, maybe start with
                 # a blue node else, start with a random green one
                 
-                # if root node has green children there is a 50% chance
+                # We check out all non terminal green neighbors
+                if green_neighbors:
+                    non_term_green_neighbors = []
+                    for x in range(len(green_neighbors)):
+                        if (self.shot_terminated(self.get_shot_of_node(green_neighbors[x])) != "terminal"):
+                            non_term_green_neighbors.append(green_neighbors[x])                 
+                    
+                # if root node has non term green children there is a 50% chance
                 # that one of the green neighbors is traversed
                 j = random.randint(0, 99)
                 if (j < 50 and green_neighbors):
@@ -222,7 +236,7 @@ class MCTS_Agent:
                         or dir_4_found and dir_5_found and dir_6_found):
                         
                         uct_values = current_tree.get_uct_values(blue_neighbors)
-                        #print("UCT Values of blue neighbors: " + str(uct_values))
+                        print("UCT Values of blue neighbors: " + str(uct_values))
 
                         # Here the Blue neighbor with the highest UCT Value is 
                         # found and set to active
@@ -238,12 +252,18 @@ class MCTS_Agent:
 
                         self.add_shot_to_mcts_ralley(self.get_shot_of_node(highest_uct_neighbor))
 
-                        print(" 1.3 Leaf Node was set at i = " + str(i))
                         #print("New MCTS Active node hast UCT = " + str(
                         #    current_tree.get_uct_value(highest_uct_neighbor)))
                     else:
-                        print(" 1.3 Leaf Node was set at i = " + str(i))
-                        self.leaf_node = self.get_active_mcts_node()
+                        self.set_leaf_node(self.get_active_mcts_node())
+                        print(" 1.4 Leaf Node was set at i = " + str(i) + " With shot: " + str(self.get_shot_of_node(self.leaf_node)))
+                        #if (self.get_active_mcts_node() != 0 and
+                        #    self.shot_terminated(self.get_shot_of_node(
+                        #        self.get_active_mcts_node())) == "terminal"):
+                        #    print("ToDo: Tried to set terminal leaf node, need to stop doing that...")
+                        #else:
+                        #    self.set_leaf_node(self.get_active_mcts_node())
+                        #    print(" 1.4 Leaf Node was set at i = " + str(i))
 
             # If the color is green, we need to check the blue neighbors
             # and either go to highest uct or set it as leaf
@@ -288,10 +308,15 @@ class MCTS_Agent:
                     #print("New MCTS Active node has UCT = " + str(
                     #    current_tree.get_uct_value(highest_uct_neighbor)))
                 else:
-                    print(" 1.4 Leaf Node was set at i = " + str(i))
-                    self.leaf_node = self.get_active_mcts_node()
-                    print(" 1.5 The ralley that lead to leaf Node: " + str(self.mcts_ralley.get_ralley()))
-            
+                    #if (self.get_active_mcts_node() != 0 and
+                    #    self.shot_terminated(self.get_shot_of_node(
+                    #        self.get_active_mcts_node())) == "terminal"):
+                    #    print("ToDo: Tried to set terminal leaf node...")
+                    #else:
+                    #    self.set_leaf_node(self.get_active_mcts_node())
+                    #    print(" 1.4 Leaf Node was set at i = " + str(i))
+                    self.leaf_node = self.get_active_mcts_node()    
+
             # If the color is blue, we need to see if it has
             # green neighbors. If it does, just pick a green neighbor at
             # random, if not we should be at a terminal node
@@ -301,23 +326,55 @@ class MCTS_Agent:
                 # to active
                 if green_neighbors:
                     #print("There are green neighbors and we pick one at random.")
-                    print("ToDo: make sure that no terminal nodes are picked")
+
+                    # first we need to seperate the terminal green 
+                    # neighbors from the non terminal to pick one, that 
+                    # is in play
+                    #non_term_green_neighbors = []
+                    #for x in range(len(green_neighbors)):
+                    #    if (self.shot_terminated(self.get_shot_of_node(green_neighbors[x])) != "terminal"):
+                    #        non_term_green_neighbors.append(green_neighbors[x])                 
+                    
+                    #if len(non_term_green_neighbors == 0):
+                    #    print("no non term green neighbors found.")
+                    #else: 
+                    #    print("Shots of non terminal green neighbors: " + str(self.get_shots_of_neighbor_nodes(non_term_green_neighbors)))
+                    #    i = random.randint(0, len(non_term_green_neighbors))
+                    #    self.set_active_mcts_node(non_term_green_neighbors[i])
+                    #    self.add_node_to_expansion_path(non_term_green_neighbors[i])
+                    #    self.add_shot_to_mcts_ralley(self.get_shot_of_node(non_term_green_neighbors[i]))
+                    
+                    #while_failsafe = 0
                     i = random.randint(0, len(green_neighbors)-1)
-                    #print("Green neighbor that was picked: " + str(green_neighbors[i]))
+
+                    #while while_failsafe < 20:
+                        #print(" Tried to make sure that no terminal nodes are picked")
+                        #if (self.shot_terminated(self.get_shot_of_node(green_neighbors[i])) != "terminal"):
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(green_neighbors[i]))
-
+                            #print("A non terminal green neighbor was picked at random: " + str(green_neighbors[i]))
+                            #break
+                        #else:
+                            #i = random.randint(0, len(green_neighbors)-1)
+                            #while_failsafe += 1
                 else: print("Error/ToDo: No green neighbors to choose from, term?")
-
             else:
-                #print("no neighbors found, setting leaf node to mcts active node.")
+                print("Setting Leaf Node to currently active node... hm")
                 
                 self.set_leaf_node(self.get_active_mcts_node())
-                if self.leaf_node != 0:
-                    if (self.shot_terminated(self.get_shot_of_node(self.leaf_node)) == "terminal"):
-                        print("Error: A terminal Node was set to leaf node!") 
-                print(" 1.4 Leaf Node was set at i = " + str(i))
+                
+                #if (self.get_active_mcts_node() != 0 and 
+                #    self.shot_terminated(self.get_shot_of_node(
+                #    self.get_active_mcts_node())) == "terminal"):
+                #    print("ToDo: Tried to set terminal leaf node")
+                #else:
+                #    self.set_leaf_node(self.get_active_mcts_node())
+                #self.set_leaf_node(self.get_active_mcts_node())
+                #if self.leaf_node != 0:
+                #    if (self.shot_terminated(self.get_shot_of_node(self.leaf_node)) == "terminal"):
+                #        print("Error: A terminal Node was set to leaf node!")                
+                #print(" 1.4 Leaf Node was set at i = " + str(i))
             # else: we do: get_mcts_active_node and set that one to leaf
             # node and we leave the while loop
 
@@ -327,10 +384,12 @@ class MCTS_Agent:
             i += 1
             print("--------------------------")
         
+        print(" 1.5 The ralley that lead to leaf Node: " + str(self.mcts_ralley.get_ralley()))
         print("2. Starting Expansion Phase!")
         self.expansion_phase(current_ralley, score, self.get_mcts_tree())
         self.reset_active_mcts_node()
         self.reset_leaf_node()
+        print("Expansion_path before clearing it: " + str(self.expansion_path))
         self.clear_expansion_path()
 
         self.show_mcts_tree()
@@ -342,9 +401,13 @@ class MCTS_Agent:
         # not yet in the leaf nodes children, and that is expanded and
         # is the node we start the simulation form
         print(" 2.1 Leaf Node Shot encoding: " + str(self.get_shot_of_node(self.leaf_node)))
-        
+        #print(" Exp Phase beginning: current_ralley: " + str(current_ralley.get_ralley()))
         self.mcts_tree.nodes[self.leaf_node]['colour'] = 'orange'
         
+        if (self.shot_terminated(self.get_shot_of_node(self.leaf_node)) == "terminal"):
+            print("ToDo: Leaf Node was terminal, start backprobagation from here.")
+            return
+
         #print("exp_shot_list is cleared before each expansion phase")
         self.exp_shot_list.clear()
         #print("Displaying the MCTS_Tree with orange Leaf Node.")
@@ -385,6 +448,7 @@ class MCTS_Agent:
         shot_encoding = self.get_shot_of_node(self.leaf_node)
 
         if any("," in s for s in shot_encoding):
+            print("Error searching 1 <---------------------------------------------------------------------------------")
             print(" 2.2 Leaf Node is 1st serve fault, need to expand 2nd serve")
             if children_of_leaf_node:
                 #shots_of_children = self.get_shots_of_neighbors(children_of_leaf_node)
@@ -432,6 +496,7 @@ class MCTS_Agent:
 
         # When the root is a leaf node, we expand a random direction
         elif self.leaf_node == 0:
+            print("Error searching 2 <---------------------------------------------------------------------------------")
             print(" 2.2 Leaf Node is Node[0] Adding a new first serve as exp.")
             # When there are already first serves, we check to see which
             # ones were played already
@@ -467,50 +532,53 @@ class MCTS_Agent:
                 self.add_probs_to_shot("5", score, current_tree)
                 self.add_probs_to_shot("6", score, current_tree)
 
-        elif children_of_leaf_node:
-            # When the leaf node already has children, we need to
-            # check their directions and add a shot with a direction,
-            # that is'nt in the tree yet
-            print(" 2.2 Leaf node has children, we add dir to exp thats not in children yet")
-            print("  -->> We have to expand all the direction that have not bee found yet.")
-            
-            #shots_of_children = self.get_shots_of_neighbors(
-            #    children_of_leaf_node)
-            
-            if dir_1_in_children and dir_2_in_children and dir_3_in_children:
-                print("Error: all shot direction found in children of leaf node.")
-            elif dir_1_in_children and dir_2_in_children:
-                self.add_probs_to_shot("3", score, current_tree)
-            elif dir_1_in_children and dir_3_in_children:
-                self.add_probs_to_shot("2", score, current_tree)
-            elif dir_2_in_children and dir_3_in_children:
-                self.add_probs_to_shot("1", score, current_tree)
-            elif dir_1_in_children:
-                self.add_probs_to_shot("2", score, current_tree)
-                self.add_probs_to_shot("3", score, current_tree)
-            elif dir_2_in_children:
-                self.add_probs_to_shot("1", score, current_tree)
-                self.add_probs_to_shot("3", score, current_tree)
-            elif dir_3_in_children:
-                self.add_probs_to_shot("1", score, current_tree)
-                self.add_probs_to_shot("2", score, current_tree)
-
         else:
-            print(" 2.2 No children of leaf node found, expanding a random direction")
-            print("  2.2.1 We expand 3 nodes (in the direction 1, 2 and 3)")
-            # previously: 
-            
-            #i = random.randint(0, 99)
-            #if i < 33:
-            #    self.add_probs_to_shot("1", score, current_tree)
-            #elif i < 66:
-            #    self.add_probs_to_shot("2", score, current_tree)
-            #else:
-            #    self.add_probs_to_shot("3", score, current_tree)
+            if children_of_leaf_node:
+                # When the leaf node already has children, we need to
+                # check their directions and add a shot with a direction,
+                # that is'nt in the tree yet
+                print("Error searching 3 <---------------------------------------------------------------------------------")
+                print(" 2.2 Leaf node has children, we add dir to exp thats not in children yet")
+                #print("  -->> We have to expand all the direction that have not bee found yet.")
+                
+                #shots_of_children = self.get_shots_of_neighbors(
+                #    children_of_leaf_node)
+                
+                if dir_1_in_children and dir_2_in_children and dir_3_in_children:
+                    print("Error: all shot direction found in children of leaf node.")
+                elif dir_1_in_children and dir_2_in_children:
+                    self.add_probs_to_shot("3", score, current_tree)
+                elif dir_1_in_children and dir_3_in_children:
+                    self.add_probs_to_shot("2", score, current_tree)
+                elif dir_2_in_children and dir_3_in_children:
+                    self.add_probs_to_shot("1", score, current_tree)
+                elif dir_1_in_children:
+                    self.add_probs_to_shot("2", score, current_tree)
+                    self.add_probs_to_shot("3", score, current_tree)
+                elif dir_2_in_children:
+                    self.add_probs_to_shot("1", score, current_tree)
+                    self.add_probs_to_shot("3", score, current_tree)
+                elif dir_3_in_children:
+                    self.add_probs_to_shot("1", score, current_tree)
+                    self.add_probs_to_shot("2", score, current_tree)
 
-            self.add_probs_to_shot("1", score, current_tree)
-            self.add_probs_to_shot("2", score, current_tree)
-            self.add_probs_to_shot("3", score, current_tree)
+            else:
+                print("Error searching 4 <---------------------------------------------------------------------------------")
+                print(" 2.2 No children of leaf node found, expanding a random direction")
+                print("  2.2.1 We expand 3 nodes (in the direction 1, 2 and 3)")
+                # previously: 
+                
+                #i = random.randint(0, 99)
+                #if i < 33:
+                #    self.add_probs_to_shot("1", score, current_tree)
+                #elif i < 66:
+                #    self.add_probs_to_shot("2", score, current_tree)
+                #else:
+                #    self.add_probs_to_shot("3", score, current_tree)
+
+                self.add_probs_to_shot("1", score, current_tree)
+                self.add_probs_to_shot("2", score, current_tree)
+                self.add_probs_to_shot("3", score, current_tree)
 
         # Now we should have a shot encoding for the expansion and we
         # add it to the mcts tree.
@@ -518,7 +586,6 @@ class MCTS_Agent:
         print("Final exp_shot_list: " + str(self.exp_shot_list))
 
         for i in range(0, len(self.exp_shot_list)):
-            #exp_shot = self.get_expansion_shot()
             exp_shot = self.exp_shot_list[i]
             exp_shot_index = self.get_next_mcts_node_index()
             exp_shot_depth = current_ralley.get_len_ralley() + 1
@@ -545,8 +612,7 @@ class MCTS_Agent:
             self.len_of_current_ralley = current_ralley.get_len_ralley() + 1
             
             self.set_active_simu_node(self.get_expansion_node())
-            print("-----------------------------")
-            print("3. Starting Simulation Phase!")
+            
             
             #print("Hi, calling simuphase with current_ralley: " + str(current_ralley.get_ralley()))
             if self.shot_terminated(self.get_expansion_shot()) == "terminal":
@@ -555,15 +621,15 @@ class MCTS_Agent:
             #    print("Exp Shot was first serve fault")
             #    self.simulation_phase(current_ralley, score, current_tree)
             else:
+                print("-----------------------------")
+                print("3. Starting Simulation Phase!")
+                print("with mcts_ralley: " + str(self.mcts_ralley.get_ralley()))
                 self.simulation_phase(current_ralley, score, current_tree)
-            
-            # i think we need to remove the last shot
             
             self.mcts_ralley.remove_last_shot()
             #print("Expansion Path: " + str(self.expansion_path))
             self.expansion_path.pop()
             #print("Expansion Path popped: " + str(self.expansion_path))
-            self.len_of_current_ralley = current_ralley.get_len_ralley() - 1
 
         #print(" 2.3 Displaying MCTS Tree with yellow expansion Shot.")
         #self.show_mcts_tree()
@@ -575,18 +641,26 @@ class MCTS_Agent:
         # terminal state is reached
 
         # We start with the expansion shot.
-        print("MCTS Ralley is: " + str(self.mcts_ralley.get_ralley()))
+        #print("Current Ralley is: " + str(current_ralley.get_ralley()))
+        print("beginning of simulation phase: MCTS Ralley is: " + str(self.mcts_ralley.get_ralley()))
         #print("Current_mcts_ralley: " + str(ralley.Ralley.get_ralley(self.mcts_ralley)))
         #print("current simlation ralley: " + str(ralley.Ralley.get_ralley(self.simulation_ralley)))
         #print("Checking, wether we are doing the simuphase with right exp shot!!!")
 
 
         print(" 3.1 Expanded shot: " + str(self.expansion_shot))
-        print(" 3.1 Ralley to expanded shot: " + str(self.simulation_ralley.get_ralley()))
+        
         #print(" 3.1.1 Simu Ralley before simu loop starts: " + str(self.simulation_ralley.get_ralley()))
         #print(" 3.1.1 MCTS Ralley before simu loop starts: " + str(self.mcts_ralley.get_ralley()))
+        
         # Range(x) x is number of simulations we do from the expanded 
         # Node
+        print("Checking, if one of the ralleys is correct when that error comes.............................")
+        print(" 3.1 Simulation_ralley: " + str(self.simulation_ralley.get_ralley()))
+        print(" 3.1.1 MCTS Ralley before simu loop starts: " + str(self.mcts_ralley.get_ralley()))
+
+        self.simulation_ralley = self.mcts_ralley
+
         for _ in range(2):
             print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
@@ -596,11 +670,11 @@ class MCTS_Agent:
             #print("MCTS Ralley in the beginning of new simulation: " + str(self.mcts_ralley.get_ralley()))
             #print("Simu Ralley in the beginning of new simulation: " + str(self.simulation_ralley.get_ralley()))
             
-            self.simulation_ralley = self.mcts_ralley
+            #self.simulation_ralley = self.mcts_ralley
 
             print("Simu Ralley in the beginning of new simulation ralley: " + str(self.simulation_ralley.get_ralley()))
             
-            # init failsafe for while loop
+            # init failsafe for while loop and bool for ralley termination
             ralley_ongoing = True
             i = 0
 
@@ -608,41 +682,43 @@ class MCTS_Agent:
             # wether its a first serve fault.
             self.x = self.shot_terminated(self.expansion_shot)
             if (self.x == "second_serve"):
+                # If exp shot was first serve fault, its mcts Agents
+                # turn for adding a second serve
                 self.mcts_agents_turn = True
-
-            #print("mcts_agents_turn: " + str(self.mcts_agents_turn))
-            #print("x Value: " + str(self.x))
 
             # This while loop runs until the ralley is over, by checking if
             # a terminal shot was played
-            while (ralley_ongoing == True and i < 500): 
+            while (ralley_ongoing == True): 
                 
+                # in the while loop we always have an active simu node
+                # from that simunode we get the shots and colors of the
+                # neighbor nodes and safe them here
                 shot_dict = self.get_shot_dict_of_neighbors(
                     self.get_active_simu_node())
                 colour_dict = self.get_colour_dict_of_neighbors(
                     self.get_active_simu_node())
 
+                # In the beginning we assume that the next node will not
+                # be in mcts tree yet
                 shot_in_tree = False
 
-                
                 # We go through 3 if statements here: 
-                
                 if (self.x == "in_play" and self.mcts_agents_turn == False):
                     #print(" 3.2 The expanded shot is in play and MCTS Agents turn is False.")
-                    # The Expansion shot is always a Shot of the MCTS agent, so we 
-                    # need to add a shot of the opponent first
+                    # The Expansion shot is always a Shot of the 
+                    # MCTS agent, so we need to add a shot of the 
+                    # opponent first unless exp shot is 1st serve fault
 
                     # here we get the next simulated shot encoding of 
                     # the opponents shot
-                    #print("simulation_ralley, which is given to bot: " + str(simulation_ralley))
                     bot_shot = self.opponent.add_shot(
                         current_ralley=self.simulation_ralley,
                         score=score,
                         current_tree=self.mcts_tree,
                         simulation_phase=True)
                     
-                    # Then we set the next index
-                    # only if shot not in children of current node!!!
+                    # Then we set the next index, but only if shot not 
+                    # in children of current node
 
                     # We check the shot encodings of the neighbors of 
                     # the active simu node and see if one matches the 
@@ -779,7 +855,6 @@ class MCTS_Agent:
                     neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
                     #print("----------------------->> Second Serve MCTS Shot: " + str(sec_serve_sim))
                     
-                    
                     if sec_serve_sim in neighbor_lst:
                         index_lst = []
                         for x in neighbor_lst:
@@ -818,8 +893,6 @@ class MCTS_Agent:
                     self.add_shot_to_simu_ralley(sec_serve_sim)
                     
                     self.x = "in_play"
-                    #print("test")
-                    #self.show_mcts_tree()
 
                 elif (self.x == "in_play" and self.mcts_agents_turn == True):
                     # we need to add a normal shot from mcts agent to the 
@@ -843,9 +916,9 @@ class MCTS_Agent:
                         simu_shot = "3"
 
                     altered_simu_shot = self.add_probs_to_shot(shot=simu_shot,
-                                                                score=score, 
-                                                                current_tree=self.mcts_tree,
-                                                                expansion=False)
+                                                               score=score,
+                                                               current_tree=self.mcts_tree,
+                                                               expansion=False)
 
                     #print("Simu shot of MCTS Agent: " + str(altered_simu_shot))
 
@@ -892,11 +965,8 @@ class MCTS_Agent:
                     # -----------------------------------------
 
                     self.add_shot_to_simu_ralley(altered_simu_shot)
-                        
-                        #self.show_mcts_tree()
-
-                    #elif (len(child_lst) > 0):
-                    #    print("Children of active simu node found.")
+                
+                else: print("Error: Scenario in three if statements in simulation not covered!")
 
                 # Testing wether the last added shot was terminal or not:
                 if ("nwdx" in self.get_shot_of_node(self.get_active_simu_node())
@@ -910,11 +980,14 @@ class MCTS_Agent:
                     print("ToDo: start backpropagation from here")
                     #print("The Simuralley after 1 ralley: " + str(self.simulation_ralley.get_ralley()))
                     #print("The MCTS Ralley after 1 simuralley: " + str(self.mcts_ralley.get_ralley()))
-                    #print("Len to cut it off to: " + str(self.len_of_current_ralley))
                     
-                    self.simulation_ralley.remove_last_n_elements_of_ralley(self.len_of_current_ralley)
+                    print("Len to cut it off to: " + str(self.len_of_current_ralley))
+                    print("Len of exp_path: " + str(len(self.expansion_path)))
+                    
+                    #self.simulation_ralley.remove_last_n_elements_of_ralley(self.len_of_current_ralley)
+                    self.simulation_ralley.remove_last_n_elements_of_ralley(len(self.expansion_path)-1)
 
-                    #print("The Simuralley after cutting it off: " + str(self.simulation_ralley.get_ralley()))
+                    print("The Simuralley after cutting it off: " + str(self.simulation_ralley.get_ralley()))
                     self.set_active_simu_node(self.get_expansion_node())
                     self.mcts_agents_turn = False
                     ralley_ongoing = False

@@ -736,7 +736,7 @@ def main_loop():
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         # The bottom bot adds a shot here
-                        print("Adding MCTS shot!")
+                        print("Adding MCTS shot to the ralley: " + str(new_ralley.get_ralley()))
                         bottom_bot.add_shot(new_ralley, new_score, new_tree)
                         print("Ralley after mcts agents shot: " + str(new_ralley.get_ralley()))
                         tree_update(new_ralley, new_tree, "blue")

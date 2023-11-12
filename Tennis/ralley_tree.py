@@ -258,7 +258,7 @@ class Ralley_Tree:
         # node is picked less and less for simulation)
         
         # c  ... exploration parameter, usually sprt(2)
-        c = math.sqrt(2)
+        c = const.Config.c_value
         
         for x in range(0, len(self.visited_nodes)):
             child_nodes = []

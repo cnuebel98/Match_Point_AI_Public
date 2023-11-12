@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import simpler_stat_bot_djoko as djoko
 import ralley
 import copy
+import math
+import numpy as np
+import constants as const
 
 class MCTS_Agent:
     '''In this class, the MCTS Algorithm is used to find the next shot 
@@ -583,8 +586,9 @@ class MCTS_Agent:
         #self.simulation_ralley = self.mcts_ralley
         self.simulation_ralley = copy.deepcopy(self.mcts_ralley)
         print(" 3.1 Simulation_ralley: " + str(self.simulation_ralley.get_ralley()))
-
-        for _ in range(2):
+        
+        n_simus = const.Config.n_simu_ralleys
+        for _ in range(n_simus):
             print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
             # the mcts agents turn to false
@@ -887,9 +891,9 @@ class MCTS_Agent:
                 i += 1
             
     def backpropagation_phase(self):
-        '''During backprobagation the Win and Visits counts for the '''
-        # we need to figure out if the last shot in the ralley was a
-        # point win for the mcts agent or for the bot
+        '''During backprobagation the 'n_wins' and 'n_visits' node 
+        attributes are updated for the expansion path nodes'''
+
         print("----------------------------")
         print("4. Start of backpropagation")
         print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
@@ -905,23 +909,44 @@ class MCTS_Agent:
 
         if (col_term_node == "lightskyblue" or col_term_node == "yellow"):
             if ("*" in self.get_shot_of_node(self.active_simu_node)):
-                print("We update n_wins. MCTS shot was a winner.")
+                #We update n_wins. MCTS shot was a winner.
                 for x in range(1, len(self.expansion_path)):
-                    self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1
-                
+                    self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1      
         elif (col_term_node == "springgreen"):
             if ("nwdx" in self.get_shot_of_node(self.active_simu_node)):
-                print("We update n_wins. Bot shot was a error.")
+                # We update n_wins. Bot shot was a error.
                 for x in range(1, len(self.expansion_path)):
                     self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1
-
         else: print("Error: Color was'nt matched Color: " + str(col_term_node))
 
-        print("Here we update the visit counts for the whole expansion path.")
+        #Here we update the visit counts for the whole expansion path."
         for x in range(0, len(self.expansion_path)):
             self.mcts_tree.nodes[self.expansion_path[x]]['n_visits'] += 1
-        # and we need to update the win_count for all the blue nodes in 
-        # the expansion path if the ralley was won
+
+        # Here we update the 'n_visits' attribute on the edges
+        for x in range(0, len(self.expansion_path)-1):
+            self.mcts_tree[self.expansion_path[x]][
+                self.expansion_path[x+1]]['n_visits'] += 1
+        
+        # Here we update the 'uct_value' attribute of the nodes in 
+        # the expansion path
+        c = const.Config.c_value
+
+        for x in range(0, len(self.expansion_path)):
+            # first we need to get the predecessors n_visits
+            # then we need the n_visits of the node in exp_path
+            # and the n_wins of the node in the exp_path
+            
+            # wi ... current nodes number of simulations, that were won
+            wi = self.mcts_tree.nodes[self.expansion_path[x]]['n_wins']
+            # si ... current nodes total number of simulations
+            si = self.mcts_tree.nodes[self.expansion_path[x]]['n_visits']
+            # sp ... parent node's current number of simulations
+            sp = self.mcts_tree.nodes[self.expansion_path[x-1]]['n_visits']
+            
+            self.mcts_tree.nodes[self.expansion_path[x]][
+                'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)   
+
 
     def get_shots_of_neighbor_nodes(self, node_list):
         '''Return a list of shots of a given List of nodes'''
@@ -2258,8 +2283,8 @@ class MCTS_Agent:
                 pos,
                 node_color = colours,
                 node_size = 170,
-                labels=nx.get_node_attributes(self.mcts_tree, 'n_wins'),
-                with_labels=True, 
+                labels=nx.get_node_attributes(self.mcts_tree, 'uct_value'),
+                with_labels=True,
                 font_size=6,
                 font_weight='bold')
         edge_labels = dict([((n1, n2), d['n_visits'])

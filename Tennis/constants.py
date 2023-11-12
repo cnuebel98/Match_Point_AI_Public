@@ -1,3 +1,5 @@
+import math
+
 class Dims:
     '''This class stores the dimensions of the GUI and the elements in 
     the GUI'''
@@ -83,3 +85,7 @@ class MenuVariables:
 
 class Changing:
     ralley_terminated = False
+
+class Config:
+    c_value = math.sqrt(2)
+    n_simu_ralleys = 2

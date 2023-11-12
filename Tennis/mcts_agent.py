@@ -59,8 +59,7 @@ class MCTS_Agent:
         #print("Initial Tree from the real game is displayed.")
         #self.show_mcts_tree()
 
-        print("--------------------------------")
-        print("1. Starting selection Phase!")
+        
         self.selection_phase(current_ralley, score, current_tree)
 
         # ToDo: we need to get the direction of the bst next action
@@ -78,11 +77,11 @@ class MCTS_Agent:
         always taking the child node with the highest UCT Value until a
         leaf node is reached'''
         
-        #self.reset_active_mcts_node()
-        #self.reset_leaf_node()
-        #self.clear_expansion_path()
-
-
+        print("--------------------------------")
+        print("1. Starting selection Phase!")
+        print(" 1.1 Setting the root node according to current ralley.")
+        print("  1.1.1 Current_ralley is: " + str(current_ralley.get_ralley()))
+        
         # Blue_neighbors are only the neighbors nodes with color blue,
         # so the actions that have been taken by the MCTS Agent
         # from that node
@@ -91,8 +90,6 @@ class MCTS_Agent:
         # The root node is always the node in the tree which represents 
         # the last shot in the current Ralley
 
-        print(" 1.1 Setting the root node according to current ralley.")
-        print("  1.1.1 Current_ralley is: " + str(current_ralley.get_ralley()))
         if (current_ralley.get_len_ralley() == 0):
             # If there is no shot in the ralley, root node is 0
             self.set_active_mcts_node(0)
@@ -162,9 +159,6 @@ class MCTS_Agent:
             green_neighbors = current_tree.get_list_of_green_neighbors(
                 self.get_active_mcts_node())
             
-            #green_neighbor_shots = []
-            #green_neighbor_shots = current_tree.get_shots_of_neighbors(green_neighbors)
-
             # Check who is serving in the current_ralley
 
             # Each neighbors shot encoding is looked at
@@ -360,7 +354,7 @@ class MCTS_Agent:
         if (self.shot_terminated(self.get_shot_of_node(self.leaf_node)) == "terminal"):
             print("Starting backprobagation Phase from terminal leaf node.")
             self.backpropagation_phase()
-            return
+            #return
 
         #print("exp_shot_list is cleared before each expansion phase")
         self.exp_shot_list.clear()
@@ -904,21 +898,28 @@ class MCTS_Agent:
         print("Shot encoding of active simu node: " + str(self.get_shot_of_node(self.active_simu_node)))
         print("Get active Simu Node, might be the one with terminal shot: " + str(self.active_simu_node))
         print("The colour of last shot that was taken and that was terminal: " + str(self.mcts_tree.nodes[self.active_simu_node]['colour']))
-        
+
         # We need to update the visit counts of all nodes in the 
         # expansion path, regardless of who won the point
         col_term_node = self.mcts_tree.nodes[self.active_simu_node]['colour']
-        
-        if (col_term_node == "lightskyblue"):
+
+        if (col_term_node == "lightskyblue" or col_term_node == "yellow"):
             if ("*" in self.get_shot_of_node(self.active_simu_node)):
-                print("ToDo: need to update n_wins. MCTS shot was a winner.")
+                print("We update n_wins. MCTS shot was a winner.")
+                for x in range(1, len(self.expansion_path)):
+                    self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1
+                
         elif (col_term_node == "springgreen"):
             if ("nwdx" in self.get_shot_of_node(self.active_simu_node)):
-                print("ToDo: need to update n_wins. Bot shot was a error.")
-        
-        else: print("Error: Color wasnt matched Color: " + str(col_term_node))
+                print("We update n_wins. Bot shot was a error.")
+                for x in range(1, len(self.expansion_path)):
+                    self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1
 
-        print("ToDo: need to update visit counts.")
+        else: print("Error: Color was'nt matched Color: " + str(col_term_node))
+
+        print("Here we update the visit counts for the whole expansion path.")
+        for x in range(0, len(self.expansion_path)):
+            self.mcts_tree.nodes[self.expansion_path[x]]['n_visits'] += 1
         # and we need to update the win_count for all the blue nodes in 
         # the expansion path if the ralley was won
 
@@ -2257,7 +2258,7 @@ class MCTS_Agent:
                 pos,
                 node_color = colours,
                 node_size = 170,
-                labels=nx.get_node_attributes(self.mcts_tree, 'shot'), 
+                labels=nx.get_node_attributes(self.mcts_tree, 'n_wins'),
                 with_labels=True, 
                 font_size=6,
                 font_weight='bold')

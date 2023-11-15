@@ -827,7 +827,7 @@ def main_loop():
                 
                 if (new_score.get_match_count() != match_count_for_tree):
                     match_count_for_tree = new_score.get_match_count()
-                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 
                 if const.Changing.ralley_terminated:

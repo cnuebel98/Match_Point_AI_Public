@@ -91,7 +91,15 @@ class MCTS_Agent:
         print("And the direction in that nodes shot encoding is: " + str(self.get_dir_of_shot_in_mcts_tree(indices_of_neighbors[pos])))
 
         dir = self.get_dir_of_shot_in_mcts_tree(indices_of_neighbors[pos])
-        new_shot = self.add_probs_to_shot(dir, score, current_tree, expansion=False)
+
+        print("current_ralley: " + str(current_ralley.get_ralley()))
+        if (current_ralley.get_len_ralley() == 1 and "," in current_ralley.get_first_shot_of_ralley()):
+            #print("first shot of current ralley: " + str(current_ralley.get_first_shot_of_ralley()))
+            new_shot = self.add_probs_to_2nd_serve(dir, score)
+        else:
+            new_shot = self.add_probs_to_shot(dir, score, current_tree, expansion=False)
+        
+        
         # then we need to get the neighbor nodes from that decision node
         # and compare the ucts values and find the neighbor with the 
         # highest uct value
@@ -374,7 +382,7 @@ class MCTS_Agent:
         #print("Expansion_path before clearing it: " + str(self.expansion_path))
         self.clear_expansion_path()
 
-        self.show_mcts_tree()
+        #self.show_mcts_tree()
     
     def expansion_phase(self, current_ralley, score, current_tree):
         # We take the leave node and check the direction, which is
@@ -386,6 +394,12 @@ class MCTS_Agent:
         
         if (self.shot_terminated(self.get_shot_of_node(self.leaf_node)) == "terminal"):
             print("Starting backprobagation Phase from terminal leaf node.")
+            
+            print("MCTS Ralley that lead to backprobagation phase: " + str(self.mcts_ralley.get_ralley()))
+            print("Acitve SImu Node: " + str(self.get_active_simu_node()))
+            
+            self.simulation_ralley = copy.deepcopy(self.mcts_ralley)
+            print("Simulation Ralley that lead to backprobagation phase: " + str(self.simulation_ralley.get_ralley()))
             self.backpropagation_phase()
             #return
 
@@ -395,7 +409,7 @@ class MCTS_Agent:
         #self.show_mcts_tree()
         
         # Get children of the leaf node
-        children_of_leaf_node = self.get_neighbors(self.leaf_node)
+        children_of_leaf_node = self.get_blue_neighbors(self.leaf_node)
         shots_of_shildren = self.get_shots_of_neighbor_nodes(children_of_leaf_node)
         # Here we check which directions were found in the childrens of
         # the leaf node
@@ -923,7 +937,7 @@ class MCTS_Agent:
                     ralley_ongoing = False
                 i += 1
             
-    def backpropagation_phase(self):
+    def backpropagation_phase(self, from_leaf_node=False):
         '''During backprobagation the 'n_wins' and 'n_visits' node 
         attributes are updated for the expansion path nodes'''
 
@@ -932,7 +946,7 @@ class MCTS_Agent:
         print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
         print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
         print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))
-        print("Shot encoding of active simu node: " + str(self.get_shot_of_node(self.active_simu_node)))
+        self.set_active_simu_node(self.expansion_path[-1])
         print("The colour of last shot that was taken and that was terminal: " + str(self.mcts_tree.nodes[self.active_simu_node]['colour']))
 
         # We need to update the visit counts of all nodes in the 
@@ -2319,6 +2333,16 @@ class MCTS_Agent:
     def add_shot_to_mcts_ralley(self, shot):
         '''Adds a shot (Expansion shot&Simu shots) to the mcts ralley'''
         self.mcts_ralley.add_shot_to_ralley(shot)
+
+    def get_blue_neighbors(self, node):
+        blue_neighbors = []
+        neighbors = self.get_neighbors(node)
+
+        for x in range(0, len(neighbors)):
+            if self.mcts_tree.nodes[neighbors[x]]['colour'] == "blue":
+                blue_neighbors.append(neighbors[x])
+
+        return blue_neighbors
 
     def show_mcts_tree(self):
         '''When this function is called, it will draw the mcts tree.'''

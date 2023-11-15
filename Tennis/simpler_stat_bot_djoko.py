@@ -658,15 +658,19 @@ class Simple_Stat_Bot_Djokovic:
               ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
             # Add return to the Second Serve
             print("Adding return to a second serve.")
+            print("1")
             # shot = "SecondServeReturn"
             self.Serving = False
             self.Returning = True
             x = score.get_point_count_per_game()
             if (x % 2 == 0): 
                 # Returning from Deuce Side of the court
+                print("2")
+                print("current_ralley.get_last_char_of_last_shot(): " + str(current_ralley.get_last_char_of_last_shot()))
+                print("current_ralley: " +str(current_ralley.get_ralley()))
                 if (current_ralley.get_last_char_of_last_shot() == "4"):
                     #print("2ndS return from Deuce Side on serve 4")
-
+                    print("3")
                     i = random.randint(0, 9999)
                     if (i < 2271):
                         # Direction of the shot
@@ -747,7 +751,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "5"):
                     #print("2ndS return from Deuce Side on serve 5")
-
+                    print("4")
                     i = random.randint(0, 9999)
                     if (i < 1621):
                         # Direction of the shot
@@ -838,7 +842,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "6"):
                     #print("2ndS return from Deuce Side on serve 6")
-
+                    print("5")
                     i = random.randint(0, 9999)
                     if (i < 976):
                         # Direction of the shot
@@ -931,9 +935,12 @@ class Simple_Stat_Bot_Djokovic:
 
             elif (x % 2 == 1):
                 # Returning from Ad Side of the court
+                print("6")
+                print("current_ralley.get_last_char_of_last_shot(): " + str(current_ralley.get_last_char_of_last_shot()))
+                print("current_ralley: " +str(current_ralley.get_ralley()))
                 if (current_ralley.get_last_char_of_last_shot() == "4"):
                     #print("2ndS return from Ad Side on serve 4")
-
+                    print("7")
                     i = random.randint(0, 9999)
                     if (i < 399):
                         # Direction of the shot
@@ -1022,7 +1029,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "5"):
                     #print("2ndS return from Ad Side on serve 5")
-
+                    print("8")
                     i = random.randint(0, 9999)
                     if (i < 685):
                         # Direction of the shot
@@ -1111,7 +1118,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "6"):
                     #print("2ndS return from Ad Side on serve 6")
-
+                    print("9")
                     i = random.randint(0, 9999)
                     if (i < 1288):
                         # Direction of the shot
@@ -1193,6 +1200,7 @@ class Simple_Stat_Bot_Djokovic:
                             shot = "s" + shot
 
         else:
+            print("10")
             # We need to seperate between serving and returning in the
             # ralley and also between first and second serves
             

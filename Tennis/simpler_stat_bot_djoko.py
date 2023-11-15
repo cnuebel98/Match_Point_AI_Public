@@ -1195,13 +1195,37 @@ class Simple_Stat_Bot_Djokovic:
         else:
             # We need to seperate between serving and returning in the
             # ralley and also between first and second serves
+            
+            # Here we set the new self.Serving and self.Returning 
+            # Variables according to the ralley
+            if (ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0):
+                if ("," in ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
+                    print("Ralley, where Djoko is returning 2nd")
+                    self.Serving = False
+                    self.Returning = True
+                else: 
+                    print("Ralley, where Djoko is Serving a 1st")
+                    self.Serving = True
+                    self.Returning = False
+            elif (ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1):
+                if ("," in ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
+                    print("Ralley, where Djoko is serving a 2nd")
+                    self.Serving = True
+                    self.Returning = False
+                else: 
+                    print("Ralley, where Djoko is returning a 1st")
+                    self.Serving = False
+                    self.Returning = True
 
-            # If Djoko was starting the ralley with a first serve
+            print("self.Serving Variable of Djoko Bot: " + str(self.Serving))
+            print("self.Returning Variable of Djoko Bot: " + str(self.Returning))
+
+            # If Djoko was starting the ralley with a second serve
             if(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
                 and self.Serving == True
                 and "," in 
                 ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                #print("Djoko was opening the ralley with a second serve")
+                print("Djoko was opening the ralley with a second serve")
 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():
@@ -1615,7 +1639,7 @@ class Simple_Stat_Bot_Djokovic:
             # ElIf Djoko started Ralley with a first Serve
             elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
                 and self.Serving == True):
-                #print("Djoko was opening the ralley with a first serve")        
+                print("Djoko was opening the ralley with a first serve")        
                 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():
@@ -2084,7 +2108,7 @@ class Simple_Stat_Bot_Djokovic:
                 and self.Returning == True
                 and "," in 
                 ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                #print("Djoko is returning a second serve in this ralley")
+                print("Djoko is returning a second serve in this ralley")
                 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():
@@ -2465,7 +2489,7 @@ class Simple_Stat_Bot_Djokovic:
             # ElIf Djoko was returning a first serve in the ralley
             elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
                 and self.Returning == True):
-                #print("Djoko is returning a first serve in this ralley")
+                print("Djoko is returning a first serve in this ralley")
                 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():
@@ -2884,8 +2908,6 @@ class Simple_Stat_Bot_Djokovic:
                 shot = "123"
                 print("Error: Szenario not covered.")
                 print("Error occured with ralley: " + str(current_ralley.get_ralley()))
-
-        #if shot == "123": print("Error occured whith ralley: " + str(current_ralley.get_ralley()))
 
         if simulation_phase == False:
             current_ralley.add_shot_to_ralley(shot)

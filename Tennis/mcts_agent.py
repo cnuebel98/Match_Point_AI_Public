@@ -35,6 +35,7 @@ class MCTS_Agent:
         self.mcts_ralley = ralley.Ralley()
         self.simulation_ralley = ralley.Ralley()
         self.opponent = djoko.Simple_Stat_Bot_Djokovic("Simple_Djoko")
+        self.decision_node = 0
 
     def add_shot(self, current_ralley, score, current_tree):
         '''This function is calling the different phases of MCTS'''
@@ -45,15 +46,16 @@ class MCTS_Agent:
         self.mcts_node_index = current_tree.get_node_index()
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
         self.mcts_ralley.clear_ralley()
-        
+        self.decision_node = 0
         # The ralley is a deepcopy (new storage loc) of the current real
         # ralley
 
-        print("before phases and before copying it to mcts ralley: " + str(current_ralley.get_ralley()))
+        #print("before phases and before copying it to mcts ralley: " + str(current_ralley.get_ralley()))
 
         self.mcts_ralley = copy.deepcopy(current_ralley)
 
-        print("before phases and after copying it to mcts ralley: " + str(current_ralley.get_ralley()))
+        
+        #print("before phases and after copying it to mcts ralley: " + str(current_ralley.get_ralley()))
         #print("mcts ralley before the phases: " + str(self.mcts_ralley.get_ralley()))
         
         #self.simulation_ralley = copy.deepcopy(current_ralley)
@@ -61,16 +63,43 @@ class MCTS_Agent:
 
         #print("Initial Tree from the real game is displayed.")
         #self.show_mcts_tree()
-
         
         self.selection_phase(current_ralley, score, current_tree)
+        
+        # Decission Node is root node, where we need to make the choice
+        # It is set when the root node is found
+        print("Decision Node: " + str(self.decision_node))
+        print("Neighbors of decision Node: " + str(self.get_neighbors(self.decision_node)))
+        indices_of_neighbors = self.get_neighbors(self.decision_node)
+        print("UCTS of neighbors: " + str(self.get_ucts_of_neighbor_nodes(indices_of_neighbors)))
+        ucts_of_neighbors = self.get_ucts_of_neighbor_nodes(indices_of_neighbors)
+        
+        highest_uct = 0
+        pos = 0
+        
+        for x in range(0, len(ucts_of_neighbors)):
+            if highest_uct == 0:
+                pos = x
+                highest_uct = ucts_of_neighbors[x]
+            elif ucts_of_neighbors[x] > highest_uct:
+                pos = x
+                highest_uct = ucts_of_neighbors[x]
+        
+        print("Highest UCT Value of neihgbors is " + str(highest_uct) + "at position: " + str(pos))
+        print("So the Node where we need to get the direction from is: " + str(indices_of_neighbors[pos]))
+        print("And the shot in that node is: " + str(self.get_shot_of_node(indices_of_neighbors[pos])))
+        print("And the direction in that nodes shot encoding is: " + str(self.get_dir_of_shot_in_mcts_tree(indices_of_neighbors[pos])))
+
+        dir = self.get_dir_of_shot_in_mcts_tree(indices_of_neighbors[pos])
+        new_shot = self.add_probs_to_shot(dir, score, current_tree, expansion=False)
+        # then we need to get the neighbor nodes from that decision node
+        # and compare the ucts values and find the neighbor with the 
+        # highest uct value
 
         # ToDo: we need to get the direction of the bst next action
         # then we need to put it through the add probas to shot phase
         # then we need to add it to the current_ralley
-        print("ToDo: Choose DIR with highest UCT Value (from current leaf node?) and add Probs to that and then add it to the real ralley.")
-        print("Get active leaf_node before adding the ebst dir: " + str(self.leaf_node))
-        current_ralley.add_shot_to_ralley(self.expansion_shot)
+        current_ralley.add_shot_to_ralley(new_shot)
         print("__________________________________________________________________________")
         print("------------------End of one MCTS iteration-------------------------------")
         print("__________________________________________________________________________")
@@ -96,6 +125,7 @@ class MCTS_Agent:
         if (current_ralley.get_len_ralley() == 0):
             # If there is no shot in the ralley, root node is 0
             self.set_active_mcts_node(0)
+            self.decision_node = self.get_active_mcts_node()
             print(" 1.2 Root Node is: " + str(self.get_active_mcts_node()) + " , should be 0.")
         else:
             # We have to find the ralley in the current tree and go to 
@@ -132,7 +162,7 @@ class MCTS_Agent:
             # the index in the end is the node, which represents the
             # last shot in the ralley
             self.set_active_mcts_node(index)
-            
+            self.decision_node = self.get_active_mcts_node()
             self.mcts_tree.nodes[self.active_mcts_node]['colour'] = 'red'
             
             print(" 1.2 Root Node is "
@@ -510,7 +540,7 @@ class MCTS_Agent:
 
             else:
                 #print("Error searching 4 <---------------------------------------------------------------------------------")
-                print(" 2.2 No children of leaf node found, expanding a random direction")
+                print(" 2.2 No children of leaf node found, expanding all missing directions")
                 print("  2.2.1 We expand 3 nodes (in the direction 1, 2 and 3)")
                 
                 self.add_probs_to_shot("1", score, current_tree)
@@ -635,6 +665,9 @@ class MCTS_Agent:
 
                     # here we get the next simulated shot encoding of 
                     # the opponents shot
+                    print("Getting Bots shot when we give him simu_ralley, when its his turn: " + str(self.simulation_ralley.get_ralley()))
+                    print("Getting Bots shot count simu_ralley before he adds a shot: " + str(self.simulation_ralley.get_shot_count()))
+
                     bot_shot = self.opponent.add_shot(
                         current_ralley=self.simulation_ralley,
                         score=score,
@@ -900,7 +933,6 @@ class MCTS_Agent:
         print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
         print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))
         print("Shot encoding of active simu node: " + str(self.get_shot_of_node(self.active_simu_node)))
-        print("Get active Simu Node, might be the one with terminal shot: " + str(self.active_simu_node))
         print("The colour of last shot that was taken and that was terminal: " + str(self.mcts_tree.nodes[self.active_simu_node]['colour']))
 
         # We need to update the visit counts of all nodes in the 
@@ -946,7 +978,9 @@ class MCTS_Agent:
             
             self.mcts_tree.nodes[self.expansion_path[x]][
                 'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)   
-
+        
+        #print("Node from where we need to choose: " + str(self.expansion_path[-2]))
+        #print("Get the Node with the highest UCT Value from ")
 
     def get_shots_of_neighbor_nodes(self, node_list):
         '''Return a list of shots of a given List of nodes'''
@@ -955,6 +989,14 @@ class MCTS_Agent:
             neighbor_shot = self.mcts_tree.nodes[node_list[x]]['shot']
             neighbor_shots.append(neighbor_shot)
         return neighbor_shots
+    
+    def get_ucts_of_neighbor_nodes(self, node_list):
+        '''Return a list of shots of a given List of nodes'''
+        neighbor_ucts = []
+        for x in range(0, len(node_list)):
+            neighbor_uct = self.mcts_tree.nodes[node_list[x]]['uct_value']
+            neighbor_ucts.append(neighbor_uct)
+        return neighbor_ucts
 
     def get_active_simu_node(self):
         '''Returns the active simu Node'''
@@ -1022,10 +1064,13 @@ class MCTS_Agent:
         # Adding the probabilites of errors and winners 
         # to the chosen action (One action can lead to different states)
         
+        print("Expansion Path in the beginning of adding probs to shot: " + str(self.expansion_path))
+
+        self.first_service = True
         if self.simulation_ralley.get_shot_count() != 0:
             first_serve_encoding = self.simulation_ralley.get_first_shot_of_ralley()
             if "," in first_serve_encoding:
-                print("First serve is set to false because, was found")
+                print("First serve is set to false because: , :was found")
                 self.first_service = False
 
         # if we add probas to an expansion shot, the shot of parent node
@@ -1086,7 +1131,7 @@ class MCTS_Agent:
                     elif k < (3527 + 897):
                         shot = shot + str("*")
         
-        elif (shot == "4" or shot == "5" or shot == "6" and first_serve == False):
+        elif (shot == "4" or shot == "5" or shot == "6" and self.first_service == False):
             # Adding Winner & Error Probas to a second serve
             if (score.get_point_count_per_game() % 2 == 0):
                 #print("Expanding/simulating 2nd serve from the deuce side")
@@ -1433,7 +1478,7 @@ class MCTS_Agent:
                 if (score.get_serving_player() == 1):
 
                     # firstly was MCTS Agent serving 2nd in the ralley?
-                    if (first_serve == False):
+                    if (self.first_service == False):
                         #print("In a ralley, where MCTS was serving a 2nd.")
                         if ("1" in parent_node_shot):
                             #print("(0) Leaf Nodes shot was in direction 1.")
@@ -1590,7 +1635,7 @@ class MCTS_Agent:
                                     shot = shot + "*"
 
                     # Was MCTS Agent serving 1st in the ralley?
-                    elif (first_serve == True):
+                    elif (self.first_service == True):
                         #print("In a ralley, where MCTS was serving a 1st.")
                         if ("1" in parent_node_shot):
                             #print("1 found in Parent Node")
@@ -1747,11 +1792,11 @@ class MCTS_Agent:
                                 elif j < (1114 + 660):
                                     shot = shot + "*"
 
-                # MCTS Agent is returing
+                # MCTS Agent is returning
                 elif (score.get_serving_player() == 2):
                     # 3rd was MCTS Agent returning 2nd in the ralley?
-                    if (any("," in s for s in self.get_shot_of_node(
-                        self.expansion_path[1]))):
+                    # any("," in s for s in self.get_shot_of_node(self.expansion_path[1]))
+                    if (self.first_service == False):
                         #print("In a ralley, where MCTS was returning a 2nd.")
                         if ("1" in parent_node_shot):
                             #print("1 found in Parent Node")
@@ -2283,7 +2328,7 @@ class MCTS_Agent:
                 pos,
                 node_color = colours,
                 node_size = 170,
-                labels=nx.get_node_attributes(self.mcts_tree, 'uct_value'),
+                labels=nx.get_node_attributes(self.mcts_tree, 'shot'),
                 with_labels=True,
                 font_size=6,
                 font_weight='bold')

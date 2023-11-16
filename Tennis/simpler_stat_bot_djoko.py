@@ -88,7 +88,7 @@ class Simple_Stat_Bot_Djokovic:
         # First Serve is returned
         elif (ralley.Ralley.get_len_ralley(current_ralley) == 1):
             # Add return to the first Serve
-            print("Adding return to a first serve.")
+            #print("Adding return to a first serve.")
             self.Serving = False
             self.Returning = True
             x = score.get_point_count_per_game()
@@ -657,20 +657,20 @@ class Simple_Stat_Bot_Djokovic:
               and "," in 
               ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
             # Add return to the Second Serve
-            print("Adding return to a second serve.")
-            print("1")
+            #print("Adding return to a second serve.")
+            #print("1")
             # shot = "SecondServeReturn"
             self.Serving = False
             self.Returning = True
             x = score.get_point_count_per_game()
             if (x % 2 == 0): 
                 # Returning from Deuce Side of the court
-                print("2")
-                print("current_ralley.get_last_char_of_last_shot(): " + str(current_ralley.get_last_char_of_last_shot()))
-                print("current_ralley: " +str(current_ralley.get_ralley()))
+                #print("2")
+                #print("current_ralley.get_last_char_of_last_shot(): " + str(current_ralley.get_last_char_of_last_shot()))
+                #print("current_ralley: " +str(current_ralley.get_ralley()))
                 if (current_ralley.get_last_char_of_last_shot() == "4"):
                     #print("2ndS return from Deuce Side on serve 4")
-                    print("3")
+                    #print("3")
                     i = random.randint(0, 9999)
                     if (i < 2271):
                         # Direction of the shot
@@ -751,7 +751,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "5"):
                     #print("2ndS return from Deuce Side on serve 5")
-                    print("4")
+                    #print("4")
                     i = random.randint(0, 9999)
                     if (i < 1621):
                         # Direction of the shot
@@ -842,7 +842,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "6"):
                     #print("2ndS return from Deuce Side on serve 6")
-                    print("5")
+                    #print("5")
                     i = random.randint(0, 9999)
                     if (i < 976):
                         # Direction of the shot
@@ -935,12 +935,12 @@ class Simple_Stat_Bot_Djokovic:
 
             elif (x % 2 == 1):
                 # Returning from Ad Side of the court
-                print("6")
-                print("current_ralley.get_last_char_of_last_shot(): " + str(current_ralley.get_last_char_of_last_shot()))
-                print("current_ralley: " +str(current_ralley.get_ralley()))
+                #print("6")
+                #print("current_ralley.get_last_char_of_last_shot(): " + str(current_ralley.get_last_char_of_last_shot()))
+                #print("current_ralley: " +str(current_ralley.get_ralley()))
                 if (current_ralley.get_last_char_of_last_shot() == "4"):
                     #print("2ndS return from Ad Side on serve 4")
-                    print("7")
+                    #print("7")
                     i = random.randint(0, 9999)
                     if (i < 399):
                         # Direction of the shot
@@ -1029,7 +1029,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "5"):
                     #print("2ndS return from Ad Side on serve 5")
-                    print("8")
+                    #print("8")
                     i = random.randint(0, 9999)
                     if (i < 685):
                         # Direction of the shot
@@ -1118,7 +1118,7 @@ class Simple_Stat_Bot_Djokovic:
 
                 elif (current_ralley.get_last_char_of_last_shot() == "6"):
                     #print("2ndS return from Ad Side on serve 6")
-                    print("9")
+                    #print("9")
                     i = random.randint(0, 9999)
                     if (i < 1288):
                         # Direction of the shot
@@ -1200,7 +1200,7 @@ class Simple_Stat_Bot_Djokovic:
                             shot = "s" + shot
 
         else:
-            print("10")
+            #print("10")
             # We need to seperate between serving and returning in the
             # ralley and also between first and second serves
             
@@ -1208,32 +1208,32 @@ class Simple_Stat_Bot_Djokovic:
             # Variables according to the ralley
             if (ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0):
                 if ("," in ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                    print("Ralley, where Djoko is returning 2nd")
+                    #print("Ralley, where Djoko is returning 2nd")
                     self.Serving = False
                     self.Returning = True
                 else: 
-                    print("Ralley, where Djoko is Serving a 1st")
+                    #print("Ralley, where Djoko is Serving a 1st")
                     self.Serving = True
                     self.Returning = False
             elif (ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1):
                 if ("," in ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                    print("Ralley, where Djoko is serving a 2nd")
+                    #print("Ralley, where Djoko is serving a 2nd")
                     self.Serving = True
                     self.Returning = False
                 else: 
-                    print("Ralley, where Djoko is returning a 1st")
+                    #print("Ralley, where Djoko is returning a 1st")
                     self.Serving = False
                     self.Returning = True
 
-            print("self.Serving Variable of Djoko Bot: " + str(self.Serving))
-            print("self.Returning Variable of Djoko Bot: " + str(self.Returning))
+            #print("self.Serving Variable of Djoko Bot: " + str(self.Serving))
+            #print("self.Returning Variable of Djoko Bot: " + str(self.Returning))
 
             # If Djoko was starting the ralley with a second serve
             if(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
                 and self.Serving == True
                 and "," in 
                 ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                print("Djoko was opening the ralley with a second serve")
+                #print("Djoko was opening the ralley with a second serve")
 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():
@@ -2116,7 +2116,7 @@ class Simple_Stat_Bot_Djokovic:
                 and self.Returning == True
                 and "," in 
                 ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                print("Djoko is returning a second serve in this ralley")
+                #print("Djoko is returning a second serve in this ralley")
                 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():
@@ -2497,7 +2497,7 @@ class Simple_Stat_Bot_Djokovic:
             # ElIf Djoko was returning a first serve in the ralley
             elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
                 and self.Returning == True):
-                print("Djoko is returning a first serve in this ralley")
+                #print("Djoko is returning a first serve in this ralley")
                 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():
@@ -2923,7 +2923,7 @@ class Simple_Stat_Bot_Djokovic:
         shot = ""
         
         print("Ralley_after_statBotShot: " + str(current_ralley.get_ralley()))
-        print("----------------------------")
+        #print("----------------------------")
         
     def set_turn(self, bool_var):
         self.turn = bool_var

@@ -60,6 +60,7 @@ class MCTS_Agent:
         # Here the Selection Phase is called
         self.selection_phase(current_ralley, score, current_tree)
         
+        print("5. Making Choice and adding MCTS Shot to ralley.")
         # Decission Node is root node, where we need to make the choice
         # It is set when the root node is found
         #print("Decision Node: " + str(self.decision_node))
@@ -401,7 +402,7 @@ class MCTS_Agent:
         
         #print(" 1.5 The ralley that lead to leaf Node: " 
         # + str(self.mcts_ralley.get_ralley()))
-        #print("2. Starting Expansion Phase!")
+        print("2. Starting Expansion Phase!")
         self.expansion_phase(current_ralley, score, self.get_mcts_tree())
  
         self.mcts_ralley.clear_ralley()
@@ -662,7 +663,7 @@ class MCTS_Agent:
         
         n_simus = const.MenuVariables.simu_ralleys
         for _ in range(n_simus):
-            print("----------------------------------")
+            #print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
             # the mcts agents turn to false
 
@@ -838,7 +839,7 @@ class MCTS_Agent:
                     else:
                         # Add a second serve direction from mcts bot to the
                         # simulation at random
-                        print("  3.2.1 and it has no children.")
+                        #print("  3.2.1 and it has no children.")
                         i = random.randint(0, 99)
                         if i < 33:
                             second_simu_serve = "4"
@@ -990,7 +991,7 @@ class MCTS_Agent:
         attributes are updated for the expansion path nodes'''
 
         #print("----------------------------")
-        #print("4. Start of backpropagation")
+        print("4. Start of backpropagation")
         #print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
         #print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
         #print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))
@@ -1126,13 +1127,13 @@ class MCTS_Agent:
         # Adding the probabilites of errors and winners 
         # to the chosen action (One action can lead to different states)
         
-        print("Expansion Path in the beginning of adding probs to shot: " + str(self.expansion_path))
+        #print("Expansion Path in the beginning of adding probs to shot: " + str(self.expansion_path))
 
         self.first_service = True
         if self.simulation_ralley.get_shot_count() != 0:
             first_serve_encoding = self.simulation_ralley.get_first_shot_of_ralley()
             if "," in first_serve_encoding:
-                print("First serve is set to false because: , :was found")
+                #print("First serve is set to false because: , :was found")
                 self.first_service = False
 
         # if we add probas to an expansion shot, the shot of parent node
@@ -2017,9 +2018,9 @@ class MCTS_Agent:
 
                     # 4th was MCTS Agent returning 1st in the ralley?
                     else:
-                        print("In a ralley, where MCTS was returning a 1st.")
+                        #print("In a ralley, where MCTS was returning a 1st.")
                         if ("1" in parent_node_shot):
-                            print("1 found in parent Node")
+                            #print("1 found in parent Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -2070,7 +2071,7 @@ class MCTS_Agent:
                                 elif j < (2566 + 976):
                                     shot = shot + "*"
                         elif ("2" in parent_node_shot):
-                            print("2 fount in Leaf Node")
+                            #print("2 fount in Leaf Node")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -2121,7 +2122,7 @@ class MCTS_Agent:
                                 elif j < (1309 + 824):
                                     shot = shot + "*"
                         elif ("3" in parent_node_shot): 
-                            print("3 found in Parent Node.")
+                            #print("3 found in Parent Node.")
                             if (shot == "1"):
                                 # Adding Depth encoding
                                 i = random.randint(0, 9999)
@@ -2172,7 +2173,7 @@ class MCTS_Agent:
                                 elif j < (1325 + 349):
                                     shot = shot + "*"
 
-        print(" ----->>> Altered Shot: " + str(shot))
+        #print(" ----->>> Altered Shot: " + str(shot))
         if expansion == True:
             self.exp_shot_list.append(shot)
             #print("New exp_shot_list: " + str(self.exp_shot_list))

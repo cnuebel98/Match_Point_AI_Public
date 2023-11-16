@@ -82,10 +82,12 @@ class MenuVariables:
     simulation = True
     colour_scheme = 1
     logging = False
+    show_tree = 'after_match'
+    simu_ralleys = 10
 
 class Changing:
     ralley_terminated = False
 
 class Config:
     c_value = math.sqrt(2)
-    n_simu_ralleys = 2
+    n_simu_ralleys = 10

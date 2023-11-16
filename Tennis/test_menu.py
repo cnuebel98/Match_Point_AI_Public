@@ -83,6 +83,22 @@ def set_logging(selected: tuple, value: any):
     elif value == 2:
         const.MenuVariables.logging = True
 
+def set_tree_display(selected: tuple, value: any):
+    if value == 1:
+        const.MenuVariables.show_tree = 'after_match'
+    elif value == 2:
+        const.MenuVariables.show_tree = 'after_game'
+    elif value == 3:
+        const.MenuVariables.show_tree = 'after_shot'
+    elif value == 4: 
+        const.MenuVariables.show_tree = 'all_mcts_trees'
+    elif value == 5:
+        const.MenuVariables.show_tree = 'off'
+
+def set_simu_ralley_no(value: any):
+    x = int(value)
+    const.MenuVariables.simu_ralleys = x
+
 # Menu options are being added
 menu.add.selector('Mode: ', 
                   [('Simulation', 1), ('Manual', 2)], 
@@ -94,6 +110,12 @@ menu.add.range_slider('Number of Matches: ',
                       range_text_value_enabled = False, 
                       slider_text_value_enabled=True, 
                       onchange=set_simu_game_no)
+menu.add.range_slider('Number of Simu Ralleys: ', 
+                      default=10, range_values=[1,100], 
+                      increment=int(1), 
+                      range_text_value_enabled = False, 
+                      slider_text_value_enabled=True, 
+                      onchange=set_simu_ralley_no)
 menu.add.selector('Top Player: ', 
                   [('Random', 1), ('Djokovic', 2), ('SimpleDjoko', 3)], 
                   default=0, 
@@ -120,6 +142,11 @@ menu.add.selector('Export Data: ',
                   [('Off', 1), ('On', 2)],
                   default=0,
                   onchange=set_logging)
+menu.add.selector('Show Tree: ', 
+                  [('After Match', 1), ('After Game', 2), 
+                   ('After Shot', 3), ('All MCTS Trees', 4), ('Off', 5)],
+                  default=0,
+                  onchange=set_tree_display)
 menu.add.button('Play',
                 start_the_game)
 menu.add.button('Quit', 

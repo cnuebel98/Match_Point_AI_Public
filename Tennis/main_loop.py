@@ -825,9 +825,10 @@ def main_loop():
                 # the shot count and the turn
                 new_ralley.score_update(new_score, new_ball)
                 
-                if (new_score.get_match_count() != match_count_for_tree):
-                    match_count_for_tree = new_score.get_match_count()
-                    ralley_tree.Ralley_Tree.show_tree(new_tree)
+                if (const.MenuVariables.show_tree == 'after_match'):
+                    if (new_score.get_match_count() != match_count_for_tree):
+                        match_count_for_tree = new_score.get_match_count()
+                        ralley_tree.Ralley_Tree.show_tree(new_tree)
 
 
                 if const.Changing.ralley_terminated:

@@ -1647,7 +1647,7 @@ class Simple_Stat_Bot_Djokovic:
             # ElIf Djoko started Ralley with a first Serve
             elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
                 and self.Serving == True):
-                print("Djoko was opening the ralley with a first serve")        
+                #print("Djoko was opening the ralley with a first serve")        
                 
                 # If Opponents last shot was dir 1
                 if "1" in current_ralley.get_last_shot():

@@ -60,6 +60,7 @@ class MCTS_Agent:
         # Here the Selection Phase is called
         self.selection_phase(current_ralley, score, current_tree)
         
+        print("------------------------------------------------")
         print("5. Making Choice and adding MCTS Shot to ralley.")
         # Decission Node is root node, where we need to make the choice
         # It is set when the root node is found
@@ -94,7 +95,8 @@ class MCTS_Agent:
 
         dir = self.get_dir_of_shot_in_mcts_tree(indices_of_neighbors[pos])
 
-        # Here we 
+        # Here we either add probabilities to a second serve with the 
+        # corresponding function or we add them with the normal function
         if (current_ralley.get_len_ralley() == 1 
             and "," in current_ralley.get_first_shot_of_ralley()):
             new_shot = self.add_probs_to_2nd_serve(dir, score)
@@ -102,14 +104,6 @@ class MCTS_Agent:
             new_shot = self.add_probs_to_shot(dir, score, current_tree, 
                                               expansion=False)
         
-        
-        # then we need to get the neighbor nodes from that decision node
-        # and compare the ucts values and find the neighbor with the 
-        # highest uct value
-
-        # ToDo: we need to get the direction of the bst next action
-        # then we need to put it through the add probas to shot phase
-        # then we need to add it to the current_ralley
         current_ralley.add_shot_to_ralley(new_shot)
         print("_______________________________________________________")
         print("-------------End of one MCTS iteration-----------------")
@@ -122,6 +116,7 @@ class MCTS_Agent:
         
         print("--------------------------------")
         print("1. Starting selection Phase!")
+        print("--------------------------------")
         #print(" 1.1 Setting the root node according to current ralley.")
         
         # Blue_neighbors are only the neighbors nodes with color blue,
@@ -402,7 +397,7 @@ class MCTS_Agent:
         
         #print(" 1.5 The ralley that lead to leaf Node: " 
         # + str(self.mcts_ralley.get_ralley()))
-        print("2. Starting Expansion Phase!")
+        
         self.expansion_phase(current_ralley, score, self.get_mcts_tree())
  
         self.mcts_ralley.clear_ralley()
@@ -422,7 +417,8 @@ class MCTS_Agent:
         #      + str(self.get_shot_of_node(self.leaf_node)))
         #print(" Exp Phase beginning: current_ralley: " 
         # + str(current_ralley.get_ralley()))
-        
+        print("2. Starting Expansion Phase!")
+
         self.mcts_tree.nodes[self.leaf_node]['colour'] = 'orange'
         
         if (self.shot_terminated(self.get_shot_of_node(
@@ -631,6 +627,7 @@ class MCTS_Agent:
             else:
                 print("-----------------------------")
                 print("3. Starting Simulation Phase!")
+                print("-----------------------------")
                 #print("with mcts_ralley: " + str(self.mcts_ralley.get_ralley()))
                 self.simulation_phase(current_ralley, score, current_tree)
             
@@ -991,7 +988,7 @@ class MCTS_Agent:
         attributes are updated for the expansion path nodes'''
 
         #print("----------------------------")
-        print("4. Start of backpropagation")
+        print("4. Start of Backpropagation Phase!")
         #print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
         #print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
         #print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))

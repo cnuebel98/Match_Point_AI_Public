@@ -85,15 +85,17 @@ def set_logging(selected: tuple, value: any):
 
 def set_tree_display(selected: tuple, value: any):
     if value == 1:
-        const.MenuVariables.show_tree = 'after_match'
-    elif value == 2:
-        const.MenuVariables.show_tree = 'after_game'
-    elif value == 3:
-        const.MenuVariables.show_tree = 'after_shot'
-    elif value == 4: 
-        const.MenuVariables.show_tree = 'all_mcts_trees'
-    elif value == 5:
         const.MenuVariables.show_tree = 'off'
+    elif value == 2:
+        const.MenuVariables.show_tree = 'after_shot'
+    elif value == 3:
+        const.MenuVariables.show_tree = 'after_ralley'
+    elif value == 4:
+        const.MenuVariables.show_tree = 'after_set'
+    elif value == 5:
+        const.MenuVariables.show_tree = 'after_match'
+    elif value == 6:
+        const.MenuVariables.show_tree = 'all_mcts_trees'
 
 def set_simu_ralley_no(value: any):
     x = int(value)
@@ -143,8 +145,9 @@ menu.add.selector('Export Data: ',
                   default=0,
                   onchange=set_logging)
 menu.add.selector('Show Tree: ', 
-                  [('After Match', 1), ('After Game', 2), 
-                   ('After Shot', 3), ('All MCTS Trees', 4), ('Off', 5)],
+                  [('Off', 1), ('After Shot', 2), ('After Ralley', 3),
+                   ('After Set', 4), ('After Match', 5), 
+                   ('All MCTS Trees', 6)],
                   default=0,
                   onchange=set_tree_display)
 menu.add.button('Play',

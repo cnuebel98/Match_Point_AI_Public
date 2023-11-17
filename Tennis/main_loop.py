@@ -736,14 +736,17 @@ def main_loop():
                         encode_shot_selection(new_ball, new_ralley)
                     else:
                         # The bottom bot adds a shot here
-                        print("Adding MCTS shot to the ralley: " + str(new_ralley.get_ralley()))
+                        #print("Adding MCTS shot to the ralley: " + str(new_ralley.get_ralley()))
                         bottom_bot.add_shot(new_ralley, new_score, new_tree)
-                        print("Ralley after mcts agents shot: " + str(new_ralley.get_ralley()))
+                        #print("Ralley after mcts agents shot: " + str(new_ralley.get_ralley()))
                         tree_update(new_ralley, new_tree, "blue")
                         
                         move_ball_to_pos(new_ball, new_ralley, WIN, 
                                          TRANSITION_ANIMATION, 
                                          "bottom", new_score)
+                        if const.MenuVariables.show_tree == 'after_shot':
+                            ralley_tree.Ralley_Tree.show_tree(new_tree)
+
                     top_bot.set_turn(True)
 
                     # If its the bots turn, call function that gets the 
@@ -757,6 +760,8 @@ def main_loop():
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_ralley, WIN, 
                                      TRANSITION_ANIMATION, "top", new_score)
+                    if const.MenuVariables.show_tree == 'after_shot':
+                            ralley_tree.Ralley_Tree.show_tree(new_tree)
                     top_bot.set_turn(False)
                     
                 # Here the score is updated, depending on the ralley and
@@ -764,13 +769,15 @@ def main_loop():
                 new_ralley.score_update(new_score, new_ball)
                 if (new_score.get_set_count() != set_counting_for_tree):
                     set_counting_for_tree = new_score.get_set_count()
-                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    if const.MenuVariables.show_tree == 'after_set':
+                        ralley_tree.Ralley_Tree.show_tree(new_tree)
 
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colours.BLACK)
                     
-                    #ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    if const.MenuVariables.show_tree == 'after_ralley':
+                        ralley_tree.Ralley_Tree.show_tree(new_tree)
 
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),

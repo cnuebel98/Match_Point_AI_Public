@@ -87,6 +87,7 @@ class MenuVariables:
 
 class Changing:
     ralley_terminated = False
+    ralley = []
 
 class Config:
     c_value = math.sqrt(2)

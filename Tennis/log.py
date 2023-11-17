@@ -28,7 +28,7 @@ class Log:
                    'Serving_Player': serving_player,
                    'Ralley': str(ralley)}, index = [1])
         self.df = pd.concat([self.df.loc[:], new_row]).reset_index(drop=True)
-        self.show_df()
+        #self.show_df()
         
     def show_df(self):
         print(self.df)
@@ -36,6 +36,6 @@ class Log:
     def add_ralley_to_df(self, ralley):
         ...
 
-    def export_to_csv(df):
+    def export_to_csv(self):
         # Data is saved and exported in a csv file
-        df.to_csv("results_simulation.csv")
+        self.df.to_csv(r"C:\Users\Carlo\Repos\TrainingsTool\Tennis\exported_results\results_simulation.csv", encoding='utf-8', index=False)

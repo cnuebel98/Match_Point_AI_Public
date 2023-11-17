@@ -787,7 +787,7 @@ def main_loop():
                                                 new_score.get_sets_A(),
                                                 new_score.get_sets_B(),
                                                 new_score.get_serving_player(),
-                                                new_ralley.get_last_ralley())
+                                                const.Changing.ralley)
                     const.Changing.ralley_terminated = False
                 
         
@@ -836,8 +836,7 @@ def main_loop():
                     if (new_score.get_match_count() != match_count_for_tree):
                         match_count_for_tree = new_score.get_match_count()
                         ralley_tree.Ralley_Tree.show_tree(new_tree)
-
-
+                        
                 if const.Changing.ralley_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colours.BLACK)
@@ -849,11 +848,14 @@ def main_loop():
                                                 new_score.get_sets_A(),
                                                 new_score.get_sets_B(),
                                                 new_score.get_serving_player(),
-                                                new_ralley.get_last_ralley())
+                                                const.Changing.ralley)
                     const.Changing.ralley_terminated = False
 
                 draw(WIN, [bottom_player, top_player], new_ball, 
                      [next_button, score_text_field])
+            #print("Saving Data from Simulation to csv file...")
+            new_log.export_to_csv()
+
     pygame.QUIT
 
 if __name__ == "__main__":

@@ -193,7 +193,6 @@ class Ralley_Tree:
 
         return direction
 
-
     def add_node_visit(self, node):
         '''The given node is added to the visited_nodes list.'''
         self.visited_nodes.append(node)

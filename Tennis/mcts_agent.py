@@ -8,6 +8,7 @@ import copy
 import math
 import numpy as np
 import constants as const
+import average_stat_bot
 
 class MCTS_Agent:
     '''In this class, the MCTS Algorithm is used to find the next shot 
@@ -34,8 +35,13 @@ class MCTS_Agent:
         self.mcts_tree = nx.DiGraph()
         self.mcts_ralley = ralley.Ralley()
         self.simulation_ralley = ralley.Ralley()
-        self.opponent = djoko.Simple_Stat_Bot_Djokovic("Simple_Djoko")
         self.decision_node = 0
+
+        if const.MenuVariables.top_bot == 3:
+            self.opponent = djoko.Simple_Stat_Bot_Djokovic("Simple_Djoko")
+        elif const.MenuVariables.top_bot == 4:
+            self.opponent = average_stat_bot.Average_Stat_Bot("Average_Bot")
+        else: print("Error: Choose other opponent for MCTS Agent")
 
     def add_shot(self, current_ralley, score, current_tree):
         '''This function is calling the different phases of MCTS'''
@@ -60,8 +66,8 @@ class MCTS_Agent:
         # Here the Selection Phase is called
         self.selection_phase(current_ralley, score, current_tree)
         
-        print("------------------------------------------------")
-        print("5. Making Choice and adding MCTS Shot to ralley.")
+        #print("------------------------------------------------")
+        #print("5. Making Choice and adding MCTS Shot to ralley.")
         # Decission Node is root node, where we need to make the choice
         # It is set when the root node is found
         #print("Decision Node: " + str(self.decision_node))
@@ -104,19 +110,27 @@ class MCTS_Agent:
             new_shot = self.add_probs_to_shot(dir, score, current_tree, 
                                               expansion=False)
         
+
+        if (current_ralley.get_len_ralley() == 0 and new_shot == "6nwdx"):
+            print("Current_Ralley: " + str(current_ralley.get_ralley()))
+            print("Adding Shot: " + str(new_shot))
+            print("Error: New Shot in MCTS Agent add_probs_to_shot function was done wrong!")
+
+
         current_ralley.add_shot_to_ralley(new_shot)
-        print("_______________________________________________________")
-        print("-------------End of one MCTS iteration-----------------")
-        print("_______________________________________________________")
+        print("Ralley_after_MCTS_shot: " + str(current_ralley.get_ralley()))
+        #print("_______________________________________________________")
+        #print("-------------End of one MCTS iteration-----------------")
+        #print("_______________________________________________________")
 
     def selection_phase(self, current_ralley, score, current_tree):
         '''In the selection Phase, we traverse through the current tree,
         always taking the child node with the highest UCT Value until a
         leaf node is reached'''
         
-        print("--------------------------------")
-        print("1. Starting selection Phase!")
-        print("--------------------------------")
+        #print("--------------------------------")
+        #print("1. Starting selection Phase!")
+        #print("--------------------------------")
         #print(" 1.1 Setting the root node according to current ralley.")
         
         # Blue_neighbors are only the neighbors nodes with color blue,
@@ -385,7 +399,28 @@ class MCTS_Agent:
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                         green_neighbors[i]))
 
-                else: print("Error/ToDo: No green neighbors to choose.")
+            elif (color_of_mcts_active_node == "blue" and 
+                  "," in self.get_shot_of_node(self.get_active_mcts_node())
+                  and dir_4_found and dir_5_found and dir_6_found):
+                # This is the scenario where a first serve fault node is 
+                # active which has all three directions of the second 
+                # serve in the children nodes. So we find the highest 
+                # UCT neighbor and set it to active
+
+                highest_uct_neighbor = 0
+                for x in range(0, len(blue_neighbors)):
+                    if highest_uct_neighbor == 0:
+                        highest_uct_neighbor = blue_neighbors[x]
+                    elif (current_tree.get_uct_value(highest_uct_neighbor)
+                        <= current_tree.get_uct_value(blue_neighbors[x])):
+                        highest_uct_neighbor = blue_neighbors[x]
+                
+                self.set_active_mcts_node(highest_uct_neighbor)
+                self.add_node_to_expansion_path(highest_uct_neighbor)
+
+                self.add_shot_to_mcts_ralley(self.get_shot_of_node(
+                    highest_uct_neighbor))
+                
             else:
                 self.set_leaf_node(self.get_active_mcts_node())
                 
@@ -417,9 +452,9 @@ class MCTS_Agent:
         #      + str(self.get_shot_of_node(self.leaf_node)))
         #print(" Exp Phase beginning: current_ralley: " 
         # + str(current_ralley.get_ralley()))
-        print("2. Starting Expansion Phase!")
+        #print("2. Starting Expansion Phase!")
 
-        self.mcts_tree.nodes[self.leaf_node]['colour'] = 'orange'
+        #self.mcts_tree.nodes[self.leaf_node]['colour'] = 'orange'
         
         if (self.shot_terminated(self.get_shot_of_node(
             self.leaf_node)) == "terminal"):
@@ -437,9 +472,6 @@ class MCTS_Agent:
 
         #print("exp_shot_list is cleared before each expansion phase")
         self.exp_shot_list.clear()
-        if (const.MenuVariables.show_tree == 'all_mcts_trees'):
-            print("Displaying the MCTS_Tree with orange Leaf Node.")
-            self.show_mcts_tree()
             
         # Get children of the leaf node
         children_of_leaf_node = self.get_blue_neighbors(self.leaf_node)
@@ -625,9 +657,9 @@ class MCTS_Agent:
                 self.backpropagation_phase()
                 
             else:
-                print("-----------------------------")
-                print("3. Starting Simulation Phase!")
-                print("-----------------------------")
+                #print("-----------------------------")
+                #print("3. Starting Simulation Phase!")
+                #print("-----------------------------")
                 #print("with mcts_ralley: " + str(self.mcts_ralley.get_ralley()))
                 self.simulation_phase(current_ralley, score, current_tree)
             
@@ -988,7 +1020,7 @@ class MCTS_Agent:
         attributes are updated for the expansion path nodes'''
 
         #print("----------------------------")
-        print("4. Start of Backpropagation Phase!")
+        #print("4. Start of Backpropagation Phase!")
         #print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
         #print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
         #print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))
@@ -999,12 +1031,13 @@ class MCTS_Agent:
         # expansion path, regardless of who won the point
         col_term_node = self.mcts_tree.nodes[self.active_simu_node]['colour']
 
-        if (col_term_node == "lightskyblue" or col_term_node == "yellow"):
+        if (col_term_node == "lightskyblue" or col_term_node == "yellow" 
+            or col_term_node == "blue"):
             if ("*" in self.get_shot_of_node(self.active_simu_node)):
-                #We update n_wins. MCTS shot was a winner.
+                # We update n_wins. MCTS shot was a winner.
                 for x in range(1, len(self.expansion_path)):
                     self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1      
-        elif (col_term_node == "springgreen"):
+        elif (col_term_node == "springgreen" or col_term_node == "green"):
             if ("nwdx" in self.get_shot_of_node(self.active_simu_node)):
                 # We update n_wins. Bot shot was a error.
                 for x in range(1, len(self.expansion_path)):
@@ -1146,7 +1179,14 @@ class MCTS_Agent:
         #print("First shot of Simuralley, before adding probs to a shot: " + str(self.simulation_ralley.get_ralley()))
         #print("First serve: " + str(self.first_service))
         #print("shot encoding expansion node before alterations: " + str(shot))
-        
+        #print("Self.MCTS Ralley: " + str(self.mcts_ralley.get_ralley()))
+        #print("Len of mcts_ralley: " + str(self.mcts_ralley.get_len_ralley()))
+        #print("Self.first_servince: " + str(self.first_service))
+        #print("first_serve: " + str(first_serve))
+
+        if self.mcts_ralley.get_len_ralley() == 0:
+            self.first_service = True
+
         if (shot == "4" or shot == "5" or shot == "6" and self.first_service == True):
             # If serving from deuce side
             if (score.get_point_count_per_game() % 2 == 0):

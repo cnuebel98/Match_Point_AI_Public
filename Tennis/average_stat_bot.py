@@ -1324,7 +1324,7 @@ class Average_Stat_Bot:
         else: return shot
         shot = ""
         
-        print("Ralley_after_statBotShot: " + str(current_ralley.get_ralley()))
+        print("Ralley_after_Average_Stat_Bot: " + str(current_ralley.get_ralley()))
         #print("----------------------------")
         
     def set_turn(self, bool_var):

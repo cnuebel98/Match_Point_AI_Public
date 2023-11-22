@@ -14,6 +14,7 @@ import constants as const
 import ralley_tree
 import networkx as nx
 import mcts_agent
+import average_stat_bot
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -663,6 +664,8 @@ def main_loop():
     elif const.MenuVariables.top_bot == 3:
         top_bot = (simpler_stat_bot_djoko.
                    Simple_Stat_Bot_Djokovic("Simple_Djoko"))
+    elif const.MenuVariables.top_bot == 4:
+        top_bot = (average_stat_bot.Average_Stat_Bot("Average_Bot"))
     else: top_bot = bot.Bot("Random")
 
     # Different classes for Bottom Bot are initialized depending on the 
@@ -676,6 +679,8 @@ def main_loop():
                       Simple_Stat_Bot_Djokovic("Simple_Djoko"))
     elif const.MenuVariables.bottom_bot == 4:
         bottom_bot = mcts_agent.MCTS_Agent("MCTS Agent")
+    elif const.MenuVariables.bottom_bot == 5:
+        bottom_bot = average_stat_bot.Average_Stat_Bot("Average_Bot")
     else: bottom_bot = bot.Bot("Random")
 
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, 

@@ -82,7 +82,7 @@ class MenuVariables:
     simulation = True
     colour_scheme = 1
     logging = False
-    show_tree = 'after_match'
+    show_tree = 'off'
     simu_ralleys = 10
 
 class Changing:

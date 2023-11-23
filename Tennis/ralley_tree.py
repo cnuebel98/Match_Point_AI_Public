@@ -18,7 +18,8 @@ class Ralley_Tree:
                            depth=0,
                            n_visits=0,
                            n_wins=0,
-                           uct_value=0)
+                           uct_value=0,
+                           point_win_rate=0)
         self.active_node = 0
         self.visited_nodes = [0]
 
@@ -32,7 +33,7 @@ class Ralley_Tree:
                            direction=direction)
 
     def add_new_node(self, index, colour, node_type, shot_string, depth,
-                     n_visits, n_wins, uct_value):
+                     n_visits, n_wins, uct_value, point_win_rate):
         '''A new node is added to the tree.'''
         self.tree.add_node(node_for_adding=index,
                            colour=colour,
@@ -41,7 +42,8 @@ class Ralley_Tree:
                            depth=depth,
                            n_visits=n_visits,
                            n_wins=n_wins,
-                           uct_value=uct_value)
+                           uct_value=uct_value,
+                           point_win_rate=point_win_rate)
 
     def get_tree(self):
         '''Returns the current tree'''
@@ -304,6 +306,15 @@ class Ralley_Tree:
         '''Returns the UCT Value of a given Node'''
         return self.tree.nodes[node]['uct_value']
     
+    def update_point_win_rate(self):
+        '''This function updates the point_win_rate Attribute of the 
+        visited Nodes'''
+        for x in range(0, len(self.visited_nodes)):
+            visits = self.tree.nodes[self.visited_nodes[x]]['n_visits']
+            wins = self.tree.nodes[self.visited_nodes[x]]['n_wins']
+            self.tree.nodes[self.visited_nodes[x]][
+                'point_win_rate'] = wins/visits
+
     def get_depth(self, node):
         '''Returns the Depth of a given Node'''
         return self.tree.nodes[node]['depth']
@@ -311,9 +322,6 @@ class Ralley_Tree:
     def get_n_nodes(self):
         '''Returns the number of nodes in the tree'''
         return self.tree.number_of_nodes()
-    
-    def get_index_of_node(self, serving, shot, depth):
-        ...
 
     def show_tree(self):
         '''If this function is called, it will draw the created tree'''
@@ -328,7 +336,7 @@ class Ralley_Tree:
                 pos,
                 node_color = colours,
                 node_size = 170,
-                labels=nx.get_node_attributes(self.tree, 'shot'), 
+                labels=nx.get_node_attributes(self.tree, 'point_win_rate'), 
                 with_labels=True, 
                 font_size=6,
                 font_weight='bold')

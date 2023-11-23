@@ -576,7 +576,8 @@ def tree_update(new_ralley, new_tree, colour):
                               depth=new_ralley.get_len_ralley(),
                               n_visits=0,
                               n_wins=0,
-                              uct_value=0)
+                              uct_value=0,
+                              point_win_rate=0)
         
         # Here we add the edge between the new node and the active node
         # and also set the new node to active
@@ -613,6 +614,7 @@ def tree_update(new_ralley, new_tree, colour):
         new_tree.update_edge_wins(new_ralley.get_last_char_of_last_shot(), 
                                   colour)
         new_tree.update_uct_value()
+        new_tree.update_point_win_rate()
         
         #new_tree.update_uct_value()
         # The visited node list is being deleted

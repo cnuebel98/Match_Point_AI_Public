@@ -27,9 +27,7 @@ class MCTS_Agent:
         self.mcts_agents_turn = False
         self.expansion_node = 0
         self.expansion_shot = ""
-        
         self.exp_shot_list = []
-
         self.len_of_current_ralley = 0
         self.expansion_path = [0]
         self.mcts_tree = nx.DiGraph()
@@ -73,9 +71,9 @@ class MCTS_Agent:
         #print("Decision Node: " + str(self.decision_node))
         #print("Neighbors of decision Node: " 
         # + str(self.get_neighbors(self.decision_node)))
+
         indices_of_neighbors = self.get_neighbors(self.decision_node)
-        #print("UCTS of neighbors: " 
-        # + str(self.get_ucts_of_neighbor_nodes(indices_of_neighbors)))
+        
         ucts_of_neighbors = self.get_ucts_of_neighbor_nodes(
             indices_of_neighbors)
         
@@ -115,7 +113,6 @@ class MCTS_Agent:
             print("Current_Ralley: " + str(current_ralley.get_ralley()))
             print("Adding Shot: " + str(new_shot))
             print("Error: New Shot in MCTS Agent add_probs_to_shot function was done wrong!")
-
 
         current_ralley.add_shot_to_ralley(new_shot)
         print("Ralley_after_MCTS_shot: " + str(current_ralley.get_ralley()))
@@ -633,7 +630,8 @@ class MCTS_Agent:
                                        depth=exp_shot_depth,
                                        n_visits=0,
                                        n_wins=0,
-                                       uct_value=0)
+                                       uct_value=0,
+                                       point_win_rate=0)
             
             exp_shot_dir = self.get_dir_of_shot_in_mcts_tree(exp_shot_index)
 
@@ -782,7 +780,8 @@ class MCTS_Agent:
                                                    depth=simu_bot_shot_depth,
                                                    n_visits=0, 
                                                    n_wins=0, 
-                                                   uct_value=0)
+                                                   uct_value=0,
+                                                   point_win_rate=0)
                         
                         direction = self.get_dir_of_shot_in_mcts_tree(simu_bot_node_index)
 
@@ -911,7 +910,8 @@ class MCTS_Agent:
                                                    depth=depth,
                                                    n_visits=0, 
                                                    n_wins=0, 
-                                                   uct_value=0)
+                                                   uct_value=0,
+                                                   point_win_rate=0)
                         
                         direction = self.get_dir_of_shot_in_mcts_tree(
                             sec_serve_index)
@@ -971,11 +971,14 @@ class MCTS_Agent:
                         depth_mcts_simu = current_ralley.get_len_ralley() + 1
 
                         self.add_node_to_mcts_tree(index=altered_simu_shot_index,
-                                            colour="lightskyblue", 
-                                            node_type="MCTS_Simu_Shot", 
-                                            shot_string=altered_simu_shot, 
-                                            depth=depth_mcts_simu,
-                                            n_visits=0, n_wins=0, uct_value=0)
+                                                   colour="lightskyblue",
+                                                   node_type="MCTS_Simu_Shot",
+                                                   shot_string=altered_simu_shot,
+                                                   depth=depth_mcts_simu,
+                                                   n_visits=0,
+                                                   n_wins=0,
+                                                   uct_value=0,
+                                                   point_win_rate=0)
 
                         dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
                             altered_simu_shot_index)
@@ -1024,11 +1027,18 @@ class MCTS_Agent:
         #print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
         #print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
         #print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))
-        self.set_active_simu_node(self.expansion_path[-1])
+        
+        #print("Shot of active simu Node when backproba was started: " + str(self.get_shot_of_node(self.get_active_simu_node())))
+        
+        #self.set_active_simu_node(self.expansion_path[-1])
+        
         #print("The colour of last shot that was taken and that was terminal: " + str(self.mcts_tree.nodes[self.active_simu_node]['colour']))
 
         # We need to update the visit counts of all nodes in the 
         # expansion path, regardless of who won the point
+
+        #print("Expansion Path: " + str(self.expansion_path))
+
         col_term_node = self.mcts_tree.nodes[self.active_simu_node]['colour']
 
         if (col_term_node == "lightskyblue" or col_term_node == "yellow" 
@@ -1070,8 +1080,13 @@ class MCTS_Agent:
             sp = self.mcts_tree.nodes[self.expansion_path[x-1]]['n_visits']
             
             self.mcts_tree.nodes[self.expansion_path[x]][
-                'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)   
-        
+                'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)
+            
+            self.mcts_tree.nodes[self.expansion_path[x]][
+                'point_win_rate'] = wi/si
+            #print("wi/si" + str(wi) + " / " + str(si))
+
+        self.set_active_simu_node(self.expansion_path[-1])
         #print("Node from where we need to choose: " + str(self.expansion_path[-2]))
         #print("Get the Node with the highest UCT Value from ")
 
@@ -1084,12 +1099,22 @@ class MCTS_Agent:
         return neighbor_shots
     
     def get_ucts_of_neighbor_nodes(self, node_list):
-        '''Return a list of shots of a given List of nodes'''
+        '''Return a list of uct values of a given List of nodes'''
         neighbor_ucts = []
         for x in range(0, len(node_list)):
             neighbor_uct = self.mcts_tree.nodes[node_list[x]]['uct_value']
             neighbor_ucts.append(neighbor_uct)
         return neighbor_ucts
+    
+
+    def get_point_win_rate_of_node_list(self, node_list):
+        '''Return a list of point_win_rate values of a given 
+        List of nodes'''
+        node_win_rates = []
+        for x in range(0, len(node_list)):
+            node_win_rate = self.mcts_tree.nodes[node_list[x]]['point_win_rate']
+            node_win_rates.append(node_win_rate)
+        return node_win_rates
 
     def get_active_simu_node(self):
         '''Returns the active simu Node'''
@@ -2346,7 +2371,8 @@ class MCTS_Agent:
         return colours_of_neighbor_nodes
 
     def add_node_to_mcts_tree(self, index, colour, node_type, shot_string,
-                              depth, n_visits, n_wins, uct_value):
+                              depth, n_visits, n_wins, uct_value,
+                              point_win_rate):
         '''A new node is added to the mcts tree.'''
         self.mcts_tree.add_node(node_for_adding=index,
                            colour=colour,
@@ -2355,7 +2381,8 @@ class MCTS_Agent:
                            depth=depth,
                            n_visits=n_visits,
                            n_wins=n_wins,
-                           uct_value=uct_value)
+                           uct_value=uct_value,
+                           point_win_rate=point_win_rate)
         
     def add_edge_to_mcts_tree(self, node_A, node_B, n_visits, uct_value,
                               win_count, direction):

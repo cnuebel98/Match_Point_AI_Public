@@ -106,7 +106,6 @@ class MCTS_Random_Agent:
         else:
             new_shot = self.add_probs_to_shot(dir, score, current_tree, 
                                               expansion=False)
-        
 
         if (current_ralley.get_len_ralley() == 0 and new_shot == "6nwdx"):
             print("Current_Ralley: " + str(current_ralley.get_ralley()))
@@ -297,19 +296,21 @@ class MCTS_Random_Agent:
                     # If all three directions are found, then we go the
                     # child with the highest UCT Value and go again from
                     # there
-                    #print("We do the UCT process with the blue children")
                     if (dir_1_found and dir_2_found and dir_3_found
                         or dir_4_found and dir_5_found and dir_6_found):
                        
                         # Here the a random Blue neighbor is 
                         # found and set to active
-                        pos = random.randint(0, len(blue_neighbors)-1)
-                        rondom_node = blue_neighbors[pos]
+                        #for x in blue_neighbors:
+                        #    print("point_win_rate neighbor: " + str(self.mcts_tree.nodes[x]['point_win_rate']))
 
-                        self.set_active_mcts_node(rondom_node)
-                        self.add_node_to_expansion_path(rondom_node)
+                        pos = random.randint(0, len(blue_neighbors)-1)
+                        random_node = blue_neighbors[pos]
+
+                        self.set_active_mcts_node(random_node)
+                        self.add_node_to_expansion_path(random_node)
                         self.add_shot_to_mcts_ralley(self.get_shot_of_node(
-                            rondom_node))
+                            random_node))
                         
                         #print("New MCTS Active node hast UCT = " + str(
                         #    current_tree.get_uct_value(highest_uct_neighbor)))
@@ -347,14 +348,16 @@ class MCTS_Random_Agent:
                     
                     # Here the Blue neighbor with the highest UCT Value
                     # is found and set to active
+                    #for x in blue_neighbors:
+                    #    print("point_win_rate neighbor: " + str(self.mcts_tree.nodes[x]['point_win_rate']))
 
                     pos = random.randint(0, len(blue_neighbors)-1)
-                    rondom_node = blue_neighbors[pos]
+                    random_node = blue_neighbors[pos]
 
-                    self.set_active_mcts_node(rondom_node)
-                    self.add_node_to_expansion_path(rondom_node)
+                    self.set_active_mcts_node(random_node)
+                    self.add_node_to_expansion_path(random_node)
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(
-                        rondom_node))
+                        random_node))
 
                 else:
                     self.leaf_node = self.get_active_mcts_node()    
@@ -383,13 +386,17 @@ class MCTS_Random_Agent:
                 # active which has all three directions of the second 
                 # serve in the children nodes. Here we find a random 
                 # neighbor and set it to active
-                pos = random.randint(0, len(blue_neighbors)-1)
-                rondom_node = blue_neighbors[pos]
 
-                self.set_active_mcts_node(rondom_node)
-                self.add_node_to_expansion_path(rondom_node)
+                #for x in blue_neighbors:
+                #    print("point_win_rate neighbor: " + str(self.mcts_tree.nodes[x]['point_win_rate']))
+
+                pos = random.randint(0, len(blue_neighbors)-1)
+                random_node = blue_neighbors[pos]
+
+                self.set_active_mcts_node(random_node)
+                self.add_node_to_expansion_path(random_node)
                 self.add_shot_to_mcts_ralley(self.get_shot_of_node(
-                    rondom_node))
+                    random_node))
                 
             else:
                 self.set_leaf_node(self.get_active_mcts_node())
@@ -601,7 +608,8 @@ class MCTS_Random_Agent:
                                        depth=exp_shot_depth,
                                        n_visits=0,
                                        n_wins=0,
-                                       uct_value=0)
+                                       uct_value=0,
+                                       point_win_rate=0)
             
             exp_shot_dir = self.get_dir_of_shot_in_mcts_tree(exp_shot_index)
 
@@ -750,7 +758,8 @@ class MCTS_Random_Agent:
                                                    depth=simu_bot_shot_depth,
                                                    n_visits=0, 
                                                    n_wins=0, 
-                                                   uct_value=0)
+                                                   uct_value=0,
+                                                   point_win_rate=0)
                         
                         direction = self.get_dir_of_shot_in_mcts_tree(simu_bot_node_index)
 
@@ -879,7 +888,8 @@ class MCTS_Random_Agent:
                                                    depth=depth,
                                                    n_visits=0, 
                                                    n_wins=0, 
-                                                   uct_value=0)
+                                                   uct_value=0,
+                                                   point_win_rate=0)
                         
                         direction = self.get_dir_of_shot_in_mcts_tree(
                             sec_serve_index)
@@ -939,11 +949,14 @@ class MCTS_Random_Agent:
                         depth_mcts_simu = current_ralley.get_len_ralley() + 1
 
                         self.add_node_to_mcts_tree(index=altered_simu_shot_index,
-                                            colour="lightskyblue", 
-                                            node_type="MCTS_Simu_Shot", 
-                                            shot_string=altered_simu_shot, 
-                                            depth=depth_mcts_simu,
-                                            n_visits=0, n_wins=0, uct_value=0)
+                                                   colour="lightskyblue",
+                                                   node_type="MCTS_Simu_Shot",
+                                                   shot_string=altered_simu_shot,
+                                                   depth=depth_mcts_simu,
+                                                   n_visits=0, 
+                                                   n_wins=0, 
+                                                   uct_value=0,
+                                                   point_win_rate=0)
 
                         dir_simu_shot = self.get_dir_of_shot_in_mcts_tree(
                             altered_simu_shot_index)
@@ -992,7 +1005,7 @@ class MCTS_Random_Agent:
         #print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
         #print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
         #print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))
-        self.set_active_simu_node(self.expansion_path[-1])
+        
         #print("The colour of last shot that was taken and that was terminal: " + str(self.mcts_tree.nodes[self.active_simu_node]['colour']))
 
         # We need to update the visit counts of all nodes in the 
@@ -1004,7 +1017,7 @@ class MCTS_Random_Agent:
             if ("*" in self.get_shot_of_node(self.active_simu_node)):
                 # We update n_wins. MCTS shot was a winner.
                 for x in range(1, len(self.expansion_path)):
-                    self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1      
+                    self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1
         elif (col_term_node == "springgreen" or col_term_node == "green"):
             if ("nwdx" in self.get_shot_of_node(self.active_simu_node)):
                 # We update n_wins. Bot shot was a error.
@@ -1038,8 +1051,12 @@ class MCTS_Random_Agent:
             sp = self.mcts_tree.nodes[self.expansion_path[x-1]]['n_visits']
             
             self.mcts_tree.nodes[self.expansion_path[x]][
-                'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)   
-        
+                'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)
+            
+            self.mcts_tree.nodes[self.expansion_path[x]][
+                'point_win_rate'] = wi/si
+            
+        self.set_active_simu_node(self.expansion_path[-1])
         #print("Node from where we need to choose: " + str(self.expansion_path[-2]))
         #print("Get the Node with the highest UCT Value from ")
 
@@ -2314,16 +2331,17 @@ class MCTS_Random_Agent:
         return colours_of_neighbor_nodes
 
     def add_node_to_mcts_tree(self, index, colour, node_type, shot_string,
-                              depth, n_visits, n_wins, uct_value):
+                              depth, n_visits, n_wins, uct_value, point_win_rate):
         '''A new node is added to the mcts tree.'''
         self.mcts_tree.add_node(node_for_adding=index,
-                           colour=colour,
-                           type=node_type,
-                           shot=shot_string,
-                           depth=depth,
-                           n_visits=n_visits,
-                           n_wins=n_wins,
-                           uct_value=uct_value)
+                                colour=colour,
+                                type=node_type,
+                                shot=shot_string,
+                                depth=depth,
+                                n_visits=n_visits,
+                                n_wins=n_wins,
+                                uct_value=uct_value,
+                                point_win_rate=point_win_rate)
         
     def add_edge_to_mcts_tree(self, node_A, node_B, n_visits, uct_value,
                               win_count, direction):

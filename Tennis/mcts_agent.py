@@ -303,7 +303,6 @@ class MCTS_Agent:
                     # + str(green_neighbors[i]))
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
-
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                         green_neighbors[i]))
 
@@ -332,8 +331,6 @@ class MCTS_Agent:
                         self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                             highest_uct_neighbor))
                         
-                        #print("New MCTS Active node hast UCT = " + str(
-                        #    current_tree.get_uct_value(highest_uct_neighbor)))
                     else:
                         self.set_leaf_node(self.get_active_mcts_node())
                         #print(" 1.4 Leaf Node was set at i = " + str(i) 
@@ -358,7 +355,6 @@ class MCTS_Agent:
                     # + str(green_neighbors[i]))
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
-
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                         green_neighbors[i]))
 

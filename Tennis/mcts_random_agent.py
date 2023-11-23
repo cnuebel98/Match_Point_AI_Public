@@ -10,8 +10,8 @@ import numpy as np
 import constants as const
 import average_stat_bot
 
-class MCTS_Agent:
-    '''In this class, the MCTS Algorithm with UCT Selection policy 
+class MCTS_Random_Agent:
+    '''In this class, the MCTS Algorithm with random selection policy 
     is used to find the next shot in a ralley'''
 
     def __init__(self, name="", turn=False):
@@ -69,13 +69,10 @@ class MCTS_Agent:
         #print("------------------------------------------------")
         #print("5. Making Choice and adding MCTS Shot to ralley.")
         # Decission Node is root node, where we need to make the choice
-        # It is set when the root node is found
-        #print("Decision Node: " + str(self.decision_node))
-        #print("Neighbors of decision Node: " 
-        # + str(self.get_neighbors(self.decision_node)))
+        # It is set when the root node is found        
+
         indices_of_neighbors = self.get_neighbors(self.decision_node)
-        #print("UCTS of neighbors: " 
-        # + str(self.get_ucts_of_neighbor_nodes(indices_of_neighbors)))
+        
         ucts_of_neighbors = self.get_ucts_of_neighbor_nodes(
             indices_of_neighbors)
         
@@ -303,26 +300,16 @@ class MCTS_Agent:
                     #print("We do the UCT process with the blue children")
                     if (dir_1_found and dir_2_found and dir_3_found
                         or dir_4_found and dir_5_found and dir_6_found):
-                        
-                        #uct_values = current_tree.get_uct_values(blue_neighbors)
-                        #print("UCT Values of blue neighbors: " 
-                        # + str(uct_values))
-
-                        # Here the Blue neighbor with the highest UCT Value is 
+                       
+                        # Here the a random Blue neighbor is 
                         # found and set to active
-                        highest_uct_neighbor = 0
-                        for x in range(0, len(blue_neighbors)):
-                            if highest_uct_neighbor == 0:
-                                highest_uct_neighbor = blue_neighbors[x]
-                            elif (current_tree.get_uct_value(
-                                highest_uct_neighbor) <= 
-                                current_tree.get_uct_value(blue_neighbors[x])):
-                                highest_uct_neighbor = blue_neighbors[x]
-                        self.set_active_mcts_node(highest_uct_neighbor)
-                        self.add_node_to_expansion_path(highest_uct_neighbor)
+                        pos = random.randint(0, len(blue_neighbors)-1)
+                        rondom_node = blue_neighbors[pos]
 
+                        self.set_active_mcts_node(rondom_node)
+                        self.add_node_to_expansion_path(rondom_node)
                         self.add_shot_to_mcts_ralley(self.get_shot_of_node(
-                            highest_uct_neighbor))
+                            rondom_node))
                         
                         #print("New MCTS Active node hast UCT = " + str(
                         #    current_tree.get_uct_value(highest_uct_neighbor)))
@@ -346,11 +333,9 @@ class MCTS_Agent:
                     # When this is the case, we go to one of the second 
                     # serves at random
                     i = random.randint(0, len(green_neighbors)-1)
-                    #print("The picked second serve is: " 
-                    # + str(green_neighbors[i]))
+
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
-
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                         green_neighbors[i]))
 
@@ -360,24 +345,16 @@ class MCTS_Agent:
                 elif (dir_1_found and dir_2_found and dir_3_found
                     or dir_4_found and dir_5_found and dir_6_found):
                     
-                    uct_values = current_tree.get_uct_values(blue_neighbors)
-                    #print("UCT Values of blue neighbors: " 
-                    # + str(uct_values))
-
                     # Here the Blue neighbor with the highest UCT Value
                     # is found and set to active
-                    highest_uct_neighbor = 0
-                    for x in range(0, len(blue_neighbors)):
-                        if highest_uct_neighbor == 0:
-                            highest_uct_neighbor = blue_neighbors[x]
-                        elif (current_tree.get_uct_value(highest_uct_neighbor)
-                            <= current_tree.get_uct_value(blue_neighbors[x])):
-                            highest_uct_neighbor = blue_neighbors[x]
-                    self.set_active_mcts_node(highest_uct_neighbor)
-                    self.add_node_to_expansion_path(highest_uct_neighbor)
 
+                    pos = random.randint(0, len(blue_neighbors)-1)
+                    rondom_node = blue_neighbors[pos]
+
+                    self.set_active_mcts_node(rondom_node)
+                    self.add_node_to_expansion_path(rondom_node)
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(
-                        highest_uct_neighbor))
+                        rondom_node))
 
                 else:
                     self.leaf_node = self.get_active_mcts_node()    
@@ -404,22 +381,15 @@ class MCTS_Agent:
                   and dir_4_found and dir_5_found and dir_6_found):
                 # This is the scenario where a first serve fault node is 
                 # active which has all three directions of the second 
-                # serve in the children nodes. So we find the highest 
-                # UCT neighbor and set it to active
+                # serve in the children nodes. Here we find a random 
+                # neighbor and set it to active
+                pos = random.randint(0, len(blue_neighbors)-1)
+                rondom_node = blue_neighbors[pos]
 
-                highest_uct_neighbor = 0
-                for x in range(0, len(blue_neighbors)):
-                    if highest_uct_neighbor == 0:
-                        highest_uct_neighbor = blue_neighbors[x]
-                    elif (current_tree.get_uct_value(highest_uct_neighbor)
-                        <= current_tree.get_uct_value(blue_neighbors[x])):
-                        highest_uct_neighbor = blue_neighbors[x]
-                
-                self.set_active_mcts_node(highest_uct_neighbor)
-                self.add_node_to_expansion_path(highest_uct_neighbor)
-
+                self.set_active_mcts_node(rondom_node)
+                self.add_node_to_expansion_path(rondom_node)
                 self.add_shot_to_mcts_ralley(self.get_shot_of_node(
-                    highest_uct_neighbor))
+                    rondom_node))
                 
             else:
                 self.set_leaf_node(self.get_active_mcts_node())
@@ -441,8 +411,6 @@ class MCTS_Agent:
         #print("Expansion_path before clearing it: " 
         # + str(self.expansion_path))
         self.clear_expansion_path()
-
-        #self.show_mcts_tree()
     
     def expansion_phase(self, current_ralley, score, current_tree):
         # We take the leave node and check the direction, which is

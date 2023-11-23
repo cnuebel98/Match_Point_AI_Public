@@ -61,6 +61,8 @@ def set_bottom_player(selected:tuple, value: any):
         const.MenuVariables.bottom_bot = 4
     elif value == 5:
         const.MenuVariables.bottom_bot = 5
+    elif value == 6:
+        const.MenuVariables.bottom_bot = 6
 
 def set_simu_game_no(value: any):
     x = int(value)
@@ -129,7 +131,8 @@ menu.add.selector('Top Player: ',
                   onchange=set_top_player)
 menu.add.selector('Bottom Player: ', 
                   [('Random', 1), ('Djokovic', 2), ('SimpleDjoko', 3),
-                   ('MCTS Agent', 4), ('AveragePlayer', 5)], 
+                   ('MCTS UCT Agent', 4), ('Average Player', 5), 
+                   ('MCTS Random Agent', 6)],
                   default=0, 
                   onchange=set_bottom_player)
 menu.add.selector('Animation time: ', 

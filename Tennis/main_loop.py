@@ -16,6 +16,7 @@ import networkx as nx
 import mcts_agent
 import average_stat_bot
 import mcts_random_agent
+import mcts_greedy_agent
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -686,6 +687,8 @@ def main_loop():
         bottom_bot = average_stat_bot.Average_Stat_Bot("Average_Bot")
     elif const.MenuVariables.bottom_bot == 6:
         bottom_bot = mcts_random_agent.MCTS_Random_Agent("MCTS_Random_Agent")
+    elif const.MenuVariables.bottom_bot == 7:
+        bottom_bot = mcts_greedy_agent.MCTS_Greedy_Agent("MCTS_Greedy_Agent")
     else: bottom_bot = bot.Bot("Random")
 
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, 

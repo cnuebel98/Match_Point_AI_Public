@@ -314,6 +314,10 @@ class Ralley_Tree:
             wins = self.tree.nodes[self.visited_nodes[x]]['n_wins']
             self.tree.nodes[self.visited_nodes[x]][
                 'point_win_rate'] = wins/visits
+    
+    def get_point_win_rate_of_node(self, node):
+        '''Returns the point win rate of a given Node.'''
+        return self.tree.nodes[node]['point_win_rate']
 
     def get_depth(self, node):
         '''Returns the Depth of a given Node'''

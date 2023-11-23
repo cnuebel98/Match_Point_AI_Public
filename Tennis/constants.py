@@ -84,6 +84,7 @@ class MenuVariables:
     logging = False
     show_tree = 'off'
     simu_ralleys = 10
+    decision_strat = 'greedy'
 
 class Changing:
     ralley_terminated = False

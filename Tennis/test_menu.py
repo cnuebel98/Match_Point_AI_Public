@@ -63,6 +63,8 @@ def set_bottom_player(selected:tuple, value: any):
         const.MenuVariables.bottom_bot = 5
     elif value == 6:
         const.MenuVariables.bottom_bot = 6
+    elif value == 7:
+        const.MenuVariables.bottom_bot = 7
 
 def set_simu_game_no(value: any):
     x = int(value)
@@ -107,6 +109,12 @@ def set_simu_ralley_no(value: any):
     x = int(value)
     const.MenuVariables.simu_ralleys = x
 
+def set_decision_strat(selected: tuple, value: any):
+    if value == 1:
+        const.MenuVariables.decision_strat = 'greedy'
+    elif value == 2:
+        const.MenuVariables.decision_strat = 'uct'
+
 # Menu options are being added
 menu.add.selector('Mode: ', 
                   [('Simulation', 1), ('Manual', 2)], 
@@ -132,9 +140,13 @@ menu.add.selector('Top Player: ',
 menu.add.selector('Bottom Player: ', 
                   [('Random', 1), ('Djokovic', 2), ('SimpleDjoko', 3),
                    ('MCTS UCT Agent', 4), ('Average Player', 5), 
-                   ('MCTS Random Agent', 6)],
+                   ('MCTS Random Agent', 6), ('MCTS Greedy Agent', 7)],
                   default=0, 
                   onchange=set_bottom_player)
+menu.add.selector('Decision Strat: ', 
+                  [('Greedy', 1), ('UCT', 2)], 
+                  default=0,
+                  onchange=set_decision_strat)
 menu.add.selector('Animation time: ', 
                   [('Fast', 1), ('Medium', 2), ('Slow', 3)], 
                   default=0, 

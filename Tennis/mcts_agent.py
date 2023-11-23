@@ -73,9 +73,6 @@ class MCTS_Agent:
         #print("5. Making Choice and adding MCTS Shot to ralley.")
         # Decission Node is root node, where we need to make the choice
         # It is set when the root node is found
-        #print("Decision Node: " + str(self.decision_node))
-        #print("Neighbors of decision Node: " 
-        # + str(self.get_neighbors(self.decision_node)))
 
         indices_of_neighbors = self.get_neighbors(self.decision_node)
         
@@ -84,16 +81,14 @@ class MCTS_Agent:
         p_win_rate_of_neighbors = self.get_point_win_rate_of_node_list(
             indices_of_neighbors)
 
-        #print("UCTS of neighbor Nodes: " + str(ucts_of_neighbors))
-        #print("Shots of neighbor Nodes: " + str(self.get_shots_of_neighbor_nodes(indices_of_neighbors)))
-        #print("Point win rate neighbor Nodes: " + str(self.get_point_win_rate_of_node_list(indices_of_neighbors)))
         highest_uct = 0
         highest_point_win_rate = 0
         pos = 0
         
-        # Here we set the position to the Node with the highest UCT Value
+        # Here we find the best child of decision node based on the 
+        # decision strategy
         if (self.decision_strategy == 'uct'):
-            print("UCT Decision")
+            #print("UCT Decision")
             for x in range(0, len(ucts_of_neighbors)):
                 if highest_uct == 0:
                     pos = x
@@ -102,7 +97,7 @@ class MCTS_Agent:
                     pos = x
                     highest_uct = ucts_of_neighbors[x]
         elif (self.decision_strategy == 'greedy'):
-            print("Greedy Decision")
+            #print("Greedy Decision")
             for x in range(0, len(p_win_rate_of_neighbors)):
                 if highest_point_win_rate == 0:
                     pos = x
@@ -132,7 +127,6 @@ class MCTS_Agent:
             new_shot = self.add_probs_to_shot(dir, score, current_tree, 
                                               expansion=False)
         
-
         if (current_ralley.get_len_ralley() == 0 and new_shot == "6nwdx"):
             print("Current_Ralley: " + str(current_ralley.get_ralley()))
             print("Adding Shot: " + str(new_shot))
@@ -194,8 +188,6 @@ class MCTS_Agent:
                 
                 #self.expansion_path.append(index)
                 self.add_node_to_expansion_path(index)
-                
-                #self.add_shot_to_mcts_ralley(self.get_shot_of_node(index))
 
                 neighbors = current_tree.get_neighbors(index)
 
@@ -321,14 +313,9 @@ class MCTS_Agent:
                     # If all three directions are found, then we go the
                     # child with the highest UCT Value and go again from
                     # there
-                    #print("We do the UCT process with the blue children")
                     if (dir_1_found and dir_2_found and dir_3_found
                         or dir_4_found and dir_5_found and dir_6_found):
                         
-                        #uct_values = current_tree.get_uct_values(blue_neighbors)
-                        #print("UCT Values of blue neighbors: " 
-                        # + str(uct_values))
-
                         # Here the Blue neighbor with the highest UCT Value is 
                         # found and set to active
                         highest_uct_neighbor = 0
@@ -339,9 +326,9 @@ class MCTS_Agent:
                                 highest_uct_neighbor) <= 
                                 current_tree.get_uct_value(blue_neighbors[x])):
                                 highest_uct_neighbor = blue_neighbors[x]
+
                         self.set_active_mcts_node(highest_uct_neighbor)
                         self.add_node_to_expansion_path(highest_uct_neighbor)
-
                         self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                             highest_uct_neighbor))
                         
@@ -380,10 +367,6 @@ class MCTS_Agent:
                 # there
                 elif (dir_1_found and dir_2_found and dir_3_found
                     or dir_4_found and dir_5_found and dir_6_found):
-                    
-                    uct_values = current_tree.get_uct_values(blue_neighbors)
-                    #print("UCT Values of blue neighbors: " 
-                    # + str(uct_values))
 
                     # Here the Blue neighbor with the highest UCT Value
                     # is found and set to active
@@ -394,9 +377,9 @@ class MCTS_Agent:
                         elif (current_tree.get_uct_value(highest_uct_neighbor)
                             <= current_tree.get_uct_value(blue_neighbors[x])):
                             highest_uct_neighbor = blue_neighbors[x]
+
                     self.set_active_mcts_node(highest_uct_neighbor)
                     self.add_node_to_expansion_path(highest_uct_neighbor)
-
                     self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                         highest_uct_neighbor))
 
@@ -438,7 +421,6 @@ class MCTS_Agent:
                 
                 self.set_active_mcts_node(highest_uct_neighbor)
                 self.add_node_to_expansion_path(highest_uct_neighbor)
-
                 self.add_shot_to_mcts_ralley(self.get_shot_of_node(
                     highest_uct_neighbor))
                 
@@ -1060,17 +1042,6 @@ class MCTS_Agent:
         # We need to update the visit counts of all nodes in the 
         # expansion path, regardless of who won the point
 
-        #print("Expansion Path: " + str(self.expansion_path))
-        #print("Exapnsion Shot: " + str(self.get_shot_of_node(self.expansion_path[-1])))
-        #print("Self.active_simu_Node: " + str(self.active_simu_node))
-        #print("Color of that node: " + str(self.mcts_tree.nodes[self.get_active_simu_node()]['colour']))
-        
-        #print("Simu_ralley: " + str(self.simulation_ralley.get_ralley()))
-        #print("Color of term Node from Simu Ralley: " + str(self.mcts_tree.nodes[self.mcts_node_index]['colour']))
-        #print("Shot of term Node of Simu Ralely: " + str(self.simulation_ralley.get_last_shot()))
-        #print("Expansion Node of that Simu Ralley: " + str(self.get_shot_of_node(self.get_active_simu_node())))
-
-        #col_term_node = self.mcts_tree.nodes[self.active_simu_node]['colour']
         col_term_node = self.mcts_tree.nodes[self.mcts_node_index]['colour']
 
         if (col_term_node == "lightskyblue" or col_term_node == "yellow" 
@@ -1121,11 +1092,7 @@ class MCTS_Agent:
             
             self.mcts_tree.nodes[self.expansion_path[x]][
                 'uct_value'] = (wi/si) + c*math.sqrt((np.log(sp))/si)
-            
-            
-            #print("wi/si" + str(wi) + " / " + str(si))
 
-        #self.set_active_simu_node(self.expansion_path[-1])
         #print("Node from where we need to choose: " + str(self.expansion_path[-2]))
         #print("Get the Node with the highest UCT Value from ")
 
@@ -1145,7 +1112,6 @@ class MCTS_Agent:
             neighbor_ucts.append(neighbor_uct)
         return neighbor_ucts
     
-
     def get_point_win_rate_of_node_list(self, node_list):
         '''Return a list of point_win_rate values of a given 
         List of nodes'''

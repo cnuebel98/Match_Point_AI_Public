@@ -89,6 +89,7 @@ class MenuVariables:
 class Changing:
     ralley_terminated = False
     ralley = []
+    simu_matches_played = 0
 
 class Config:
     c_value = math.sqrt(2)

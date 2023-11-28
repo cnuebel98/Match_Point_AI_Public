@@ -2922,7 +2922,7 @@ class Simple_Stat_Bot_Djokovic:
         else: return shot
         shot = ""
         
-        print("Ralley_after_SimpleDjokoStatBotShot: " + str(current_ralley.get_ralley()))
+        #print("Ralley_after_SimpleDjokoStatBotShot: " + str(current_ralley.get_ralley()))
         #print("----------------------------")
         
     def set_turn(self, bool_var):

@@ -653,7 +653,7 @@ def main_loop():
     
     # The options are displayed to see what kind of game was started
     print("Simulation: " + str(const.MenuVariables.simulation))
-    print("No of Games: " + str(const.MenuVariables.simu_matches))
+    print("No of Matches: " + str(const.MenuVariables.simu_matches))
     print("Top Bot: " + str(const.MenuVariables.top_bot))
     print("Bottom Bot: " + str(const.MenuVariables.bottom_bot))
     print("Animation time: " + str(const.MenuVariables.animation_time))
@@ -765,7 +765,7 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
-                    print("Adding Bot shot!")
+                    #print("Adding Bot shot!")
                     top_bot.add_shot(new_ralley, new_score, new_tree)
 
                     tree_update(new_ralley, new_tree, "green")

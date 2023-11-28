@@ -30,6 +30,9 @@ class Scoring:
         self.games_B = 0
         self.sets_A = 0
         self.sets_B = 0
+
+        self.a_wins = 0
+        self.b_wins = 0
     
     def get_score(self):
         # Score is returned in a string, depending on how far we are in 
@@ -273,19 +276,23 @@ class Scoring:
         if const.MenuVariables.sets_to_play == 3:
             if self.sets_A == 2:
                 print("Player A / Bottom Bot wins!")
+                self.a_wins += 1
                 self.matches_played += 1
                 self.reset_score()
             elif self.sets_B == 2:
                 print("Player B / Top Bot wins!")
+                self.b_wins += 1
                 self.matches_played += 1
                 self.reset_score()
         elif const.MenuVariables.sets_to_play == 5:
             if self.sets_A == 3:
                 print("Player A / Bottom Bot wins!")
+                self.a_wins += 1
                 self.matches_played += 1
                 self.reset_score()
             elif self.sets_B == 3:
                 print("Player B / Top Bot wins!")
+                self.b_wins += 1
                 self.matches_played += 1
                 self.reset_score()
 
@@ -307,8 +314,11 @@ class Scoring:
         return self.point_count_per_game
     
     def reset_score(self):
+        print("---------------------------------------------")
         print("Match: " + str(self.matches_played) + " / " + str(const.MenuVariables.simu_matches) + " is over.")
         print("Score: " + str(self.set_scores))
+        print("A(Bottom Bot)-wins: " + str(self.a_wins))
+        print("B(Top Bot)-wins: " + str(self.b_wins))
         self.score = ""
         self.sets_count = 0
         self.set_scores.clear()

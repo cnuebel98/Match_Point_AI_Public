@@ -133,7 +133,7 @@ class MCTS_Agent:
             print("Error: New Shot in MCTS Agent add_probs_to_shot function was done wrong!")
 
         current_ralley.add_shot_to_ralley(new_shot)
-        print("Ralley_after_MCTS_shot: " + str(current_ralley.get_ralley()))
+        #print("Ralley_after_MCTS_shot: " + str(current_ralley.get_ralley()))
         #print("_______________________________________________________")
         #print("-------------End of one MCTS iteration-----------------")
         #print("_______________________________________________________")

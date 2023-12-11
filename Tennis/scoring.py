@@ -1,4 +1,5 @@
 import constants as const
+from datetime import datetime
 
 class Scoring:
     '''In this class the whole scoring process for points, games and 
@@ -315,6 +316,9 @@ class Scoring:
     
     def reset_score(self):
         print("---------------------------------------------")
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Current Time =", current_time)
         print("Match: " + str(self.matches_played) + " / " + str(const.MenuVariables.simu_matches) + " is over.")
         print("Score: " + str(self.set_scores))
         print("A(Bottom Bot)-wins: " + str(self.a_wins))

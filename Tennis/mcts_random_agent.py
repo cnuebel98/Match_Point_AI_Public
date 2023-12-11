@@ -133,7 +133,7 @@ class MCTS_Random_Agent:
             print("Error: New Shot in MCTS Agent add_probs_to_shot function was done wrong!")
 
         current_ralley.add_shot_to_ralley(new_shot)
-        print("Ralley_after_MCTS_shot: " + str(current_ralley.get_ralley()))
+        #print("Ralley_after_MCTS_shot: " + str(current_ralley.get_ralley()))
         #print("_______________________________________________________")
         #print("-------------End of one MCTS iteration-----------------")
         #print("_______________________________________________________")
@@ -701,10 +701,11 @@ class MCTS_Random_Agent:
                 # in the while loop we always have an active simu node
                 # from that simunode we get the shots and colors of the
                 # neighbor nodes and safe them here
-                shot_dict = self.get_shot_dict_of_neighbors(
-                    self.get_active_simu_node())
-                colour_dict = self.get_colour_dict_of_neighbors(
-                    self.get_active_simu_node())
+                
+                #shot_dict = self.get_shot_dict_of_neighbors(
+                #    self.get_active_simu_node())
+                #colour_dict = self.get_colour_dict_of_neighbors(
+                #    self.get_active_simu_node())
 
                 # In the beginning we assume that the next node will not
                 # be in mcts tree yet
@@ -736,10 +737,16 @@ class MCTS_Random_Agent:
                     # bot_shot
 
                     #print(" ----->>> Bot_shot: " + str(bot_shot))
-                    neighbor_lst = self.get_shot_list_of_simu_neighbors(
+                    neighbor_lst = self.get_shot_list_of_simu_neighbors_new(
                         self.get_active_simu_node())
                     
                     if bot_shot in neighbor_lst:
+
+                        shot_dict = self.get_shot_dict_of_neighbors_new(
+                            self.get_active_simu_node())
+                        colour_dict = self.get_colour_dict_of_neighbors_new(
+                            self.get_active_simu_node())
+                        
                         index_lst = []
                         for x in neighbor_lst:
                             if (x == bot_shot):
@@ -867,10 +874,16 @@ class MCTS_Random_Agent:
 
                     #print(" 3.3 2nd serve shot enconding for simu phase is: " + str(sec_serve_sim))
                     
-                    neighbor_lst = self.get_shot_list_of_simu_neighbors(
+                    neighbor_lst = self.get_shot_list_of_simu_neighbors_new(
                         self.get_active_simu_node())
                     
                     if sec_serve_sim in neighbor_lst:
+
+                        shot_dict = self.get_shot_dict_of_neighbors_new(
+                            self.get_active_simu_node())
+                        colour_dict = self.get_colour_dict_of_neighbors_new(
+                            self.get_active_simu_node())
+
                         index_lst = []
                         for x in neighbor_lst:
                             if (x == sec_serve_sim):
@@ -936,9 +949,15 @@ class MCTS_Random_Agent:
                     #print("children_shot_list: " + str(self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())))
                     #print("simu shot MCTS Shot: " + str(altered_simu_shot))
 
-                    neighbor_lst = self.get_shot_list_of_simu_neighbors(self.get_active_simu_node())
+                    neighbor_lst = self.get_shot_list_of_simu_neighbors_new(self.get_active_simu_node())
 
                     if altered_simu_shot in neighbor_lst:
+
+                        shot_dict = self.get_shot_dict_of_neighbors_new(
+                            self.get_active_simu_node())
+                        colour_dict = self.get_colour_dict_of_neighbors_new(
+                            self.get_active_simu_node())
+
                         index_lst = []
                         for x in neighbor_lst:
                             if (x == altered_simu_shot):
@@ -2315,6 +2334,20 @@ class MCTS_Random_Agent:
             shots_of_neighbor_nodes.append(shots_of_all_nodes[n])
 
         return shots_of_neighbor_nodes
+    
+    def get_shot_list_of_simu_neighbors_new(self, node):
+        '''This function returns a list of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = []
+        neighbor_nodes = list(self.mcts_tree.neighbors(node))
+        
+        #shots_of_all_nodes = nx.get_node_attributes(self.mcts_tree, 'shot')
+        
+        for n in range(0, len(neighbor_nodes)):
+            neighbor_shot = self.mcts_tree.nodes[neighbor_nodes[n]]['shot']
+            shots_of_neighbor_nodes.append(neighbor_shot)
+
+        return shots_of_neighbor_nodes
 
     def get_shots_of_neighbors(self, node_list):
         '''Return a list of shots of a given List of nodes'''
@@ -2335,6 +2368,19 @@ class MCTS_Random_Agent:
             shots_of_neighbor_nodes[n] = shots_of_all_nodes[n]
 
         return shots_of_neighbor_nodes
+
+    def get_shot_dict_of_neighbors_new(self, node):
+        '''This function returns a dict of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.mcts_tree.neighbors(node))
+        #shots_of_all_nodes = nx.get_node_attributes(self.mcts_tree, 'shot')
+        #print("Neighbor Node list: " + str(neighbor_nodes))
+        for n in range(0, len(neighbor_nodes)):
+            neighbor_shot = self.mcts_tree.nodes[neighbor_nodes[n]]['shot']
+            shots_of_neighbor_nodes[neighbor_nodes[n]] = neighbor_shot
+
+        return shots_of_neighbor_nodes
     
     def get_colour_dict_of_neighbors(self, node):
         '''This function returns a dict of the colours of the neighbor
@@ -2345,6 +2391,18 @@ class MCTS_Random_Agent:
         
         for i in neighbor_nodes:
             colours_of_neighbor_nodes[i] = colour_of_all_nodes[i]
+
+        return colours_of_neighbor_nodes
+    
+    def get_colour_dict_of_neighbors_new(self, node):
+        '''This function returns a dict of the colours of the neighbor
+        nodes of a given node'''
+        colours_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.mcts_tree.neighbors(node))
+        
+        for i in range(0, len(neighbor_nodes)):
+            neighbor_color = self.mcts_tree.nodes[neighbor_nodes[i]]['colour']
+            colours_of_neighbor_nodes[neighbor_nodes[i]] = neighbor_color
 
         return colours_of_neighbor_nodes
 

@@ -1321,7 +1321,11 @@ class Average_Stat_Bot:
 
         if simulation_phase == False:
             current_ralley.add_shot_to_ralley(shot)
-        else: return shot
+        else: 
+            if shot == None:
+                print("Error, Bot shot didnt get a value!")
+                shot = "28"
+            return shot
         shot = ""
         
         #print("Ralley_after_Average_Stat_Bot: " + str(current_ralley.get_ralley()))

@@ -17,6 +17,7 @@ import mcts_agent
 import average_stat_bot
 import mcts_random_agent
 import mcts_greedy_agent
+import test_menu
 
 WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
@@ -524,9 +525,9 @@ def tree_update(new_ralley, new_tree, colour):
     otherwise its added as a directional graph to the tree'''
     
     # The dictionaries are mapping the shot/colour -> index of the node
-    shot_dict = new_tree.get_shot_dict_of_neighbors(
+    shot_dict = new_tree.get_shot_dict_of_neighbors_new(
         new_tree.get_active_node())
-    colour_dict = new_tree.get_colour_dict_of_neighbors(
+    colour_dict = new_tree.get_colour_dict_of_neighbors_new(
         new_tree.get_active_node())
     #print(shot_dict)
     #print(colour_dict)
@@ -805,6 +806,10 @@ def main_loop():
                 
         
         if const.MenuVariables.simulation == True:
+
+            if new_score.matches_played == const.MenuVariables.simu_matches:
+                run = False
+
             while new_score.matches_played < const.MenuVariables.simu_matches:
                 
                 if (new_score.get_serving_player() == 1 
@@ -868,7 +873,8 @@ def main_loop():
                      [next_button, score_text_field])
             #print("Saving Data from Simulation to csv file...")
             new_log.export_to_csv()
-
+            
+    test_menu.pygame_menu.events.EXIT
     pygame.QUIT
 
 if __name__ == "__main__":

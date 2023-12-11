@@ -128,6 +128,30 @@ class Ralley_Tree:
             shots_of_neighbor_nodes[n] = shots_of_all_nodes[n]
 
         return shots_of_neighbor_nodes
+    
+    def get_shot_dict_of_neighbors_new(self, node):
+        '''This function returns a dict of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.tree.neighbors(node))
+        
+        for n in range(0, len(neighbor_nodes)):
+            neighbor_shot = self.tree.nodes[neighbor_nodes[n]]['shot']
+            shots_of_neighbor_nodes[neighbor_nodes[n]] = neighbor_shot
+
+        return shots_of_neighbor_nodes
+    
+    def get_colour_dict_of_neighbors_new(self, node):
+        '''This function returns a dict of the colours of the neighbor
+        nodes of a given node'''
+        colours_of_neighbor_nodes = {}
+        neighbor_nodes = list(self.tree.neighbors(node))
+        
+        for i in range(0, len(neighbor_nodes)):
+            neighbor_color = self.tree.nodes[neighbor_nodes[i]]['colour']
+            colours_of_neighbor_nodes[neighbor_nodes[i]] = neighbor_color
+
+        return colours_of_neighbor_nodes
 
     def get_colour_of_node(self, node):
         '''Returns the color of a given Node.'''

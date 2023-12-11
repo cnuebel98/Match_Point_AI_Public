@@ -2913,13 +2913,18 @@ class Simple_Stat_Bot_Djokovic:
                             shot = "m" + shot
 
             else: 
-                shot = "123"
+                shot = "18"
                 print("Error: Szenario not covered.")
                 print("Error occured with ralley: " + str(current_ralley.get_ralley()))
 
         if simulation_phase == False:
             current_ralley.add_shot_to_ralley(shot)
-        else: return shot
+        else: 
+            if shot == None:
+                print("Error, Bot shot didnt get a value!")
+                shot = "28"
+            
+            return shot
         shot = ""
         
         #print("Ralley_after_SimpleDjokoStatBotShot: " + str(current_ralley.get_ralley()))

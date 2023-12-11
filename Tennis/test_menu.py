@@ -121,7 +121,7 @@ menu.add.selector('Mode: ',
                   default=0, 
                   onchange=simulation_bool)
 menu.add.range_slider('Number of Matches: ', 
-                      default=1, range_values=[1,100], 
+                      default=1, range_values=[1,500], 
                       increment=int(1), 
                       range_text_value_enabled = False, 
                       slider_text_value_enabled=True, 

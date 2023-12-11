@@ -75,8 +75,8 @@ class MenuVariables:
     game is started'''
     sets_to_play = 3
     animation = True
-    top_bot = 1
-    bottom_bot = 1
+    top_bot = 4
+    bottom_bot = 6
     animation_time = 0.00
     simu_matches = 1
     simulation = True

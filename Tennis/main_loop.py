@@ -149,8 +149,9 @@ def draw(win, players, ball, buttons):
         player.draw(win)
 
     for button in buttons:
-        button.draw(win, const.Colours.WHITE)
-
+        #button.draw(win, const.Colours.WHITE)
+        ...
+        
     ball.draw(win, const.Colours.YELLOW)
 
     pygame.display.update()
@@ -397,10 +398,10 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION,
         y_diff = y_pos - ball.get_Y()
         x = ball.get_X()
         y = ball.get_Y()
-        for i in range(0, 11, 1):
+        for i in range(0, 1, 1):
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
             ball.draw(win, const.Colours.YELLOW)
-            pygame.display.update()
+            #pygame.display.update()
             time.sleep(const.MenuVariables.animation_time)
     else:
         # Here the ball jumps instantly to the new positions
@@ -708,8 +709,12 @@ def main_loop():
     match_count_for_tree = 0
 
     while run:
-        draw(WIN, [bottom_player, top_player], 
-             new_ball, [next_button, score_text_field])
+        draw(WIN, 
+             [bottom_player, top_player], 
+             new_ball 
+             , [next_button, score_text_field]
+             )
+        
         clock.tick(FPS)
         keys = pygame.key.get_pressed()
         mouse_pos = pygame.mouse.get_pos()

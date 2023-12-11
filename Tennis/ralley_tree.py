@@ -85,7 +85,7 @@ class Ralley_Tree:
         neighbor_list = self.tree.neighbors(n)
         return list(neighbor_list)
     
-    def get_shot_list_of_neighbors(self, node):
+    def get_shot_list_of_neighbors_old(self, node):
         '''This function returns a list of shots of the neighbor nodes
         of a given node'''
         shots_of_neighbor_nodes = []
@@ -97,6 +97,18 @@ class Ralley_Tree:
 
         return shots_of_neighbor_nodes
     
+    def get_shot_list_of_neighbors(self, node):
+        '''This function returns a list of shots of the neighbor nodes
+        of a given node'''
+        shots_of_neighbor_nodes = []
+        neighbor_nodes = list(self.tree.neighbors(node))
+        
+        for n in range(0, len(neighbor_nodes)):
+            shot_of_neighbor = self.tree.nodes[neighbor_nodes[n]]['shot']
+            shots_of_neighbor_nodes.append(shot_of_neighbor)
+
+        return shots_of_neighbor_nodes
+    
     def get_shots_of_neighbors(self, node_list):
         '''Return a list of shots of a given List of nodes'''
         neighbor_shots = []
@@ -105,7 +117,7 @@ class Ralley_Tree:
             neighbor_shots.append(neighbor_shot)
         return neighbor_shots
     
-    def get_colour_list_of_neighbors(self, node):
+    def get_colour_list_of_neighbors_old(self, node):
         '''This function returns a list of shots of the neighbor nodes
         of a given node'''
         colours_of_neighbor_nodes = []
@@ -114,6 +126,18 @@ class Ralley_Tree:
         
         for n in neighbor_nodes:
             colours_of_neighbor_nodes.append(colours_of_all_nodes[n])
+
+        return colours_of_neighbor_nodes
+
+    def get_colour_list_of_neighbors(self, node):
+        '''This function returns a list of shots of the neighbor nodes
+        of a given node'''
+        colours_of_neighbor_nodes = []
+        neighbor_nodes = list(self.tree.neighbors(node))
+        
+        for n in range(0, len(neighbor_nodes)):
+            color_of_neighbor = self.tree.nodes[neighbor_nodes[n]]['colour']
+            colours_of_neighbor_nodes.append(color_of_neighbor)
 
         return colours_of_neighbor_nodes
 

@@ -23,7 +23,7 @@ class Simple_Stat_Bot_Djokovic:
 
     def add_shot(self, current_ralley, score, current_tree, simulation_phase=False):
         '''Adds the most likely shot based on djokovic data'''
-
+        shot = "18"
         # Serve from deuce side
         if (ralley.Ralley.get_len_ralley(current_ralley) == 0):
             # Adding a first serve from deuce side
@@ -2913,14 +2913,14 @@ class Simple_Stat_Bot_Djokovic:
                             shot = "m" + shot
 
             else: 
-                shot = "18"
+                shot = "123"
                 print("Error: Szenario not covered.")
                 print("Error occured with ralley: " + str(current_ralley.get_ralley()))
 
         if simulation_phase == False:
             current_ralley.add_shot_to_ralley(shot)
         else: 
-            if shot == None:
+            if shot == "123":
                 print("Error, Bot shot didnt get a value!")
                 shot = "28"
             

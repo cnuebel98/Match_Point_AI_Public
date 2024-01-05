@@ -9,6 +9,7 @@ import math
 import numpy as np
 import constants as const
 import average_stat_bot
+import log
 
 class MCTS_Random_Agent:
     '''In this class, the MCTS Algorithm with random selection policy 
@@ -2299,8 +2300,15 @@ class MCTS_Random_Agent:
 
     def get_shot_of_node(self, node):
         '''Returns the shot of a given Node.'''
-        shot = self.mcts_tree.nodes[node]['shot']
-        return shot
+        try:
+        # Attempt to access the attribute
+            shot = self.mcts_tree.nodes[node]['shot']
+            return shot
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            print("Error where node is not okay.")
+            shot = self.mcts_tree.nodes[1]['shot']
+            return shot
 
     def get_next_mcts_node_index(self):
         '''Adds +1 to current node index and returns the new index'''

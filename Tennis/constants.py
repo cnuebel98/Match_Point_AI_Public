@@ -92,5 +92,5 @@ class Changing:
     simu_matches_played = 0
 
 class Config:
-    c_value = math.sqrt(2)
+    c_value = (math.sqrt(2))
     n_simu_ralleys = 10

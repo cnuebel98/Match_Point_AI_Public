@@ -155,7 +155,7 @@ class Simple_Stat_Bot_Djokovic:
                         else:
                             shot = "r" + shot
 
-                    elif (i < 3219 + 5713 + 1068):
+                    elif (i < (3219 + 5713 + 1068)):
                         # Direction of the shot
                         shot = "3"
 

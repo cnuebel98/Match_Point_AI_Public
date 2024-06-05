@@ -3,7 +3,7 @@ import rally
 import ball
 import bot
 import log
-import stat_bot_djokovic
+#import stat_bot_djokovic
 import simpler_stat_bot_djoko
 import button
 import pandas as pd
@@ -665,8 +665,8 @@ def main_loop():
     # choice in the main menu
     if const.MenuVariables.top_bot == 1:
         top_bot = bot.Bot("Random")
-    elif const.MenuVariables.top_bot == 2:
-        top_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
+    #elif const.MenuVariables.top_bot == 2:
+    #    top_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
     elif const.MenuVariables.top_bot == 3:
         top_bot = (simpler_stat_bot_djoko.
                    Simple_Stat_Bot_Djokovic("Simple_Djoko"))
@@ -678,8 +678,8 @@ def main_loop():
     # choice in the main menu
     if const.MenuVariables.bottom_bot == 1:
         bottom_bot = bot.Bot("Random")
-    elif const.MenuVariables.bottom_bot == 2:
-        bottom_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
+    #elif const.MenuVariables.bottom_bot == 2:
+    #    bottom_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
     elif const.MenuVariables.bottom_bot == 3:
         bottom_bot = (simpler_stat_bot_djoko.
                       Simple_Stat_Bot_Djokovic("Simple_Djoko"))

@@ -11,7 +11,7 @@ class Stat_Bot_Djokovic:
     RETURN_SHOT_TYPES = const.ShotEncodings.RETURN_SHOT_TYPES
     RETURN_DEPTH = const.ShotEncodings.RETURN_DEPTH
     DIRECTIONS = const.ShotEncodings.DIRECTIONS
-    RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
+    RALLY_ERROR = const.ShotEncodings.RALLY_ERROR
     ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
     WINNER = const.ShotEncodings.WINNER
     EXTRA_STUFF = const.ShotEncodings.EXTRA_STUFF
@@ -22,11 +22,11 @@ class Stat_Bot_Djokovic:
         self.name = name
         self.turn = turn
 
-    def add_shot(self, current_ralley, score, current_tree):
+    def add_shot(self, current_rally, score, current_tree):
         '''Adds the most likely shot based on djokovic data'''
 
         # Serve from deuce side
-        if (ralley.Ralley.get_len_ralley(current_ralley) == 0):
+        if (rally.Rally.get_len_rally(current_rally) == 0):
             # Adding a first serve from deuce side
             # First we need to add the direction
             i = random.randint(0, 9999)
@@ -74,8 +74,8 @@ class Stat_Bot_Djokovic:
                 elif (j < (1265 + 598 + 1347 + 100 + 848)):
                     shot = shot + "*"
 
-        elif (ralley.Ralley.get_len_ralley(current_ralley) == 1
-              and current_ralley.get_last_char_of_last_shot() == ","):
+        elif (rally.Rally.get_len_rally(current_rally) == 1
+              and current_rally.get_last_char_of_last_shot() == ","):
             # Add Second Serve
             self.Serving = True
             self.Returning = False
@@ -116,14 +116,14 @@ class Stat_Bot_Djokovic:
 
         # do we return the first or the second serve (1st if statement)
         # First Serve is returned
-        elif (ralley.Ralley.get_len_ralley(current_ralley) == 1):
+        elif (rally.Rally.get_len_rally(current_rally) == 1):
             # Add return to the first Serve
             self.Serving = False
             self.Returning = True
             x = score.get_point_count_per_game()
             if (x % 2 == 0):
                 # Returning from Deuce Side of the court
-                if (current_ralley.get_last_char_of_last_shot() == "4"):
+                if (current_rally.get_last_char_of_last_shot() == "4"):
                     # First serve from deuce side was direction 4
                     i = random.randint(0, 9999)
                     if (i < 3219):
@@ -223,7 +223,7 @@ class Stat_Bot_Djokovic:
                         else:
                             shot = "r" + shot
 
-                elif (current_ralley.get_last_char_of_last_shot() == "5"):
+                elif (current_rally.get_last_char_of_last_shot() == "5"):
                     # shot = "1stS return from Deuce Side on serve 5"
 
                     i = random.randint(0, 9999)
@@ -325,7 +325,7 @@ class Stat_Bot_Djokovic:
                             shot = "r" + shot
 
 
-                elif (current_ralley.get_last_char_of_last_shot() == "6"):
+                elif (current_rally.get_last_char_of_last_shot() == "6"):
                     # shot = "1stS return from Deuce Side on serve 6"
                     i = random.randint(0, 9999)
                     if (i < 1441):
@@ -433,7 +433,7 @@ class Stat_Bot_Djokovic:
 
             elif (x % 2 == 1):
                 # Returning from Ad Side of the court
-                if (current_ralley.get_last_char_of_last_shot() == "4"):
+                if (current_rally.get_last_char_of_last_shot() == "4"):
                     #shot = "1stS return from Ad Side on serve 4"
                     i = random.randint(0, 9999)
                     if (i < 946):
@@ -542,7 +542,7 @@ class Stat_Bot_Djokovic:
                             shot = "m" + shot
 
 
-                elif (current_ralley.get_last_char_of_last_shot() == "5"):
+                elif (current_rally.get_last_char_of_last_shot() == "5"):
                     # shot = "1stS return from Ad Side on serve 5"
 
                     i = random.randint(0, 9999)
@@ -649,7 +649,7 @@ class Stat_Bot_Djokovic:
                         else:
                             shot = "m" + shot
 
-                elif (current_ralley.get_last_char_of_last_shot() == "6"):
+                elif (current_rally.get_last_char_of_last_shot() == "6"):
                     # shot = "1stS return from Ad Side on serve 6"
                     i = random.randint(0, 9999)
                     if (i < 1292):
@@ -758,9 +758,9 @@ class Stat_Bot_Djokovic:
                             shot = "s" + shot
 
 
-        elif (ralley.Ralley.get_len_ralley(current_ralley) == 2
+        elif (rally.Rally.get_len_rally(current_rally) == 2
               and "," in 
-              ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
+              rally.Rally.get_first_shot_of_rally(current_rally)):
             # Add return to the Second Serve
             # shot = "SecondServeReturn"
             self.Serving = False
@@ -768,7 +768,7 @@ class Stat_Bot_Djokovic:
             x = score.get_point_count_per_game()
             if (x % 2 == 0): 
                 # Returning from Deuce Side of the court
-                if (current_ralley.get_last_char_of_last_shot() == "4"):
+                if (current_rally.get_last_char_of_last_shot() == "4"):
                     #print("2ndS return from Deuce Side on serve 4")
 
                     i = random.randint(0, 9999)
@@ -859,7 +859,7 @@ class Stat_Bot_Djokovic:
                         if (l < 10000):
                             shot = "f" + shot
 
-                elif (current_ralley.get_last_char_of_last_shot() == "5"):
+                elif (current_rally.get_last_char_of_last_shot() == "5"):
                     #print("2ndS return from Deuce Side on serve 5")
 
                     i = random.randint(0, 9999)
@@ -960,7 +960,7 @@ class Stat_Bot_Djokovic:
                         else:
                             shot = "r" + shot
 
-                elif (current_ralley.get_last_char_of_last_shot() == "6"):
+                elif (current_rally.get_last_char_of_last_shot() == "6"):
                     #print("2ndS return from Deuce Side on serve 6")
 
                     i = random.randint(0, 9999)
@@ -1067,7 +1067,7 @@ class Stat_Bot_Djokovic:
 
             elif (x % 2 == 1):
                 # Returning from Ad Side of the court
-                if (current_ralley.get_last_char_of_last_shot() == "4"):
+                if (current_rally.get_last_char_of_last_shot() == "4"):
                     #print("2ndS return from Ad Side on serve 4")
 
                     i = random.randint(0, 9999)
@@ -1168,7 +1168,7 @@ class Stat_Bot_Djokovic:
                         else:
                             shot = "s" + shot
 
-                elif (current_ralley.get_last_char_of_last_shot() == "5"):
+                elif (current_rally.get_last_char_of_last_shot() == "5"):
                     #print("2ndS return from Ad Side on serve 5")
 
                     i = random.randint(0, 9999)
@@ -1271,7 +1271,7 @@ class Stat_Bot_Djokovic:
                         else:
                             shot = "r" + shot
 
-                elif (current_ralley.get_last_char_of_last_shot() == "6"):
+                elif (current_rally.get_last_char_of_last_shot() == "6"):
                     #print("2ndS return from Ad Side on serve 6")
 
                     i = random.randint(0, 9999)
@@ -1371,17 +1371,17 @@ class Stat_Bot_Djokovic:
 
         else:
             # We need to seperate between serving and returning in the
-            # ralley and also between first and second serves
+            # rally and also between first and second serves
             shot = "123"
-            # If Djoko was starting the ralley with a first serve
-            if(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
+            # If Djoko was starting the rally with a first serve
+            if(rally.Rally.get_len_rally(current_rally) % 2 == 1
                 and self.Serving == True
                 and "," in 
-                ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                #print("Djoko was opening the ralley with a second serve")
+                rally.Rally.get_first_shot_of_rally(current_rally)):
+                #print("Djoko was opening the rally with a second serve")
 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Djokos Shot are added
                     
@@ -1525,7 +1525,7 @@ class Stat_Bot_Djokovic:
                             shot = "j" + shot
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Djokos Shot are added
                     
@@ -1689,7 +1689,7 @@ class Stat_Bot_Djokovic:
                             shot = "j" + shot
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Djokos Shot are added
                     
@@ -1832,13 +1832,13 @@ class Stat_Bot_Djokovic:
                             shot = "i" + shot
 
                 
-            # ElIf Djoko started Ralley with a first Serve
-            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
+            # ElIf Djoko started rally with a first Serve
+            elif(rally.Rally.get_len_rally(current_rally) % 2 == 0
                 and self.Serving == True):
-                #print("Djoko was opening the ralley with a first serve")        
+                #print("Djoko was opening the rally with a first serve")        
                 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Djokos Shot are added
                     i = random.randint(0, 9999)
@@ -1984,7 +1984,7 @@ class Stat_Bot_Djokovic:
                             shot = "j" + shot
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Djokos Shot are added
 
@@ -2161,7 +2161,7 @@ class Stat_Bot_Djokovic:
                             shot = "j" + shot
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Djokos Shot are added
                     
@@ -2337,15 +2337,15 @@ class Stat_Bot_Djokovic:
                                    + 40 + 205 + 20 + 40 + 7 + 46 + 26)):
                             shot = "k" + shot
             
-            # ElIf Djoko was returning a second serve in the ralley
-            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
+            # ElIf Djoko was returning a second serve in the rally
+            elif(rally.Rally.get_len_rally(current_rally) % 2 == 0
                 and self.Returning == True
                 and "," in 
-                ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                #print("Djoko is returning a second serve in this ralley")
+                rally.Rally.get_first_shot_of_rally(current_rally)):
+                #print("Djoko is returning a second serve in this rally")
                 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Djokos Shot are added
                     
@@ -2462,7 +2462,7 @@ class Stat_Bot_Djokovic:
                             shot = "l" + shot
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Djokos Shot are added
                     i = random.randint(0, 9999)
@@ -2622,7 +2622,7 @@ class Stat_Bot_Djokovic:
                             shot = "j" + shot
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Djokos Shot are added
                     i = random.randint(0, 9999)
@@ -2757,13 +2757,13 @@ class Stat_Bot_Djokovic:
                                    + 126 + 104)):
                             shot = "m" + shot
 
-            # ElIf Djoko was returning a first serve in the ralley
-            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
+            # ElIf Djoko was returning a first serve in the rally
+            elif(rally.Rally.get_len_rally(current_rally) % 2 == 1
                 and self.Returning == True):
-                #print("Djoko is returning a first serve in this ralley")
+                #print("Djoko is returning a first serve in this rally")
                 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Djokos Shot are added
                     
@@ -2890,7 +2890,7 @@ class Stat_Bot_Djokovic:
                             shot = "h" + shot
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Djokos Shot are added
                     i = random.randint(0, 9999)
@@ -3070,7 +3070,7 @@ class Stat_Bot_Djokovic:
                             shot = "i" + shot
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Djokos Shot are added
                     i = random.randint(0, 9999)
@@ -3221,9 +3221,9 @@ class Stat_Bot_Djokovic:
                 #shot = "123"
                 print("Error: Szenario under development")
 
-        current_ralley.add_shot_to_ralley(shot)
+        current_rally.add_shot_to_rally(shot)
         shot = ""
-        print(current_ralley.get_ralley())
+        print(current_rally.get_rally())
 
     def set_turn(self, bool_var):
         self.turn = bool_var

@@ -26,7 +26,6 @@ class Average_Stat_Bot:
         
         # Adding first Serve
         if (rally.Rally.get_len_rally(current_rally) == 0):
-            # Adding a first serve from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
                 # Adding a first serve from deuce side
                 # First we need to add the direction

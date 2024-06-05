@@ -78,7 +78,7 @@ class MenuVariables:
     top_bot = 4
     bottom_bot = 4
     animation_time = 0.00
-    simu_matches = 10
+    simu_matches = 1
     simulation = True
     colour_scheme = 1
     logging = False

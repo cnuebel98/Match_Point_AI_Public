@@ -4,7 +4,7 @@ from datetime import datetime
 class Scoring:
     '''In this class the whole scoring process for points, games and 
     sets is implemented'''
-    RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
+    RALLY_ERROR = const.ShotEncodings.RALLY_ERROR
     ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
     WINNER = const.ShotEncodings.WINNER
     set_scores = []
@@ -81,7 +81,7 @@ class Scoring:
     def reset_point_count_per_game(self):
         self.point_count_per_game = 0
     
-    def update_points(self, ralley, last_char, shot_count):
+    def update_points(self, rally, last_char, shot_count):
         
         # if bottom player (1) was serving
         if self.get_serving_player() == 1:
@@ -90,7 +90,7 @@ class Scoring:
             if shot_count % 2 == 0:
                 # If that shot was an error, player 1 gets a point
                 if (last_char in self.ERROR_TYPE 
-                    or last_char in self.RALLEY_ERROR):
+                    or last_char in self.RALLY_ERROR):
                     self.give_point(1)
                 # If that shot was a winner, player 2 gets that point
                 elif last_char in self.WINNER:
@@ -100,7 +100,7 @@ class Scoring:
             elif shot_count % 2 == 1:
                 # If that shot was an error, player 2 gets a point
                 if (last_char in self.ERROR_TYPE 
-                    or last_char in self.RALLEY_ERROR):
+                    or last_char in self.RALLY_ERROR):
                     self.give_point(2)
                 # If that shot was a winner, player 2 gets that point
                 elif last_char in self.WINNER:
@@ -113,7 +113,7 @@ class Scoring:
             if shot_count % 2 == 0:
                 # If that shot was an error, player 2 gets a point
                 if (last_char in self.ERROR_TYPE 
-                    or last_char in self.RALLEY_ERROR):
+                    or last_char in self.RALLY_ERROR):
                     self.give_point(2)
                 # If that shot was a winner, player 1 gets that point
                 elif last_char in self.WINNER:
@@ -123,7 +123,7 @@ class Scoring:
             elif shot_count % 2 == 1:
                 # If that shot was an error, player 1 gets a point
                 if (last_char in self.ERROR_TYPE 
-                    or last_char in self.RALLEY_ERROR):
+                    or last_char in self.RALLY_ERROR):
                     self.give_point(1)
                 # If that shot was a winner, player 2 gets that point
                 elif last_char in self.WINNER:
@@ -198,7 +198,7 @@ class Scoring:
                     self.give_game(2)
                     self.points_A = 0
                     self.points_B = 0
-        const.Changing.ralley_terminated = True
+        const.Changing.rally_terminated = True
 
     def give_game(self, player):
         # When this is called, the server has to be switched

@@ -24,65 +24,118 @@ class Simple_Stat_Bot_Djokovic:
     def add_shot(self, current_rally, score, current_tree, simulation_phase=False):
         '''Adds the most likely shot based on djokovic data'''
         
-        # Serve from deuce side
+        # First Serve
         if (rally.Rally.get_len_rally(current_rally) == 0):
-            # Adding a first serve from deuce side
-            # First we need to add the direction
-            i = random.randint(0, 9999)
-            self.Serving = True
-            self.Returning = False
-            # The real probabilities are used for 1st serve from deuce side
-            if (i < 4938):
-                shot = "4"
-                # Error and Ace Probabilities for Serve Direction 4
-                j = random.randint(0, 9999)
-                if (j < (1588 + 761 + 906 + 284)):
-                    shot = shot + "nwdx,"
-                elif (j < (1588 + 761 + 906 + 284 + 628)):
-                    shot = shot + "*"
-            elif (i < (4938+572)):
-                shot = "5"
-                # Error and Ace Probabilities for Serve Direction 5
-                j = random.randint(0, 9999)
-                if (j < (766 + 1626 + 19)):
-                    shot = shot + "nwdx,"
-                elif (j < (766 + 1626 + 19 + 19)):
-                    shot = shot + "*"
-            else:
-                shot = "6"
-                # Error and Ace Probabilities for Serve Direction 6
-                j = random.randint(0, 9999)
-                if (j < (1265 + 598 + 1347 + 100)):
-                    shot = shot + "nwdx,"
-                elif (j < (1265 + 598 + 1347 + 100 + 848)):
-                    shot = shot + "*"
-        
+            # from deuce side
+            if (score.get_point_count_per_game() % 2 == 0):
+                # First we need to add the direction, then the error and ace probas
+                i = random.randint(0, 9999)
+                self.Serving = True
+                self.Returning = False
+            
+                # The real probabilities are used for 1st serve from deuce side
+                if (i < 4683):
+                    shot = "4"
+                    # Error and Ace Probabilities for Serve Direction 4
+                    j = random.randint(0, 9999)
+                    if (j < (3220)):
+                        shot = shot + "nwdx,"
+                    elif (j < (3220+740)):
+                        shot = shot + "*"
+                elif (i < (4683+528)):
+                    shot = "5"
+                    # Error and Ace Probabilities for Serve Direction 5
+                    j = random.randint(0, 9999)
+                    if (j < (1850)):
+                        shot = shot + "nwdx,"
+                    elif (j < (1850+40)):
+                        shot = shot + "*"
+                else:
+                    shot = "6"
+                    # Error and Ace Probabilities for Serve Direction 6
+                    j = random.randint(0, 9999)
+                    if (j < (3518)):
+                        shot = shot + "nwdx,"
+                    elif (j < (3518 + 715)):
+                        shot = shot + "*"
+            # from ad side
+            elif (score.get_point_count_per_game() % 2 == 1):
+                  #print("Adding first serve from ad side!")
+                i = random.randint(0, 9999)
+                self.Serving = True
+                self.Returning = False
+                # The real probabilities are used for 1st serve from deuce side
+                if (i < 5218):
+                    shot = "4"
+                    # Error and Ace Probabilities for Serve Direction 4
+                    j = random.randint(0, 9999)
+                    if (j < (3877)):
+                        shot = shot + "nwdx,"
+                    elif (j < (3877 + 533)):
+                        shot = shot + "*"
+                elif (i < (5218 + 624)):
+                    shot = "5"
+                    # Error and Ace Probabilities for Serve Direction 5
+                    j = random.randint(0, 9999)
+                    if (j < (2884)):
+                        shot = shot + "nwdx,"
+                else:
+                    shot = "6"
+                    # Error and Ace Probabilities for Serve Direction 6
+                    j = random.randint(0, 9999)
+                    if (j < (3062)):
+                        shot = shot + "nwdx,"
+                    elif (j < (3062 + 1051)):
+                        shot = shot + "*"
 
+        # Adding second Serve
         elif (rally.Rally.get_len_rally(current_rally) == 1
               and current_rally.get_last_char_of_last_shot() == ","):
-            # Add Second Serve
-            self.Serving = True
-            self.Returning = False
-            i = random.randint(0, 9999)
-            if (i < 3628):
-                shot = "4"
-                j = random.randint(0, 9999)
-                if (j < (382 + 200 + 373 + 35)):
-                    shot = shot + "nwdx"
-                elif (j < (382 + 200 + 373 + 35 + 43)):
-                    shot = shot + "*"
-            elif (i < (3628+3291)):
-                shot = "5"
-                j = random.randint(0, 9999)
-                if (j < (220 + 258)):
-                    shot = shot + "nd"
-            else:
-                shot = "6"
-                j = random.randint(0, 9999)
-                if (j < (378 + 153 + 501 + 10)):
-                    shot = shot + "nwdx"
-                elif (j < (378 + 153 + 501 + 10 + 174)):
-                    shot = shot + "*"
+            # Add Second Serve from deuce side
+            if (score.get_point_count_per_game() % 2 == 0):
+                self.Serving = True
+                self.Returning = False
+                i = random.randint(0, 9999)
+                if (i < 4626):
+                    shot = "4"
+                    j = random.randint(0, 9999)
+                    if (j < (1235)):
+                        shot = shot + "nwdx"
+                    elif (j < (1235 + 69)):
+                        shot = shot + "*"
+                elif (i < (4626 + 3211)):
+                    shot = "5"
+                    j = random.randint(0, 9999)
+                    if (j < (704)):
+                        shot = shot + "nwdx"
+                else:
+                    shot = "6"
+                    j = random.randint(0, 9999)
+                    if (j < (499)):
+                        shot = shot + "nwdx"
+
+            # Add Second Serve from ad side
+            elif (score.get_point_count_per_game() % 2 == 1):
+                self.Serving = True
+                self.Returning = False
+                i = random.randint(0, 9999)
+                if (i < 2600):
+                    shot = "4"
+                    j = random.randint(0, 9999)
+                    if (j < (513)):
+                        shot = shot + "nwdx"
+                elif (i < (2600 + 3333)):
+                    shot = "5"
+                    j = random.randint(0, 9999)
+                    if (j < (520)):
+                        shot = shot + "nwdx"
+                else:
+                    shot = "6"
+                    j = random.randint(0, 9999)
+                    if (j < (1328)):
+                        shot = shot + "nwdx"
+                    elif (j < (1328 + 279)):
+                        shot = shot + "*"
 
         # do we return the first or the second serve (1st if statement)
         # First Serve is returned

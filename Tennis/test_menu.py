@@ -97,7 +97,7 @@ def set_tree_display(selected: tuple, value: any):
     elif value == 2:
         const.MenuVariables.show_tree = 'after_shot'
     elif value == 3:
-        const.MenuVariables.show_tree = 'after_ralley'
+        const.MenuVariables.show_tree = 'after_rally'
     elif value == 4:
         const.MenuVariables.show_tree = 'after_set'
     elif value == 5:
@@ -105,9 +105,9 @@ def set_tree_display(selected: tuple, value: any):
     elif value == 6:
         const.MenuVariables.show_tree = 'all_mcts_trees'
 
-def set_simu_ralley_no(value: any):
+def set_simu_rally_no(value: any):
     x = int(value)
-    const.MenuVariables.simu_ralleys = x
+    const.MenuVariables.simu_rallys = x
 
 def set_decision_strat(selected: tuple, value: any):
     if value == 1:
@@ -126,12 +126,12 @@ menu.add.range_slider('Number of Matches: ',
                       range_text_value_enabled = False, 
                       slider_text_value_enabled=True, 
                       onchange=set_simu_game_no)
-menu.add.range_slider('Number of Simu Ralleys: ', 
+menu.add.range_slider('Number of Simu Rallys: ', 
                       default=10, range_values=[1,500], 
                       increment=int(1), 
                       range_text_value_enabled = False, 
                       slider_text_value_enabled=True, 
-                      onchange=set_simu_ralley_no)
+                      onchange=set_simu_rally_no)
 menu.add.selector('Top Player: ', 
                   [#('Random', 1)
                    #,('Djokovic', 2)
@@ -142,9 +142,9 @@ menu.add.selector('Top Player: ',
 menu.add.selector('Bottom Player: ', 
                   [#('Random', 1)
                    #,('Djokovic', 2)
-                   ('SimpleDjoko', 3)
+                   ('Djokovic Bot', 3)
                    ,('MCTS UCT Agent', 4)
-                   ,('Average Player', 5)
+                   ,('Average Bot', 5)
                    ,('MCTS Random Agent', 6)
                    ,('MCTS Greedy Agent', 7)],
                   default=0, 
@@ -170,12 +170,12 @@ menu.add.selector('Export Data: ',
                   [('Off', 1), ('On', 2)],
                   default=0,
                   onchange=set_logging)
-menu.add.selector('Show Tree: ', 
-                  [('Off', 1), ('After Shot', 2), ('After Ralley', 3),
-                   ('After Set', 4), ('After Match', 5), 
-                   ('All MCTS Trees', 6)],
-                  default=0,
-                  onchange=set_tree_display)
+#menu.add.selector('Show Tree: ', 
+#                  [('Off', 1), ('After Shot', 2), ('After rally', 3),
+#                   ('After Set', 4), ('After Match', 5), 
+#                   ('All MCTS Trees', 6)],
+#                  default=0,
+#                  onchange=set_tree_display)
 menu.add.button('Play',
                 start_the_game)
 menu.add.button('Quit', 

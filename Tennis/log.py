@@ -2,17 +2,17 @@ import constants as const
 import pandas as pd
 
 class Log:
-    '''The Ralleys, the points and the setting of the match is logged
+    '''The rallys, the points and the setting of the match is logged
     and saved if it was chosen to save the data'''
     logging_enabled = const.MenuVariables.logging
     def __init__(self):
         self.df = pd.DataFrame(columns=['Points_A', 'Points_B', 
                                    'Games_A', 'Games_B',
                                    'Sets_A', 'Sets_B', 'Serving_Player', 
-                                   'Ralley'])
+                                   'Rally'])
     
     def add_score_to_df(self, points_A, points_B, games_A, games_B, sets_A, 
-                        sets_B, serving_player, ralley):
+                        sets_B, serving_player, rally):
         
         if points_A == "AD":
             points_A = 50
@@ -26,14 +26,14 @@ class Log:
                    'Sets_A': sets_A,
                    'Sets_B': sets_B,
                    'Serving_Player': serving_player,
-                   'Ralley': str(ralley)}, index = [1])
+                   'Rally': str(rally)}, index = [1])
         self.df = pd.concat([self.df.loc[:], new_row]).reset_index(drop=True)
         #self.show_df()
         
     def show_df(self):
         print(self.df)
 
-    def add_ralley_to_df(self, ralley):
+    def add_rally_to_df(self, rally):
         ...
 
     def export_to_csv(self):

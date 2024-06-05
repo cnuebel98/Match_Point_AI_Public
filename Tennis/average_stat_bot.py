@@ -1,6 +1,6 @@
 import constants as const
 import random
-import ralley
+import rally
 
 class Average_Stat_Bot:
     '''This Bot uses a fixed strategy based on the Average Probabilities
@@ -10,7 +10,7 @@ class Average_Stat_Bot:
     RETURN_SHOT_TYPES = const.ShotEncodings.RETURN_SHOT_TYPES
     RETURN_DEPTH = const.ShotEncodings.RETURN_DEPTH
     DIRECTIONS = const.ShotEncodings.DIRECTIONS
-    RALLEY_ERROR = const.ShotEncodings.RALLEY_ERROR
+    RALLY_ERROR = const.ShotEncodings.RALLY_ERROR
     ERROR_TYPE = const.ShotEncodings.ERROR_TYPE
     WINNER = const.ShotEncodings.WINNER
     EXTRA_STUFF = const.ShotEncodings.EXTRA_STUFF
@@ -21,14 +21,15 @@ class Average_Stat_Bot:
         self.name = name
         self.turn = turn
 
-    def add_shot(self, current_ralley, score, current_tree, simulation_phase=False):
+    def add_shot(self, current_rally, score, current_tree, simulation_phase=False):
         '''Adds the most likely shot based on average player data'''
         
         # Adding first Serve
-        if (ralley.Ralley.get_len_ralley(current_ralley) == 0):
+        if (rally.Rally.get_len_rally(current_rally) == 0):
             # Adding a first serve from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
-                #print("Adding first serve from deuce side!")        
+                # Adding a first serve from deuce side
+                # First we need to add the direction
                 i = random.randint(0, 9999)
                 self.Serving = True
                 self.Returning = False
@@ -91,8 +92,8 @@ class Average_Stat_Bot:
                         shot = shot + "*"
 
         # Adding second Serve
-        elif (ralley.Ralley.get_len_ralley(current_ralley) == 1
-              and current_ralley.get_last_char_of_last_shot() == ","):
+        elif (rally.Rally.get_len_rally(current_rally) == 1
+              and current_rally.get_last_char_of_last_shot() == ","):
             # Add Second Serve from deuce side
             if (score.get_point_count_per_game() % 2 == 0):
                 self.Serving = True
@@ -148,14 +149,14 @@ class Average_Stat_Bot:
                         shot = shot + "*"
 
         # Adding Return on first serve
-        elif (ralley.Ralley.get_len_ralley(current_ralley) == 1):
+        elif (rally.Rally.get_len_rally(current_rally) == 1):
             # Add return to the first Serve
             #print("Adding return to a first serve.")
             self.Serving = False
             self.Returning = True
             x = score.get_point_count_per_game()
             
-            if (current_ralley.get_last_char_of_last_shot() == "4"):
+            if (current_rally.get_last_char_of_last_shot() == "4"):
                 # First serve was direction 4
                 i = random.randint(0, 9999)
                 if (i < 2015):
@@ -218,7 +219,7 @@ class Average_Stat_Bot:
                     elif (k < (2574 + 147)):
                         shot = shot + "*"
 
-            elif (current_ralley.get_last_char_of_last_shot() == "5"):
+            elif (current_rally.get_last_char_of_last_shot() == "5"):
                 # shot = "1stS return on serve 5"
 
                 i = random.randint(0, 9999)
@@ -282,7 +283,7 @@ class Average_Stat_Bot:
                     elif (k < (2230 + 95)):
                         shot = shot + "*"
 
-            elif (current_ralley.get_last_char_of_last_shot() == "6"):
+            elif (current_rally.get_last_char_of_last_shot() == "6"):
                     # shot = "1stS return from Deuce Side on serve 6"
                     i = random.randint(0, 9999)
                     if (i < 1474):
@@ -346,15 +347,15 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
         # Adding Return on second serve
-        elif (ralley.Ralley.get_len_ralley(current_ralley) == 2
+        elif (rally.Rally.get_len_rally(current_rally) == 2
               and "," in 
-              ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
+              rally.Rally.get_first_shot_of_rally(current_rally)):
             # Add return to the Second Serve
             
             self.Serving = False
             self.Returning = True
             
-            if (current_ralley.get_last_char_of_last_shot() == "4"):
+            if (current_rally.get_last_char_of_last_shot() == "4"):
                 i = random.randint(0, 9999)
                 if (i < 1903):
                     # Direction of the shot
@@ -416,7 +417,7 @@ class Average_Stat_Bot:
                     elif (k < (1513 + 195)):
                         shot = shot + "*"
 
-            elif (current_ralley.get_last_char_of_last_shot() == "5"):
+            elif (current_rally.get_last_char_of_last_shot() == "5"):
                 #print("2ndS return from Deuce Side on serve 5")
                 #print("4")
                 i = random.randint(0, 9999)
@@ -480,7 +481,7 @@ class Average_Stat_Bot:
                     elif (k < (1481 + 232)):
                         shot = shot + "*"
 
-            elif (current_ralley.get_last_char_of_last_shot() == "6"):
+            elif (current_rally.get_last_char_of_last_shot() == "6"):
                     #print("2ndS return from Deuce Side on serve 6")
                     #print("5")
                     i = random.randint(0, 9999)
@@ -544,41 +545,41 @@ class Average_Stat_Bot:
                         elif (k < (1685 + 219)):
                             shot = shot + "*"
 
-        # Adding a normal shot to an ongoing ralley
+        # Adding a normal shot to an ongoing rally
         else:
             # We need to seperate between serving and returning in the
-            # ralley and also between first and second serves
+            # rally and also between first and second serves
             
             # Here we set the new self.Serving and self.Returning 
-            # Variables according to the ralley
-            if (ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0):
-                if ("," in ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                    #print("Ralley, where Average_Player is returning 2nd")
+            # Variables according to the rally
+            if (rally.Rally.get_len_rally(current_rally) % 2 == 0):
+                if ("," in rally.Rally.get_first_shot_of_rally(current_rally)):
+                    #print("Rally, where Average_Player is returning 2nd")
                     self.Serving = False
                     self.Returning = True
                 else: 
-                    #print("Ralley, where Average_Player is Serving a 1st")
+                    #print("Rally, where Average_Player is Serving a 1st")
                     self.Serving = True
                     self.Returning = False
-            elif (ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1):
-                if ("," in ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                    #print("Ralley, where Average_Player is serving a 2nd")
+            elif (rally.Rally.get_len_rally(current_rally) % 2 == 1):
+                if ("," in rally.Rally.get_first_shot_of_rally(current_rally)):
+                    #print("rally, where Average_Player is serving a 2nd")
                     self.Serving = True
                     self.Returning = False
                 else: 
-                    #print("Ralley, where Average_Player is returning a 1st")
+                    #print("rally, where Average_Player is returning a 1st")
                     self.Serving = False
                     self.Returning = True
 
-            # If Average_Player was starting the ralley with a second serve
-            if(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
+            # If Average_Player was starting the rally with a second serve
+            if(rally.Rally.get_len_rally(current_rally) % 2 == 1
                 and self.Serving == True
                 and "," in 
-                ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                #print("Average_Player was opening the ralley with a second serve")
+                rally.Rally.get_first_shot_of_rally(current_rally)):
+                #print("Average_Player was opening the rally with a second serve")
 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Average_Players Shot are added
                     
@@ -638,7 +639,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Average_Players Shot are added
                     
@@ -698,7 +699,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Average_Players Shot are added
                     
@@ -757,13 +758,13 @@ class Average_Stat_Bot:
                         elif (k < (1167 + 317)):
                             shot = shot + "*"
   
-            # ElIf Average_Player started Ralley with a first Serve
-            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
+            # ElIf Average_Player started rally with a first Serve
+            elif(rally.Rally.get_len_rally(current_rally) % 2 == 0
                 and self.Serving == True):
-                #print("Average_Player was opening the ralley with a first serve")        
+                #print("Average_Player was opening the rally with a first serve")        
                 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Average_Players Shot are added
                     i = random.randint(0, 9999)
@@ -825,7 +826,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Average_Players Shot are added
 
@@ -885,7 +886,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Average_Players Shot are added
                     
@@ -946,15 +947,15 @@ class Average_Stat_Bot:
                         elif (k < (1114 + 660)):
                             shot = shot + "*"
             
-            # ElIf Average_Player was returning a second serve in the ralley
-            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 0
+            # ElIf Average_Player was returning a second serve in the rally
+            elif(rally.Rally.get_len_rally(current_rally) % 2 == 0
                 and self.Returning == True
                 and "," in 
-                ralley.Ralley.get_first_shot_of_ralley(current_ralley)):
-                #print("Average_Player is returning a second serve in this ralley")
+                rally.Rally.get_first_shot_of_rally(current_rally)):
+                #print("Average_Player is returning a second serve in this rally")
                 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Average_Players Shot are added
                     
@@ -1014,7 +1015,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Average_Players Shot are added
                     i = random.randint(0, 9999)
@@ -1073,7 +1074,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Average_Players Shot are added
                     i = random.randint(0, 9999)
@@ -1131,13 +1132,13 @@ class Average_Stat_Bot:
                         elif (k < (1155 + 271)):
                             shot = shot + "*"
 
-            # ElIf Average_Player was returning a first serve in the ralley
-            elif(ralley.Ralley.get_len_ralley(current_ralley) % 2 == 1
+            # ElIf Average_Player was returning a first serve in the rally
+            elif(rally.Rally.get_len_rally(current_rally) % 2 == 1
                 and self.Returning == True):
-                #print("Average_Player is returning a first serve in this ralley")
+                #print("Average_Player is returning a first serve in this rally")
                 
                 # If Opponents last shot was dir 1
-                if "1" in current_ralley.get_last_shot():
+                if "1" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 1")
                     # probabilities for Average_Players Shot are added
                     
@@ -1197,7 +1198,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 2
-                elif "2" in current_ralley.get_last_shot():
+                elif "2" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 2")
                     # probabilities for Average_Players Shot are added
                     i = random.randint(0, 9999)
@@ -1256,7 +1257,7 @@ class Average_Stat_Bot:
                             shot = shot + "*"
 
                 # ElIf Opponents last shot was dir 3
-                elif "3" in current_ralley.get_last_shot():
+                elif "3" in current_rally.get_last_shot():
                     #print("Opponents last shot was in dir 3")
                     # probabilities for Average_Players Shot are added
                     i = random.randint(0, 9999)
@@ -1317,10 +1318,10 @@ class Average_Stat_Bot:
             else: 
                 shot = "123"
                 print("Error: Szenario not covered.")
-                print("Error occured with ralley: " + str(current_ralley.get_ralley()))
+                print("Error occured with rally: " + str(current_rally.get_rally()))
 
         if simulation_phase == False:
-            current_ralley.add_shot_to_ralley(shot)
+            current_rally.add_shot_to_rally(shot)
         else: 
             if shot == None:
                 print("Error, Bot shot didnt get a value!")
@@ -1328,7 +1329,7 @@ class Average_Stat_Bot:
             return shot
         shot = ""
         
-        #print("Ralley_after_Average_Stat_Bot: " + str(current_ralley.get_ralley()))
+        #print("Rally_after_Average_Stat_Bot: " + str(current_rally.get_rally()))
         #print("----------------------------")
         
     def set_turn(self, bool_var):

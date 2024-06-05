@@ -4,7 +4,7 @@ from pygame_menu.examples import create_example_window
 import main_loop
 import constants as const
 
-SURFACE = create_example_window('PyTennis', 
+SURFACE = create_example_window('Match Point AI', 
                                 (const.Dims.WIDTH, 
                                  const.Dims.HEIGHT))
 
@@ -133,24 +133,30 @@ menu.add.range_slider('Number of Simu Ralleys: ',
                       slider_text_value_enabled=True, 
                       onchange=set_simu_ralley_no)
 menu.add.selector('Top Player: ', 
-                  [('Random', 1), ('Djokovic', 2), ('SimpleDjoko', 3), 
-                   ('AveragePlayer', 4)], 
+                  [#('Random', 1)
+                   #,('Djokovic', 2)
+                   ('Djokovic Bot', 3)
+                   ,('Average Bot', 4)], 
                   default=0, 
                   onchange=set_top_player)
 menu.add.selector('Bottom Player: ', 
-                  [('Random', 1), ('Djokovic', 2), ('SimpleDjoko', 3),
-                   ('MCTS UCT Agent', 4), ('Average Player', 5), 
-                   ('MCTS Random Agent', 6), ('MCTS Greedy Agent', 7)],
+                  [#('Random', 1)
+                   #,('Djokovic', 2)
+                   ('SimpleDjoko', 3)
+                   ,('MCTS UCT Agent', 4)
+                   ,('Average Player', 5)
+                   ,('MCTS Random Agent', 6)
+                   ,('MCTS Greedy Agent', 7)],
                   default=0, 
                   onchange=set_bottom_player)
 menu.add.selector('Decision Strat: ', 
                   [('Greedy', 1), ('UCT', 2)], 
                   default=0,
                   onchange=set_decision_strat)
-menu.add.selector('Animation time: ', 
-                  [('Fast', 1), ('Medium', 2), ('Slow', 3)], 
-                  default=0, 
-                  onchange=set_animation)
+#menu.add.selector('Animation time: ', 
+#                  [('Fast', 1), ('Medium', 2), ('Slow', 3)], 
+#                  default=0, 
+#                  onchange=set_animation)
 menu.add.selector('Best of: ', 
                   [('3', 1), ('5', 2)], 
                   default=0, 

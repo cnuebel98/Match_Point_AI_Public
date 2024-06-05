@@ -131,9 +131,8 @@ class Scoring:
 
     def give_point(self, player):
         # Point is given so point count per game is updated
-        # self.point_count_per_game += 1
         self.update_point_count_per_game(1)
-        #print(self.get_point_count_per_game())
+
         # When there is a tiebreak, points are added according to 
         # tiebreak rules
         if self.games_A == 6 and self.games_B == 6:
@@ -160,9 +159,6 @@ class Scoring:
                     self.points_B = 0
                 elif (self.points_A + self.points_B) % 2 == 1:
                     self.switch_serving_player()
-        
-        # ToDo: When it's the third set the titebreak is played until 1
-        # and not until 7
 
         # If there is no tiebreak, points are given according to 15, 30,
         # 40, game rules    
@@ -272,8 +268,8 @@ class Scoring:
             self.sets_A += 1
         elif player == 2:
             self.sets_B += 1
-        #print(self.sets_A)
-        #print(self.sets_B)
+        
+        # print statements for the Terminal
         if const.MenuVariables.sets_to_play == 3:
             if self.sets_A == 2:
                 print("Player A / Bottom Bot wins!")

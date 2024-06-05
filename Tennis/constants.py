@@ -56,7 +56,7 @@ class ShotEncodings:
     '''This class stores all the Shot encodings in their respective 
     categories'''
     WINNER = "*"
-    RALLEY_ERROR = ["n", "w", "d", "x"]
+    RALLY_ERROR = ["n", "w", "d", "x"]
     ERROR_TYPE = ["@", "#"]
     SERVE_DIRECTION = ["4", "5", "6"]
     EVERY_SHOT_TYPE = ["f", "b", "r", "s", "v", "z", "o", "p", "y", "l",
@@ -83,14 +83,14 @@ class MenuVariables:
     colour_scheme = 1
     logging = False
     show_tree = 'off'
-    simu_ralleys = 10
+    simu_rallys = 10
     decision_strat = 'greedy'
 
 class Changing:
-    ralley_terminated = False
-    ralley = []
+    rally_terminated = False
+    rally = []
     simu_matches_played = 0
 
 class Config:
     c_value = (math.sqrt(2))
-    n_simu_ralleys = 10
+    n_simu_rallys = 10

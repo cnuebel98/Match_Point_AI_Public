@@ -1,2 +1,10 @@
-# TrainingsTool
-This is gonna be a tool for training and analysing strategies in tennis.
+# Match Point AI
+Match Point AI is a novel AI Framework, for evaluating data-driven Tennis strategies. 
+
+# Project Structure
+
+
+# Using Match Point AI
+
+
+

@@ -1,6 +1,6 @@
 import constants as const
 import random
-import ralley
+import rally
 
 class Stat_Bot_Djokovic:
     '''This is the Djokovic bot, which adds the probabilities of a shot 

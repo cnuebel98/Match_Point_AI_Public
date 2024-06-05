@@ -3,7 +3,7 @@ import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 import matplotlib.pyplot as plt
 import simpler_stat_bot_djoko as djoko
-import ralley
+import rally
 import copy
 import math
 import numpy as np
@@ -13,7 +13,7 @@ import log
 
 class MCTS_Random_Agent:
     '''In this class, the MCTS Algorithm with random selection policy 
-    is used to find the next shot in a ralley'''
+    is used to find the next shot in a rally'''
 
     def __init__(self, name="", turn=False):
         self.name = name
@@ -29,11 +29,11 @@ class MCTS_Random_Agent:
         self.expansion_node = 0
         self.expansion_shot = ""
         self.exp_shot_list = []
-        self.len_of_current_ralley = 0
+        self.len_of_current_rally = 0
         self.expansion_path = [0]
         self.mcts_tree = nx.DiGraph()
-        self.mcts_ralley = ralley.Ralley()
-        self.simulation_ralley = ralley.Ralley()
+        self.mcts_rally = rally.Rally()
+        self.simulation_rally = rally.Rally()
         self.decision_node = 0
 
         if const.MenuVariables.decision_strat == 'uct':
@@ -47,7 +47,7 @@ class MCTS_Random_Agent:
             self.opponent = average_stat_bot.Average_Stat_Bot("Average_Bot")
         else: print("Error: Choose other opponent for MCTS Agent")
 
-    def add_shot(self, current_ralley, score, current_tree):
+    def add_shot(self, current_rally, score, current_tree):
         '''This function is calling the different phases of MCTS'''
 
         # Here we take the actual game tree and put it on top of the 
@@ -56,22 +56,22 @@ class MCTS_Random_Agent:
         self.mcts_tree = nx.DiGraph()
         self.mcts_node_index = current_tree.get_node_index()
         self.mcts_tree = nx.compose(self.mcts_tree, current_tree.get_tree())
-        self.mcts_ralley.clear_ralley()
+        self.mcts_rally.clear_rally()
         self.decision_node = 0
 
-        # The ralley is a deepcopy (new storage loc) of the current real
-        # ralley
-        self.mcts_ralley = copy.deepcopy(current_ralley)
+        # The rally is a deepcopy (new storage loc) of the current real
+        # rally
+        self.mcts_rally = copy.deepcopy(current_rally)
 
         if (const.MenuVariables.show_tree == 'all_mcts_trees'):
             print("Initial Tree from the real game is displayed.")
             self.show_mcts_tree()
 
         # Here the Selection Phase is called
-        self.selection_phase(current_ralley, score, current_tree)
+        self.selection_phase(current_rally, score, current_tree)
         
         #print("------------------------------------------------")
-        #print("5. Making Choice and adding MCTS Shot to ralley.")
+        #print("5. Making Choice and adding MCTS Shot to rally.")
         # Decission Node is root node, where we need to make the choice
         # It is set when the root node is found        
 
@@ -121,25 +121,25 @@ class MCTS_Random_Agent:
 
         # Here we either add probabilities to a second serve with the 
         # corresponding function or we add them with the normal function
-        if (current_ralley.get_len_ralley() == 1 
-            and "," in current_ralley.get_first_shot_of_ralley()):
+        if (current_rally.get_len_rally() == 1 
+            and "," in current_rally.get_first_shot_of_rally()):
             new_shot = self.add_probs_to_2nd_serve(dir, score)
         else:
             new_shot = self.add_probs_to_shot(dir, score, current_tree, 
                                               expansion=False)
 
-        if (current_ralley.get_len_ralley() == 0 and new_shot == "6nwdx"):
-            print("Current_Ralley: " + str(current_ralley.get_ralley()))
+        if (current_rally.get_len_rally() == 0 and new_shot == "6nwdx"):
+            print("current_rally: " + str(current_rally.get_rally()))
             print("Adding Shot: " + str(new_shot))
             print("Error: New Shot in MCTS Agent add_probs_to_shot function was done wrong!")
 
-        current_ralley.add_shot_to_ralley(new_shot)
-        #print("Ralley_after_MCTS_shot: " + str(current_ralley.get_ralley()))
+        current_rally.add_shot_to_rally(new_shot)
+        #print("Rally_after_MCTS_shot: " + str(current_rally.get_rally()))
         #print("_______________________________________________________")
         #print("-------------End of one MCTS iteration-----------------")
         #print("_______________________________________________________")
 
-    def selection_phase(self, current_ralley, score, current_tree):
+    def selection_phase(self, current_rally, score, current_tree):
         '''In the selection Phase, we traverse through the current tree,
         always taking the child node with the highest UCT Value until a
         leaf node is reached'''
@@ -147,44 +147,44 @@ class MCTS_Random_Agent:
         #print("--------------------------------")
         #print("1. Starting selection Phase!")
         #print("--------------------------------")
-        #print(" 1.1 Setting the root node according to current ralley.")
+        #print(" 1.1 Setting the root node according to current rally.")
         
         # Blue_neighbors are only the neighbors nodes with color blue,
         # so the actions that have been taken by the MCTS Agent
         # from that node
 
         # The root node is always the node in the tree which represents 
-        # the last shot in the current Ralley
+        # the last shot in the current Rally
 
-        if (current_ralley.get_len_ralley() == 0):
-            # If there is no shot in the ralley yet, root node is 0
+        if (current_rally.get_len_rally() == 0):
+            # If there is no shot in the rally yet, root node is 0
             self.set_active_mcts_node(0)
             self.decision_node = self.get_active_mcts_node()
             #print(" 1.2 Root Node is: " 
             # + str(self.get_active_mcts_node()) + " , should be 0.")
         else:
-            # We have to find the ralley in the current tree and go to 
-            # last node/last shot of ralley and find the index of that
+            # We have to find the rally in the current tree and go to 
+            # last node/last shot of rally and find the index of that
             # node and set it to root node
             serving = score.get_serving_player()
-            ralley = copy.deepcopy(current_ralley.get_ralley())
+            rally = copy.deepcopy(current_rally.get_rally())
             index = 0
             # from the Red Node, there can be 2x "6" encoding, we have 
-            # to look at the current_ralley, to see who is serving to 
+            # to look at the current_rally, to see who is serving to 
             # take the right "6"
             if (serving == 1):
                 neighbors = current_tree.get_list_of_blue_neighbors(index)
             elif (serving == 2):
                 neighbors = current_tree.get_list_of_green_neighbors(index)
             
-            # We look at each shot in the ralley and find the enconding 
+            # We look at each shot in the rally and find the enconding 
             # in the tree
-            #print(" --> The ralley where we get the ")
-            for i in range(0, len(ralley)):
-                ralley_shot = ""
-                ralley_shot = ralley[i]
+            #print(" --> The rally where we get the ")
+            for i in range(0, len(rally)):
+                rally_shot = ""
+                rally_shot = rally[i]
                 neighbor_shots = current_tree.get_shots_of_neighbors(neighbors)
-                neighbors_index = neighbor_shots.index(ralley_shot)
+                neighbors_index = neighbor_shots.index(rally_shot)
                 index = neighbors[neighbors_index]
                 
                 #self.expansion_path.append(index)
@@ -193,7 +193,7 @@ class MCTS_Random_Agent:
                 neighbors = current_tree.get_neighbors(index)
 
             # the index in the end is the node, which represents the
-            # last shot in the ralley
+            # last shot in the rally
             self.set_active_mcts_node(index)
             self.decision_node = self.get_active_mcts_node()
             self.mcts_tree.nodes[self.active_mcts_node]['colour'] = 'red'
@@ -227,7 +227,7 @@ class MCTS_Random_Agent:
             green_neighbors = current_tree.get_list_of_green_neighbors(
                 self.get_active_mcts_node())
             
-            # Check who is serving in the current_ralley
+            # Check who is serving in the current_rally
 
             # Each neighbors shot encoding is looked at
             blue_neighbor_shots = []
@@ -305,7 +305,7 @@ class MCTS_Random_Agent:
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
 
-                    self.add_shot_to_mcts_ralley(self.get_shot_of_node(
+                    self.add_shot_to_mcts_rally(self.get_shot_of_node(
                         green_neighbors[i]))
 
                 # If there are no green neighbors or in 50% of the cases 
@@ -324,7 +324,7 @@ class MCTS_Random_Agent:
 
                         self.set_active_mcts_node(random_node)
                         self.add_node_to_expansion_path(random_node)
-                        self.add_shot_to_mcts_ralley(self.get_shot_of_node(
+                        self.add_shot_to_mcts_rally(self.get_shot_of_node(
                             random_node))
                         
                         #print("New MCTS Active node hast UCT = " + str(
@@ -352,7 +352,7 @@ class MCTS_Random_Agent:
 
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
-                    self.add_shot_to_mcts_ralley(self.get_shot_of_node(
+                    self.add_shot_to_mcts_rally(self.get_shot_of_node(
                         green_neighbors[i]))
 
                 # If all three directions are found, then we go the the 
@@ -368,7 +368,7 @@ class MCTS_Random_Agent:
 
                     self.set_active_mcts_node(random_node)
                     self.add_node_to_expansion_path(random_node)
-                    self.add_shot_to_mcts_ralley(self.get_shot_of_node(
+                    self.add_shot_to_mcts_rally(self.get_shot_of_node(
                         random_node))
 
                 else:
@@ -388,7 +388,7 @@ class MCTS_Random_Agent:
 
                     self.set_active_mcts_node(green_neighbors[i])
                     self.add_node_to_expansion_path(green_neighbors[i])
-                    self.add_shot_to_mcts_ralley(self.get_shot_of_node(
+                    self.add_shot_to_mcts_rally(self.get_shot_of_node(
                         green_neighbors[i]))
 
             elif (color_of_mcts_active_node == "blue" and 
@@ -404,7 +404,7 @@ class MCTS_Random_Agent:
 
                 self.set_active_mcts_node(random_node)
                 self.add_node_to_expansion_path(random_node)
-                self.add_shot_to_mcts_ralley(self.get_shot_of_node(
+                self.add_shot_to_mcts_rally(self.get_shot_of_node(
                     random_node))
                 
             else:
@@ -416,26 +416,26 @@ class MCTS_Random_Agent:
             i += 1
             #print("--------------------------")
         
-        #print(" 1.5 The ralley that lead to leaf Node: " 
-        # + str(self.mcts_ralley.get_ralley()))
+        #print(" 1.5 The rally that lead to leaf Node: " 
+        # + str(self.mcts_rally.get_rally()))
         
-        self.expansion_phase(current_ralley, score, self.get_mcts_tree())
+        self.expansion_phase(current_rally, score, self.get_mcts_tree())
  
-        self.mcts_ralley.clear_ralley()
+        self.mcts_rally.clear_rally()
         self.reset_active_mcts_node()
         self.reset_leaf_node()
         #print("Expansion_path before clearing it: " 
         # + str(self.expansion_path))
         self.clear_expansion_path()
     
-    def expansion_phase(self, current_ralley, score, current_tree):
+    def expansion_phase(self, current_rally, score, current_tree):
         # We take the leave node and check the direction, which is
         # not yet in the leaf nodes children, and that is expanded and
         # is the node we start the simulation form
         #print(" 2.1 Leaf Node Shot encoding: " 
         #      + str(self.get_shot_of_node(self.leaf_node)))
-        #print(" Exp Phase beginning: current_ralley: " 
-        # + str(current_ralley.get_ralley()))
+        #print(" Exp Phase beginning: current_rally: " 
+        # + str(current_rally.get_rally()))
         #print("2. Starting Expansion Phase!")
 
         #self.mcts_tree.nodes[self.leaf_node]['colour'] = 'orange'
@@ -443,15 +443,7 @@ class MCTS_Random_Agent:
         if (self.shot_terminated(self.get_shot_of_node(
             self.leaf_node)) == "terminal"):
             #print("Starting backprobagation Phase from terminal leaf node.")
-            
-            #print("MCTS Ralley that lead to backprobagation phase: " 
-            #      + str(self.mcts_ralley.get_ralley()))
-            #print("Acitve SImu Node: " 
-            #      + str(self.get_active_simu_node()))
-            
-            self.simulation_ralley = copy.deepcopy(self.mcts_ralley)
-            #print("Simulation Ralley that lead to backprobagation phase: " 
-            #      + str(self.simulation_ralley.get_ralley()))
+            self.simulation_rally = copy.deepcopy(self.mcts_rally)
             self.backpropagation_phase()
 
         #print("exp_shot_list is cleared before each expansion phase")
@@ -607,7 +599,7 @@ class MCTS_Random_Agent:
         for i in range(0, len(self.exp_shot_list)):
             exp_shot = self.exp_shot_list[i]
             exp_shot_index = self.get_next_mcts_node_index()
-            exp_shot_depth = current_ralley.get_len_ralley() + 1
+            exp_shot_depth = current_rally.get_len_rally() + 1
             
             # Here we add the expansion shot to the leaf node of the tree
             self.add_node_to_mcts_tree(exp_shot_index, 
@@ -631,60 +623,60 @@ class MCTS_Random_Agent:
             
             self.add_node_to_expansion_path(self.get_expansion_node())
             self.expansion_shot = exp_shot
-            self.add_shot_to_mcts_ralley(self.get_expansion_shot())
-            #print("Get MCTS Ralley, when exp shot just was added: " + str(self.mcts_ralley.get_ralley()))
+            self.add_shot_to_mcts_rally(self.get_expansion_shot())
+            #print("Get MCTS Rally, when exp shot just was added: " + str(self.mcts_rally.get_rally()))
            
             self.set_active_simu_node(self.get_expansion_node())
             
             if (self.shot_terminated(self.get_expansion_shot()) == "terminal"):
                 #print("Starting backpropagaton phase from terminal expansion shot.")
-                self.simulation_ralley = copy.deepcopy(self.mcts_ralley)
+                self.simulation_rally = copy.deepcopy(self.mcts_rally)
                 self.backpropagation_phase()
                 
             else:
                 #print("-----------------------------")
                 #print("3. Starting Simulation Phase!")
                 #print("-----------------------------")
-                #print("with mcts_ralley: " + str(self.mcts_ralley.get_ralley()))
-                self.simulation_phase(current_ralley, score, current_tree)
+                #print("with mcts_rally: " + str(self.mcts_rally.get_rally()))
+                self.simulation_phase(current_rally, score, current_tree)
             
-            self.mcts_ralley.remove_last_shot()
+            self.mcts_rally.remove_last_shot()
             self.expansion_path.pop()
         
         if (const.MenuVariables.show_tree == 'all_mcts_trees'):
             print(" 2.3 Displaying MCTS Tree with yellow expansion Shots.")
             self.show_mcts_tree()
 
-    def simulation_phase(self, current_ralley, score, current_tree):
+    def simulation_phase(self, current_rally, score, current_tree):
         # starting from the expansion node, simulation is done.
         # Djoko Bot and MCTS Simulation Strategy (e.g. Random,
         # MC-Evaluation, or others) take turns in adding a shot until
         # terminal state is reached
 
         # We start with the expansion shot.
-        #print("Current Ralley is: " + str(current_ralley.get_ralley()))
-        #print("beginning of simulation phase: MCTS Ralley is: " + str(self.mcts_ralley.get_ralley()))
+        #print("Current Rally is: " + str(current_rally.get_rally()))
+        #print("beginning of simulation phase: MCTS Rally is: " + str(self.mcts_rally.get_rally()))
         #print(" 3.1 Expanded shot: " + str(self.expansion_shot))
         
         # Range(x) x is number of simulations we do from the expanded 
         # Node
 
-        #print(" 3.1.1 MCTS Ralley before simu loop starts: " + str(self.mcts_ralley.get_ralley()))
+        #print(" 3.1.1 MCTS Rally before simu loop starts: " + str(self.mcts_rally.get_rally()))
 
-        #self.simulation_ralley = self.mcts_ralley
-        self.simulation_ralley = copy.deepcopy(self.mcts_ralley)
-        #print(" 3.1 Simulation_ralley: " + str(self.simulation_ralley.get_ralley()))
+        #self.simulation_rally = self.mcts_rally
+        self.simulation_rally = copy.deepcopy(self.mcts_rally)
+        #print(" 3.1 simulation_rally: " + str(self.simulation_rally.get_rally()))
         
-        n_simus = const.MenuVariables.simu_ralleys
+        n_simus = const.MenuVariables.simu_rallys
         for _ in range(n_simus):
             #print("----------------------------------")
             # for each simualtion we set thon "ongoing" bool to true and
             # the mcts agents turn to false
 
-            #print("Simu Ralley in the beginning of new simulation ralley: " + str(self.simulation_ralley.get_ralley()))
+            #print("Simu Rally in the beginning of new simulation rally: " + str(self.simulation_rally.get_rally()))
             
-            # init failsafe for while loop and bool for ralley termination
-            ralley_ongoing = True
+            # init failsafe for while loop and bool for rally termination
+            rally_ongoing = True
             i = 0
 
             # first we check if the Expansion Shot is terminal or not or
@@ -695,9 +687,9 @@ class MCTS_Random_Agent:
                 # turn for adding a second serve
                 self.mcts_agents_turn = True
 
-            # This while loop runs until the ralley is over, by checking if
+            # This while loop runs until the rally is over, by checking if
             # a terminal shot was played
-            while (ralley_ongoing == True): 
+            while (rally_ongoing == True): 
                 
                 # in the while loop we always have an active simu node
                 # from that simunode we get the shots and colors of the
@@ -721,11 +713,11 @@ class MCTS_Random_Agent:
 
                     # here we get the next simulated shot encoding of 
                     # the opponents shot
-                    #print("Getting Bots shot when we give him simu_ralley, when its his turn: " + str(self.simulation_ralley.get_ralley()))
-                    #print("Getting Bots shot count simu_ralley before he adds a shot: " + str(self.simulation_ralley.get_shot_count()))
+                    #print("Getting Bots shot when we give him simu_rally, when its his turn: " + str(self.simulation_rally.get_rally()))
+                    #print("Getting Bots shot count simu_rally before he adds a shot: " + str(self.simulation_rally.get_shot_count()))
 
                     bot_shot = self.opponent.add_shot(
-                        current_ralley=self.simulation_ralley,
+                        current_rally=self.simulation_rally,
                         score=score,
                         current_tree=self.mcts_tree,
                         simulation_phase=True)
@@ -763,7 +755,7 @@ class MCTS_Random_Agent:
 
                     if (shot_in_tree == False):
                         simu_bot_node_index = self.get_next_mcts_node_index()
-                        simu_bot_shot_depth = current_ralley.get_len_ralley()+1
+                        simu_bot_shot_depth = current_rally.get_len_rally()+1
                         
                         #print("The simulated shot of Djoko: " + str(bot_shot))
 
@@ -789,7 +781,7 @@ class MCTS_Random_Agent:
                         self.set_active_simu_node(simu_bot_node_index)
                         self.switch_simu_turns()
                     
-                    self.add_shot_to_simu_ralley(bot_shot)
+                    self.add_shot_to_simu_rally(bot_shot)
                     
                     #if (const.MenuVariables.show_tree == 'all_mcts_trees'):
                     #    print("The MCTS_Tree with the first simu shot from expanded node is displayed.")
@@ -901,7 +893,7 @@ class MCTS_Random_Agent:
                     if (shot_in_tree == False):
                     
                         sec_serve_index = self.get_next_mcts_node_index()
-                        depth = current_ralley.get_len_ralley() + 1
+                        depth = current_rally.get_len_rally() + 1
 
                         self.add_node_to_mcts_tree(index=sec_serve_index,
                                                    colour="lightskyblue",
@@ -925,14 +917,14 @@ class MCTS_Random_Agent:
                         self.set_active_simu_node(sec_serve_index)
                         self.switch_simu_turns()
                     
-                    self.add_shot_to_simu_ralley(sec_serve_sim)
+                    self.add_shot_to_simu_rally(sec_serve_sim)
                     
                     self.x = "in_play"
 
                 elif (self.x == "in_play" and self.mcts_agents_turn == True):
                     # we need to add a normal shot from mcts agent to the 
                     # simulation phase
-                    #print(" 3.2 Add a simulation shot from the mcts agent to the ralley. MCTS Agents Turn = True")
+                    #print(" 3.2 Add a simulation shot from the mcts agent to the rally. MCTS Agents Turn = True")
                     
                     i = random.randint(0, 99)
                     if i < 33:
@@ -974,7 +966,7 @@ class MCTS_Random_Agent:
 
                     if (shot_in_tree == False):
                         altered_simu_shot_index = self.get_next_mcts_node_index()
-                        depth_mcts_simu = current_ralley.get_len_ralley() + 1
+                        depth_mcts_simu = current_rally.get_len_rally() + 1
 
                         self.add_node_to_mcts_tree(index=altered_simu_shot_index,
                                                    colour="lightskyblue",
@@ -997,7 +989,7 @@ class MCTS_Random_Agent:
                         self.set_active_simu_node(altered_simu_shot_index)
                         self.switch_simu_turns()
 
-                    self.add_shot_to_simu_ralley(altered_simu_shot)
+                    self.add_shot_to_simu_rally(altered_simu_shot)
                 
                 else: print("Error: Scenario in three if statements in simulation not covered!")
 
@@ -1013,15 +1005,15 @@ class MCTS_Random_Agent:
                     #if self.x == "terminal": print(" 3.3 Exp Shot was terminal.")
                     #else: print(" 3.3 Last shot was terminal.")
                     
-                    #print("Starting backpropagation from normal terminal shot in ralley.")
+                    #print("Starting backpropagation from normal terminal shot in rally.")
                     self.backpropagation_phase()
                     
-                    self.simulation_ralley.remove_last_n_elements_of_ralley(
+                    self.simulation_rally.remove_last_n_elements_of_rally(
                         len(self.expansion_path)-1)
 
                     self.set_active_simu_node(self.get_expansion_node())
                     self.mcts_agents_turn = False
-                    ralley_ongoing = False
+                    rally_ongoing = False
                 i += 1
             
     def backpropagation_phase(self, from_leaf_node=False):
@@ -1031,8 +1023,8 @@ class MCTS_Random_Agent:
         #print("----------------------------")
         #print("4. Start of Backpropagation Phase!")
         #print("The expansion path that we possibly need to backprobagate through: " + str(self.expansion_path))
-        #print("The simulation ralley, that lead to the backprobagation: " + str(self.simulation_ralley.get_ralley()))
-        #print("The last shot that was taken and that was terminal: " + str(self.simulation_ralley.get_last_shot()))
+        #print("The simulation rally, that lead to the backprobagation: " + str(self.simulation_rally.get_rally()))
+        #print("The last shot that was taken and that was terminal: " + str(self.simulation_rally.get_last_shot()))
         self.set_active_simu_node(self.expansion_path[-1])
         
         # We need to update the visit counts of all nodes in the 
@@ -1041,12 +1033,12 @@ class MCTS_Random_Agent:
 
         if (col_term_node == "lightskyblue" or col_term_node == "yellow" 
             or col_term_node == "blue"):
-            if ("*" in self.simulation_ralley.get_last_shot()):
+            if ("*" in self.simulation_rally.get_last_shot()):
                 # We update n_wins. MCTS shot was a winner.
                 for x in range(1, len(self.expansion_path)):
                     self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1
         elif (col_term_node == "springgreen" or col_term_node == "green"):
-            if ("nwdx" in self.simulation_ralley.get_last_shot()):
+            if ("nwdx" in self.simulation_rally.get_last_shot()):
                 # We update n_wins. Bot shot was a error.
                 for x in range(1, len(self.expansion_path)):
                     self.mcts_tree.nodes[self.expansion_path[x]]['n_wins'] += 1
@@ -1183,8 +1175,8 @@ class MCTS_Random_Agent:
         #print("Expansion Path in the beginning of adding probs to shot: " + str(self.expansion_path))
 
         self.first_service = True
-        if self.simulation_ralley.get_shot_count() != 0:
-            first_serve_encoding = self.simulation_ralley.get_first_shot_of_ralley()
+        if self.simulation_rally.get_shot_count() != 0:
+            first_serve_encoding = self.simulation_rally.get_first_shot_of_rally()
             if "," in first_serve_encoding:
                 #print("First serve is set to false because: , :was found")
                 self.first_service = False
@@ -1199,15 +1191,15 @@ class MCTS_Random_Agent:
             parent_node_depth = self.get_depth(self.get_active_simu_node())
 
         #print("Parent_Node_Shot = " + str(parent_node_shot))
-        #print("First shot of Simuralley, before adding probs to a shot: " + str(self.simulation_ralley.get_ralley()))
+        #print("First shot of Simurally, before adding probs to a shot: " + str(self.simulation_rally.get_rally()))
         #print("First serve: " + str(self.first_service))
         #print("shot encoding expansion node before alterations: " + str(shot))
-        #print("Self.MCTS Ralley: " + str(self.mcts_ralley.get_ralley()))
-        #print("Len of mcts_ralley: " + str(self.mcts_ralley.get_len_ralley()))
+        #print("Self.MCTS Rally: " + str(self.mcts_rally.get_rally()))
+        #print("Len of mcts_rally: " + str(self.mcts_rally.get_len_rally()))
         #print("Self.first_servince: " + str(self.first_service))
         #print("first_serve: " + str(first_serve))
 
-        if self.mcts_ralley.get_len_ralley() == 0:
+        if self.mcts_rally.get_len_rally() == 0:
             self.first_service = True
 
         if (shot == "4" or shot == "5" or shot == "6" and self.first_service == True):
@@ -1301,7 +1293,7 @@ class MCTS_Random_Agent:
             
             #print("Serving (1 for bottom, 2 for top): " + str(score.get_serving_player()))
             #print("Path till expanded shot: " + str(self.expansion_path))
-            #print("Shot of first serve in selected Ralley: " + str(self.get_shot_of_node(self.expansion_path[1])))
+            #print("Shot of first serve in selected rally: " + str(self.get_shot_of_node(self.expansion_path[1])))
             #print("Shot of Leaf Node: " + str(self.get_shot_of_node(self.leaf_node)))
             
             # Are we expanding/simulation a return?
@@ -1600,9 +1592,9 @@ class MCTS_Random_Agent:
                 #print("We are expanding/simulating a normal shot.")
                 if (score.get_serving_player() == 1):
 
-                    # firstly was MCTS Agent serving 2nd in the ralley?
+                    # firstly was MCTS Agent serving 2nd in the rally?
                     if (self.first_service == False):
-                        #print("In a ralley, where MCTS was serving a 2nd.")
+                        #print("In a rally, where MCTS was serving a 2nd.")
                         if ("1" in parent_node_shot):
                             #print("(0) Leaf Nodes shot was in direction 1.")
                             if (shot == "1"):
@@ -1757,9 +1749,9 @@ class MCTS_Random_Agent:
                                 elif j < (1167 + 317):
                                     shot = shot + "*"
 
-                    # Was MCTS Agent serving 1st in the ralley?
+                    # Was MCTS Agent serving 1st in the rally?
                     elif (self.first_service == True):
-                        #print("In a ralley, where MCTS was serving a 1st.")
+                        #print("In a rally, where MCTS was serving a 1st.")
                         if ("1" in parent_node_shot):
                             #print("1 found in Parent Node")
                             if (shot == "1"):
@@ -1917,10 +1909,10 @@ class MCTS_Random_Agent:
 
                 # MCTS Agent is returning
                 elif (score.get_serving_player() == 2):
-                    # 3rd was MCTS Agent returning 2nd in the ralley?
+                    # 3rd was MCTS Agent returning 2nd in the rally?
                     # any("," in s for s in self.get_shot_of_node(self.expansion_path[1]))
                     if (self.first_service == False):
-                        #print("In a ralley, where MCTS was returning a 2nd.")
+                        #print("In a rally, where MCTS was returning a 2nd.")
                         if ("1" in parent_node_shot):
                             #print("1 found in Parent Node")
                             if (shot == "1"):
@@ -2076,9 +2068,9 @@ class MCTS_Random_Agent:
                                 elif j < (1155 + 271):
                                     shot = shot + "*"
 
-                    # 4th was MCTS Agent returning 1st in the ralley?
+                    # 4th was MCTS Agent returning 1st in the rally?
                     else:
-                        #print("In a ralley, where MCTS was returning a 1st.")
+                        #print("In a rally, where MCTS was returning a 1st.")
                         if ("1" in parent_node_shot):
                             #print("1 found in parent Node")
                             if (shot == "1"):
@@ -2456,25 +2448,25 @@ class MCTS_Random_Agent:
 
         return direction
 
-    def copy_ralley_to_mcts_ralley(self, current_ralley):
-        '''Copys current_ralley to the mcts ralley'''
-        for i in range(0, current_ralley.get_len_ralley()):
-            x = current_ralley.return_shot_at_pos(i)
-            self.mcts_ralley.add_shot_to_ralley(x)
+    def copy_rally_to_mcts_rally(self, current_rally):
+        '''Copys current_rally to the mcts rally'''
+        for i in range(0, current_rally.get_len_rally()):
+            x = current_rally.return_shot_at_pos(i)
+            self.mcts_rally.add_shot_to_rally(x)
 
-    def copy_ralley_to_simu_ralley(self, current_ralley):
-        '''Copys current_ralley to the mcts ralley'''
-        for i in range(0, current_ralley.get_len_ralley()):
-            x = current_ralley.return_shot_at_pos(i)
-            self.simulation_ralley.add_shot_to_ralley(x)
+    def copy_rally_to_simu_rally(self, current_rally):
+        '''Copys current_rally to the mcts rally'''
+        for i in range(0, current_rally.get_len_rally()):
+            x = current_rally.return_shot_at_pos(i)
+            self.simulation_rally.add_shot_to_rally(x)
 
-    def get_mcts_ralley(self):
-        '''Returns the MCTS Ralley.'''
-        return self.mcts_ralley
+    def get_mcts_rally(self):
+        '''Returns the MCTS rally.'''
+        return self.mcts_rally
 
-    def add_shot_to_simu_ralley(self, shot):
-        '''Adds a given shot to the Simulation Ralley'''
-        self.simulation_ralley.add_shot_to_ralley(shot)
+    def add_shot_to_simu_rally(self, shot):
+        '''Adds a given shot to the Simulation rally'''
+        self.simulation_rally.add_shot_to_rally(shot)
 
     def switch_simu_turns(self):
         '''Switches the turn variable from true to false and vice versa 
@@ -2484,9 +2476,9 @@ class MCTS_Random_Agent:
         elif self.mcts_agents_turn == True:
             self.mcts_agents_turn = False
 
-    def add_shot_to_mcts_ralley(self, shot):
-        '''Adds a shot (Expansion shot&Simu shots) to the mcts ralley'''
-        self.mcts_ralley.add_shot_to_ralley(shot)
+    def add_shot_to_mcts_rally(self, shot):
+        '''Adds a shot (Expansion shot&Simu shots) to the mcts rally'''
+        self.mcts_rally.add_shot_to_rally(shot)
 
     def get_blue_neighbors(self, node):
         '''Returns a List of the Blue neighbor Node indexes of a given Node'''

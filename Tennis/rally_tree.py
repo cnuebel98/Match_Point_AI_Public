@@ -5,7 +5,7 @@ import constants as const
 import math
 import numpy as np
 
-class Ralley_Tree:
+class Rally_Tree:
     '''In this class all the functions to generate the game tree are 
     defined'''
     def __init__(self):
@@ -249,12 +249,12 @@ class Ralley_Tree:
 
     def clear_visited_nodes(self):
         '''The visited_nodes list is being cleard before each new 
-        ralley'''
+        rally'''
         self.visited_nodes.clear()
         self.visited_nodes.append(0)
 
     def get_visited_nodes(self):
-        '''Returns the List of the visited nodes in a ralley'''
+        '''Returns the List of the visited nodes in a rally'''
         return self.visited_nodes
 
     def update_edge_visit_counts(self):

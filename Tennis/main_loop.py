@@ -1,5 +1,5 @@
 import pygame
-import ralley
+import rally
 import ball
 import bot
 import log
@@ -11,7 +11,7 @@ import random
 import time
 import scoring
 import constants as const
-import ralley_tree
+import rally_tree
 import networkx as nx
 import mcts_agent
 import average_stat_bot
@@ -23,7 +23,7 @@ WIDTH  = const.Dims.WIDTH
 HEIGHT = const.Dims.HEIGHT
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("PyTennis")
+pygame.display.set_caption("Match Point AI")
 
 FPS = const.Dims.FPS
 
@@ -188,10 +188,10 @@ def handle_ball_movement(keys, ball):
         and ball.x + ball.VELOCITY + ball.radius <= WIDTH):
         ball.move_horizontal(left=False)
 
-def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION, 
+def move_ball_to_pos(ball, rally, win, TRANSITION_ANIMATION, 
                      turn, current_score):
     # makes the ball go to the position, based on the bot shot
-    r = ralley.get_ralley()
+    r = rally.get_rally()
     series = pd.Series(r)
     RETURN_DEPTH = ["7", "8", "9"]
     DIRECTIONS = ["1", "2", "3"]
@@ -202,11 +202,11 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION,
     current_shot = ""
     current_shot = series[len(series)-1]
 
-    # Takes the last shot in the ralley and iterates through the
+    # Takes the last shot in the rally and iterates through the
     # characters in that shot, looks at depth of shot first and finds a 
     # fitting y position and then the same for direction and x posititon
     for c in current_shot:
-        # The first if statement checks, whose turn in the ralley it is 
+        # The first if statement checks, whose turn in the rally it is 
         # (of top or bottom player)accordingly, the ball is moved to the 
         # right side of the court into the correct space
         if turn == "bottom":
@@ -216,87 +216,87 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION,
                 point_count = scoring.Scoring.get_point_count_per_game(
                     current_score)
                 y_pos = random.randint(
-                    HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS, 
-                    HEIGHT//2 - 0.3*TLINE_HEIGHT//2)
+                    int(HEIGHT//2 - TLINE_HEIGHT//2 - BALL_RADIUS), 
+                    int(HEIGHT//2 - 0.3*TLINE_HEIGHT//2))
                 # Serve to the outside
                 if c == "4":
                     if point_count % 2 == 0:
                         # bottom player serves from deuce side
                         x_pos = random.randint(
-                            WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2))
                     elif point_count % 2 == 1:
                         # bottom player serves from the Ad side
                         x_pos = random.randint(
-                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2))
 
                 # Serve to the body    
                 elif c == "5":
                     if point_count % 2 == 0:
                         # bottom player serves from deuce side
                         x_pos = random.randint(
-                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2))
                     elif point_count % 2 == 1:
                         # bottom player serves from the Ad side
                         x_pos = random.randint(
-                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2))
                 
                 # Serve down the T            
                 elif c == "6":
                     if point_count % 2 == 0:
                         # bottom player serves from deuce side
                         x_pos = random.randint(
-                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 + BALL_RADIUS)
+                            int(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 + BALL_RADIUS))
                     elif point_count % 2 == 1:
                         # bottom player serves from the Ad side
                         x_pos = random.randint(
-                            WIDTH//2 - BALL_RADIUS, 
-                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 - BALL_RADIUS), 
+                            int(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2))
                     
             if c in RETURN_DEPTH:
                 if c == "7":
                     y_pos = random.randint(
-                        HEIGHT//2 - TLINE_HEIGHT//2, 
-                        HEIGHT//2 - BALL_RADIUS//2)
+                        int(HEIGHT//2 - TLINE_HEIGHT//2), 
+                        int(HEIGHT//2 - BALL_RADIUS//2))
                 elif c == "8":
                     y_pos = random.randint(
-                        HEIGHT//2 - TLINE_HEIGHT//2 
-                        - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2), 
-                        HEIGHT//2 - TLINE_HEIGHT//2)
+                        int(HEIGHT//2 - TLINE_HEIGHT//2 
+                        - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2)), 
+                        int(HEIGHT//2 - TLINE_HEIGHT//2))
                 elif c == "9":
                     y_pos = random.randint(
-                        HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS, 
-                        HEIGHT//2 - TLINE_HEIGHT//2 
-                        - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2))
+                        int(HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS), 
+                        int(HEIGHT//2 - TLINE_HEIGHT//2 
+                        - ((COURT_HEIGHT//2 - TLINE_HEIGHT//2)//2)))
 
             if c in DIRECTIONS:
                 if c == "1":
                     x_pos = random.randint(
-                        WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
-                        WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
+                        int(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS), 
+                        int(WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2)))
                 elif c == "2":
                     x_pos = random.randint(
-                        WIDTH//2 - BALL_RADIUS 
-                        - int(0.2*SINGLES_LINES_WIDTH//2), 
-                        WIDTH//2 + BALL_RADIUS 
-                        + int(0.2*SINGLES_LINES_WIDTH//2))
+                        int(WIDTH//2 - BALL_RADIUS 
+                        - int(0.2*SINGLES_LINES_WIDTH//2)), 
+                        int(WIDTH//2 + BALL_RADIUS 
+                        + int(0.2*SINGLES_LINES_WIDTH//2)))
                 elif c == "3":
                     x_pos = random.randint(
-                        WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS, 
-                        WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                        int(WIDTH//2 + int(0.2*SINGLES_LINES_WIDTH) + BALL_RADIUS), 
+                        int(WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2))
 
             if (y_pos == 10):
                 y_pos = random.randint(
-                    HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS, 
-                    HEIGHT//2 - BALL_RADIUS)
+                    int(HEIGHT//2 - COURT_HEIGHT//2 - BALL_RADIUS), 
+                    int(HEIGHT//2 - BALL_RADIUS))
             if (x_pos == 10):
                 x_pos = random.randint(
-                    WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
-                    WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
+                    int(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS), 
+                    int(WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS))
 
         elif turn == "top":
             # Ball placement for Serve encoding dependet on shot count, 
@@ -305,64 +305,64 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION,
                 point_count = scoring.Scoring.get_point_count_per_game(
                     current_score)
                 y_pos = random.randint(
-                    HEIGHT//2 + 0.3*TLINE_HEIGHT//2, 
-                    HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS)
+                    int(HEIGHT//2 + 0.3*TLINE_HEIGHT//2), 
+                    int(HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS))
                 # Serve to the outside
                 if c == "4":
                     if point_count % 2 == 0:
                         # top player serves from deuce side
                         x_pos = random.randint(
-                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 + BALL_RADIUS + SINGLES_LINES_WIDTH//2))
                     elif point_count % 2 == 1:
                         # top player serves from the Ad side
                         x_pos = random.randint(
-                            WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 - BALL_RADIUS - SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2))
 
                 # Serve to the body    
                 elif c == "5":
                     if point_count % 2 == 0:
                         # top player serves from deuce side
                         x_pos = random.randint(
-                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 + 0.7*SINGLES_LINES_WIDTH//2))
                     elif point_count % 2 == 1:
                         # top player serves from the Ad side
                         x_pos = random.randint(
-                            WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 - 0.7*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2))
                 
                 # Serve down the T            
                 elif c == "6":
                     if point_count % 2 == 0:
                         # top player serves from deuce side
                         x_pos = random.randint(
-                            WIDTH//2 - BALL_RADIUS, 
-                            WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2)
+                            int(WIDTH//2 - BALL_RADIUS), 
+                            int(WIDTH//2 + 0.3*SINGLES_LINES_WIDTH//2))
                     elif point_count % 2 == 1:
                         # top player serves from the Ad side
                         x_pos = random.randint(
-                            WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2, 
-                            WIDTH//2 + BALL_RADIUS)
+                            int(WIDTH//2 - 0.3*SINGLES_LINES_WIDTH//2), 
+                            int(WIDTH//2 + BALL_RADIUS))
 
             if c in RETURN_DEPTH:
                 if c == "7":
                     #print("y Pos because of 7")
                     y_pos = random.randint(
-                        HEIGHT//2 + BALL_RADIUS, HEIGHT//2 + TLINE_HEIGHT//2)
+                        int(HEIGHT//2 + BALL_RADIUS), int(HEIGHT//2 + TLINE_HEIGHT//2))
                 elif c == "8":
                     #print("y Pos because of 8")
                     y_pos = random.randint(
-                        HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS, 
-                        HEIGHT//2 + TLINE_HEIGHT//2 
-                        + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2)
+                        int(HEIGHT//2 + TLINE_HEIGHT//2 + BALL_RADIUS), 
+                        int(HEIGHT//2 + TLINE_HEIGHT//2 
+                        + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2))
                 elif c == "9":
                     #print("y Pos because of 9")
                     y_pos = random.randint(
-                        HEIGHT//2 + TLINE_HEIGHT//2 
-                        + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2, 
-                        HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
+                        int(HEIGHT//2 + TLINE_HEIGHT//2 
+                        + (COURT_HEIGHT//2-TLINE_HEIGHT//2)//2), 
+                        int(HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS))
                     
             if c in DIRECTIONS:
                 if c == "1":
@@ -373,24 +373,24 @@ def move_ball_to_pos(ball, ralley, win, TRANSITION_ANIMATION,
                 elif c == "2":
                     #print("x Pos because of 2")
                     x_pos = random.randint(
-                        WIDTH//2 - BALL_RADIUS 
-                        - int(0.2*SINGLES_LINES_WIDTH//2), 
-                        WIDTH//2 + BALL_RADIUS 
-                        + int(0.2*SINGLES_LINES_WIDTH//2))
+                        int(WIDTH//2 - BALL_RADIUS 
+                        - int(0.2*SINGLES_LINES_WIDTH//2)), 
+                        int(WIDTH//2 + BALL_RADIUS 
+                        + int(0.2*SINGLES_LINES_WIDTH//2)))
                 elif c == "3":
                     #print("x Pos because of 3")
                     x_pos = random.randint(
-                        WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
-                        WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2))
+                        int(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS), 
+                        int(WIDTH//2 - int(0.2*SINGLES_LINES_WIDTH//2)))
                     
             if (y_pos == 10):
                 y_pos = random.randint(
-                    HEIGHT//2 + BALL_RADIUS, 
-                    HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS)
+                    int(HEIGHT//2 + BALL_RADIUS), 
+                    int(HEIGHT//2 + COURT_HEIGHT//2 + BALL_RADIUS))
             if (x_pos == 10):
                 x_pos = random.randint(
-                    WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS, 
-                    WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS)
+                    int(WIDTH//2 - SINGLES_LINES_WIDTH//2 - BALL_RADIUS), 
+                    int(WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS))
     
     if TRANSITION_ANIMATION == True:
         # Here the ball transitions to the new position
@@ -503,24 +503,24 @@ def encode_shot_depth(ball):
             return 9
     else: print("Ball is Wide (left or right)")
 
-def encode_shot_selection(ball, ralley):
+def encode_shot_selection(ball, rally):
     current_shot = ""
-    old_ralley = ralley
+    old_rally = rally
     serve_position = None
 
-    # when there was no stroke in the ralley yet, it has to be a serve
-    if old_ralley.get_shot_count() == 0:
+    # when there was no stroke in the rally yet, it has to be a serve
+    if old_rally.get_shot_count() == 0:
         serve_position = "right"
         current_shot = str(encode_serve(ball, serve_position))
-        ralley.add_shot_to_ralley(current_shot)
-    # Encode the other shots after the serve and add them to the ralley
+        rally.add_shot_to_rally(current_shot)
+    # Encode the other shots after the serve and add them to the rally
     # but only for every second shot depending on who is serving
-    elif old_ralley.get_shot_count() > 0:
+    elif old_rally.get_shot_count() > 0:
         current_shot = (current_shot + str(encode_shot_direction(ball)) 
                         + str(encode_shot_depth(ball)))
-        ralley.add_shot_to_ralley(current_shot)
+        rally.add_shot_to_rally(current_shot)
     
-def tree_update(new_ralley, new_tree, colour):
+def tree_update(new_rally, new_tree, colour):
     '''A new node is added to the tree. When the node with the new shot
     already was played from the current game state, then its not added,
     otherwise its added as a directional graph to the tree'''
@@ -540,7 +540,7 @@ def tree_update(new_ralley, new_tree, colour):
 
     # We check wether the new shot is already in the child nodes of the
     # current game state
-    if (new_ralley.get_last_shot() in
+    if (new_rally.get_last_shot() in
         new_tree.get_shot_list_of_neighbors(new_tree.get_active_node())):
         # If the shot in the gamestate has already been played, then 
         # that node is being set to active
@@ -550,7 +550,7 @@ def tree_update(new_ralley, new_tree, colour):
         # Here we set the node active, where the shot already was played
         for x in new_tree.get_shot_list_of_neighbors(
             new_tree.get_active_node()):
-            if (x == new_ralley.get_last_shot()):
+            if (x == new_rally.get_last_shot()):
                 
                 # matching shot is the value we are looking for in the
                 # shot dict to get the indices
@@ -575,8 +575,8 @@ def tree_update(new_ralley, new_tree, colour):
         new_tree.add_new_node(new_tree.get_next_node_index(),
                               node_type="state",
                               colour=colour,
-                              shot_string=new_ralley.get_last_shot(),
-                              depth=new_ralley.get_len_ralley(),
+                              shot_string=new_rally.get_last_shot(),
+                              depth=new_rally.get_len_rally(),
                               n_visits=0,
                               n_wins=0,
                               uct_value=0,
@@ -585,15 +585,15 @@ def tree_update(new_ralley, new_tree, colour):
         # Here we add the edge between the new node and the active node
         # and also set the new node to active
         dir = new_tree.get_dir_of_shot(new_tree.get_node_index())
-        if (ralley.Ralley.get_len_ralley(new_ralley) == 1):
-            # If the Node is the first shot in a ralley, it's added to 
+        if (rally.Rally.get_len_rally(new_rally) == 1):
+            # If the Node is the first shot in a rally, it's added to 
             # State 0
             new_tree.add_new_edge(0, new_tree.get_node_index(), 0, 0, 0, dir)
             new_tree.set_active_node(new_tree.get_node_index())
             node_start = new_tree.get_active_node()
         else:
-            # If the ralley is ongoing, here the Edges are added
-            # print("Ralley length is not 1")
+            # If the rally is ongoing, here the Edges are added
+            # print("rally length is not 1")
             node_start = new_tree.get_active_node()
             new_tree.add_new_edge(node_start,
                                   new_tree.get_node_index(), 0, 0, 0, dir)
@@ -603,18 +603,18 @@ def tree_update(new_ralley, new_tree, colour):
     new_tree.add_node_visit(new_tree.get_active_node())
     # If the added shot was a terminal shot, the initial state is set to
     # active
-    if (new_ralley.get_last_char_of_last_shot()
+    if (new_rally.get_last_char_of_last_shot()
         in const.ShotEncodings.TERMINALS):
 
         # The visited Nodes List is used to update the visit counts on 
-        # each edge, that has been visited durcing the ralley
+        # each edge, that has been visited durcing the rally
         #print("List of visited Nodes: " + str(new_tree.get_visited_nodes()))
         
         new_tree.update_edge_visit_counts()
         new_tree.update_node_visit_counts()
-        new_tree.update_node_wins(new_ralley.get_last_char_of_last_shot(), 
+        new_tree.update_node_wins(new_rally.get_last_char_of_last_shot(), 
                                   colour)
-        new_tree.update_edge_wins(new_ralley.get_last_char_of_last_shot(), 
+        new_tree.update_edge_wins(new_rally.get_last_char_of_last_shot(), 
                                   colour)
         new_tree.update_uct_value()
         new_tree.update_point_win_rate()
@@ -628,7 +628,7 @@ def tree_update(new_ralley, new_tree, colour):
         node_start = 0
 
     #print("Visited_nodes: " + str(new_tree.get_visited_nodes()))
-    #ralley_tree.Ralley_Tree.show_tree(new_tree)
+    #rally_tree.Rally_Tree.show_tree(new_tree)
 
 def main_loop():
     run = True
@@ -649,9 +649,9 @@ def main_loop():
                             PLAYER_HEIGHT,
                             const.Colours.LIGHT_GREEN)
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
-    new_ralley = ralley.Ralley()
+    new_rally = rally.Rally()
     new_log = log.Log()
-    new_tree = ralley_tree.Ralley_Tree()
+    new_tree = rally_tree.Rally_Tree()
     
     # The options are displayed to see what kind of game was started
     print("Simulation: " + str(const.MenuVariables.simulation))
@@ -703,7 +703,7 @@ def main_loop():
     # the match (1 for Bottom player, 2 for top player)
     new_score.set_serving_player(1) 
     new_ball.reset_ball(new_score.get_serving_player(), 
-                        new_ralley.get_shot_count())
+                        new_rally.get_shot_count())
 
     set_counting_for_tree = 0
     match_count_for_tree = 0
@@ -735,36 +735,36 @@ def main_loop():
 
                 # This if elif statement looks at which player is 
                 # serving in the game and sets the turn accordingly 
-                # before each new ralley, so always the correct player 
-                # starts the ralley
+                # before each new rally, so always the correct player 
+                # starts the rally
                 # ToDo: set turn for service for tiebreak
                 if (new_score.get_serving_player() == 1 
-                    and new_ralley.get_shot_count() == 0):
+                    and new_rally.get_shot_count() == 0):
                     top_bot.set_turn(False)
                 elif (new_score.get_serving_player() == 2 
-                      and new_ralley.get_shot_count() == 0):
+                      and new_rally.get_shot_count() == 0):
                     top_bot.set_turn(True)
                 #print(new_score.get_serving_player())
-                #print(new_ralley.get_shot_count())
+                #print(new_rally.get_shot_count())
                 # If its not the bots turn, take the ball position as 
                 # shot by the user/by the bottom bot
                 if top_bot.get_turn() == False:
                     # This is the manual shot encoding, taking the ball 
                     # position set by arrow keys into account
                     if MANUAL:
-                        encode_shot_selection(new_ball, new_ralley)
+                        encode_shot_selection(new_ball, new_rally)
                     else:
                         # The bottom bot adds a shot here
-                        #print("Adding MCTS shot to the ralley: " + str(new_ralley.get_ralley()))
-                        bottom_bot.add_shot(new_ralley, new_score, new_tree)
-                        #print("Ralley after mcts agents shot: " + str(new_ralley.get_ralley()))
-                        tree_update(new_ralley, new_tree, "blue")
+                        #print("Adding MCTS shot to the rally: " + str(new_rally.get_rally()))
+                        bottom_bot.add_shot(new_rally, new_score, new_tree)
+                        #print("rally after mcts agents shot: " + str(new_rally.get_rally()))
+                        tree_update(new_rally, new_tree, "blue")
                         
-                        move_ball_to_pos(new_ball, new_ralley, WIN, 
+                        move_ball_to_pos(new_ball, new_rally, WIN, 
                                          TRANSITION_ANIMATION, 
                                          "bottom", new_score)
                         if const.MenuVariables.show_tree == 'after_shot':
-                            ralley_tree.Ralley_Tree.show_tree(new_tree)
+                            rally_tree.Rally_Tree.show_tree(new_tree)
 
                     top_bot.set_turn(True)
 
@@ -772,31 +772,31 @@ def main_loop():
                     # shot from the bot
                 elif top_bot.get_turn() == True:
                     #print("Adding Bot shot!")
-                    top_bot.add_shot(new_ralley, new_score, new_tree)
+                    top_bot.add_shot(new_rally, new_score, new_tree)
 
-                    tree_update(new_ralley, new_tree, "green")
+                    tree_update(new_rally, new_tree, "green")
 
                     # Ball Movement is an animated transition
-                    move_ball_to_pos(new_ball, new_ralley, WIN, 
+                    move_ball_to_pos(new_ball, new_rally, WIN, 
                                      TRANSITION_ANIMATION, "top", new_score)
                     if const.MenuVariables.show_tree == 'after_shot':
-                            ralley_tree.Ralley_Tree.show_tree(new_tree)
+                            rally_tree.Rally_Tree.show_tree(new_tree)
                     top_bot.set_turn(False)
                     
-                # Here the score is updated, depending on the ralley and
+                # Here the score is updated, depending on the rally and
                 # the shot count and the turn
-                new_ralley.score_update(new_score, new_ball)
+                new_rally.score_update(new_score, new_ball)
                 if (new_score.get_set_count() != set_counting_for_tree):
                     set_counting_for_tree = new_score.get_set_count()
                     if const.MenuVariables.show_tree == 'after_set':
-                        ralley_tree.Ralley_Tree.show_tree(new_tree)
+                        rally_tree.Rally_Tree.show_tree(new_tree)
 
-                if const.Changing.ralley_terminated:
+                if const.Changing.rally_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colours.BLACK)
                     
-                    if const.MenuVariables.show_tree == 'after_ralley':
-                        ralley_tree.Ralley_Tree.show_tree(new_tree)
+                    if const.MenuVariables.show_tree == 'after_rally':
+                        rally_tree.Rally_Tree.show_tree(new_tree)
 
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),
@@ -806,8 +806,8 @@ def main_loop():
                                                 new_score.get_sets_A(),
                                                 new_score.get_sets_B(),
                                                 new_score.get_serving_player(),
-                                                const.Changing.ralley)
-                    const.Changing.ralley_terminated = False
+                                                const.Changing.rally)
+                    const.Changing.rally_terminated = False
                 
         
         if const.MenuVariables.simulation == True:
@@ -818,10 +818,10 @@ def main_loop():
             while new_score.matches_played < const.MenuVariables.simu_matches:
                 
                 if (new_score.get_serving_player() == 1 
-                    and new_ralley.get_shot_count() == 0):
+                    and new_rally.get_shot_count() == 0):
                     top_bot.set_turn(False)
                 elif (new_score.get_serving_player() == 2 
-                      and new_ralley.get_shot_count() == 0):
+                      and new_rally.get_shot_count() == 0):
                     top_bot.set_turn(True)
                 # If its not the bots turn, take the ball position as 
                 # shot by the user/by the bottom player
@@ -829,13 +829,13 @@ def main_loop():
                     # This is the manual shot encoding, taking the ball 
                     # position set by arrow keys into account
                     if MANUAL:
-                        encode_shot_selection(new_ball, new_ralley)
+                        encode_shot_selection(new_ball, new_rally)
                     else:
                         # The bottom bot adds a shot here
-                        bottom_bot.add_shot(new_ralley, new_score, new_tree)
-                        tree_update(new_ralley, new_tree, "blue")
+                        bottom_bot.add_shot(new_rally, new_score, new_tree)
+                        tree_update(new_rally, new_tree, "blue")
 
-                        move_ball_to_pos(new_ball, new_ralley, WIN, 
+                        move_ball_to_pos(new_ball, new_rally, WIN, 
                                          TRANSITION_ANIMATION, "bottom", 
                                          new_score)
                     top_bot.set_turn(True)
@@ -843,24 +843,24 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
-                    top_bot.add_shot(new_ralley, new_score, new_tree)
-                    tree_update(new_ralley, new_tree, "green")
+                    top_bot.add_shot(new_rally, new_score, new_tree)
+                    tree_update(new_rally, new_tree, "green")
 
                     # Ball Movement is an animated transition
-                    move_ball_to_pos(new_ball, new_ralley, WIN, 
+                    move_ball_to_pos(new_ball, new_rally, WIN, 
                                      TRANSITION_ANIMATION, "top", new_score)
                     top_bot.set_turn(False)
                     
-                # Here the score is updated, depending on the ralley and 
+                # Here the score is updated, depending on the rally and 
                 # the shot count and the turn
-                new_ralley.score_update(new_score, new_ball)
+                new_rally.score_update(new_score, new_ball)
                 
                 if (const.MenuVariables.show_tree == 'after_match'):
                     if (new_score.get_match_count() != match_count_for_tree):
                         match_count_for_tree = new_score.get_match_count()
-                        ralley_tree.Ralley_Tree.show_tree(new_tree)
+                        rally_tree.Rally_Tree.show_tree(new_tree)
                         
-                if const.Changing.ralley_terminated:
+                if const.Changing.rally_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colours.BLACK)
                     if const.MenuVariables.logging == True:
@@ -871,8 +871,8 @@ def main_loop():
                                                 new_score.get_sets_A(),
                                                 new_score.get_sets_B(),
                                                 new_score.get_serving_player(),
-                                                const.Changing.ralley)
-                    const.Changing.ralley_terminated = False
+                                                const.Changing.rally)
+                    const.Changing.rally_terminated = False
 
                 draw(WIN, [bottom_player, top_player], new_ball, 
                      [next_button, score_text_field])

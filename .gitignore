@@ -1,2 +1,10 @@
+# Ignore virtual environment directory
 venv/
+
+# Ignore Python cache files
 __pycache__/
+*.pyc
+*.pyo
+
+# Ignore results.csv file
+results.csv

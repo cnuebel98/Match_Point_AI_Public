@@ -28,14 +28,10 @@ class Log:
                    'Serving_Player': serving_player,
                    'Rally': str(rally)}, index = [1])
         self.df = pd.concat([self.df.loc[:], new_row]).reset_index(drop=True)
-        #self.show_df()
         
     def show_df(self):
         print(self.df)
 
-    def add_rally_to_df(self, rally):
-        ...
-
     def export_to_csv(self):
         # Data is saved and exported in a csv file
-        self.df.to_csv(r"C:\Users\Carlo\Repos\TrainingsTool\Tennis\exported_results\results_simulation.csv", encoding='utf-8', index=False)
+        self.df.to_csv(r"results.csv", encoding='utf-8', index=False)

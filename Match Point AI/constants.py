@@ -1,5 +1,7 @@
 import math
 
+TRANSITION_ANIMATION = True
+
 class Dims:
     '''This class stores the dimensions of the GUI and the elements in 
     the GUI'''
@@ -9,7 +11,7 @@ class Dims:
 
     # Size of elements
     BALL_RADIUS = 7
-    PLAYER_WIDTH = 40
+    PLAYER_WIDTH = 120
     PLAYER_HEIGHT = 40
 
     # Some timing related stuff
@@ -77,7 +79,7 @@ class MenuVariables:
     animation = True
     top_bot = 4
     bottom_bot = 4
-    animation_time = 0.00
+    animation_time = 0.05
     simu_matches = 1
     simulation = True
     colour_scheme = 1

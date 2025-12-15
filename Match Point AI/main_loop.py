@@ -38,7 +38,7 @@ SINGLES_LINES_WIDTH = const.Dims.SINGLES_LINES_WIDTH
 TLINE_HEIGHT = const.Dims.TLINE_HEIGHT
 NET_WIDTH = const.Dims.NET_WIDTH
 
-TRANSITION_ANIMATION = False
+TRANSITION_ANIMATION = const.TRANSITION_ANIMATION
 
 class PlayerRect:
     # ToDo: Make Players circles instead of squares
@@ -46,17 +46,22 @@ class PlayerRect:
     # ToDo: Make velocity dependent on the player
     VELOCITY = 4
 
-    def __init__(self, x, y, width, height, colour):
+    def __init__(self, x, y, width, height, colour, name=None):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.colour = colour
+        self.name = name
+        self.font = pygame.font.SysFont(None, 24)
 
     def draw(self, win):
-        pygame.draw.rect(win, 
-                         self.colour, 
-                         (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(win, self.colour, (self.x, self.y, self.width, self.height))
+        if self.name:
+            text_surface = self.font.render(self.name, True, (0, 0, 0))
+            text_rect = text_surface.get_rect(center=(self.x + self.width // 2,
+                                                       self.y + self.height // 2))
+            win.blit(text_surface, text_rect)
 
     def move_vertical(self, up=True):
         if up:
@@ -143,17 +148,14 @@ def draw(win, players, ball, buttons):
                      (WIDTH//2 - NET_WIDTH//2, 
                       HEIGHT//2 - LINE_WIDTH//2, 
                       NET_WIDTH, 
-                      LINE_WIDTH))    
+                      LINE_WIDTH))
 
     for player in players:
         player.draw(win)
 
-    for button in buttons:
-        #button.draw(win, const.Colours.WHITE)
-        ...
-        
-    ball.draw(win, const.Colours.YELLOW)
-
+    #for button in buttons:
+    #    button.draw(win, const.Colours.WHITE)
+    buttons[1].draw(win,const.Colours.WHITE)
     pygame.display.update()
 
 def handle_player_movement(keys, bottom_player):
@@ -189,7 +191,7 @@ def handle_ball_movement(keys, ball):
         ball.move_horizontal(left=False)
 
 def move_ball_to_pos(ball, rally, win, TRANSITION_ANIMATION, 
-                     turn, current_score):
+                     turn, current_score, bottom_player, top_player, next_button, score_text_field):
     # makes the ball go to the position, based on the bot shot
     r = rally.get_rally()
     series = pd.Series(r)
@@ -393,18 +395,40 @@ def move_ball_to_pos(ball, rally, win, TRANSITION_ANIMATION,
                     int(WIDTH//2 + SINGLES_LINES_WIDTH//2 + BALL_RADIUS))
     
     if TRANSITION_ANIMATION == True:
-        # Here the ball transitions to the new position
-        x_diff = x_pos - ball.get_X()
-        y_diff = y_pos - ball.get_Y()
         x = ball.get_X()
         y = ball.get_Y()
-        for i in range(0, 1, 1):
+        x_diff = x_pos - x
+        y_diff = y_pos - y
+
+        trail = []
+        MAX_TRAIL_LENGTH = 3
+
+        for i in range(10):
+            draw(WIN, [bottom_player, top_player], ball, [next_button, score_text_field])
+
+            # Update ball position
             ball.move_animation_from_A_to_B(x_diff, y_diff, i, x, y)
-            ball.draw(win, const.Colours.YELLOW)
-            #pygame.display.update()
+
+            # Store current position in trail
+            trail.append((ball.get_X(), ball.get_Y()))
+            if len(trail) > MAX_TRAIL_LENGTH:
+                trail.pop(0)
+
+            # Draw trail (from oldest to newest, increasing opacity)
+            for idx, (tx, ty) in enumerate(trail):
+                alpha = int(255 * (idx + 1) / (MAX_TRAIL_LENGTH + 1))  # fading effect
+                faded_surface = pygame.Surface((2 * BALL_RADIUS, 2 * BALL_RADIUS), pygame.SRCALPHA)
+                pygame.draw.circle(
+                    faded_surface, (255, 255, 0, alpha), (BALL_RADIUS, BALL_RADIUS), BALL_RADIUS
+                )
+                WIN.blit(faded_surface, (tx - BALL_RADIUS, ty - BALL_RADIUS))
+
+            # Draw the current (latest) ball on top
+            ball.draw(WIN, const.Colours.YELLOW)
+
+            pygame.display.update()
             time.sleep(const.MenuVariables.animation_time)
     else:
-        # Here the ball jumps instantly to the new positions
         ball.set_X(x_pos)
         ball.set_Y(y_pos)
 
@@ -516,7 +540,7 @@ def encode_shot_selection(ball, rally):
     # Encode the other shots after the serve and add them to the rally
     # but only for every second shot depending on who is serving
     elif old_rally.get_shot_count() > 0:
-        current_shot = (current_shot + str(encode_shot_direction(ball)) 
+        current_shot = (current_shot + str(encode_shot_direction(ball))
                         + str(encode_shot_depth(ball)))
         rally.add_shot_to_rally(current_shot)
     
@@ -630,24 +654,38 @@ def tree_update(new_rally, new_tree, colour):
     #print("Visited_nodes: " + str(new_tree.get_visited_nodes()))
     #rally_tree.Rally_Tree.show_tree(new_tree)
 
+def highlight_winning_player(new_ball, WIN, 
+                             bottom_player, top_player, next_button, score_text_field, new_score):
+
+    winner = new_score.last_point_won_player
+
+    if winner == 1:
+        print("Bottom Player Won")
+        original_colour = bottom_player.colour
+        bottom_player.colour = (255, 215, 0)
+    elif winner == 2:
+        original_colour = top_player.colour
+        top_player.colour = (255, 215, 0)
+        print("Top Player Won")
+
+    draw(WIN, [bottom_player, top_player], 
+             new_ball, [next_button, score_text_field])
+    
+    time.sleep(0.5)
+
+    top_player.colour = original_colour
+    bottom_player.colour = original_colour
+
+    draw(WIN, [bottom_player, top_player], 
+             new_ball, [next_button, score_text_field])
+    
+
 def main_loop():
     run = True
     clock = pygame.time.Clock()
     # Set MANUAL to true to be able to play with arrow keys
     MANUAL = False
-    # Set to false to safe time and not display the transition animation
-    # of the ball
-    TRANSITION_ANIMATION = True
 
-    bottom_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 
-                               HEIGHT - PLAYER_HEIGHT - 10, 
-                               PLAYER_WIDTH, 
-                               PLAYER_HEIGHT,
-                               const.Colours.LIGHT_BLUE)
-    top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2, 10, 
-                            PLAYER_WIDTH, 
-                            PLAYER_HEIGHT,
-                            const.Colours.LIGHT_GREEN)
     new_ball = ball.Ball(WIDTH//2, HEIGHT//2, BALL_RADIUS)
     new_rally = rally.Rally()
     new_log = log.Log()
@@ -669,9 +707,9 @@ def main_loop():
     #    top_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
     elif const.MenuVariables.top_bot == 3:
         top_bot = (simpler_stat_bot_djoko.
-                   Simple_Stat_Bot_Djokovic("Simple_Djoko"))
+                   Simple_Stat_Bot_Djokovic("Djokovic Bot"))
     elif const.MenuVariables.top_bot == 4:
-        top_bot = (average_stat_bot.Average_Stat_Bot("Average_Bot"))
+        top_bot = (average_stat_bot.Average_Stat_Bot("Average Bot"))
     else: top_bot = bot.Bot("Random")
 
     # Different classes for Bottom Bot are initialized depending on the 
@@ -682,15 +720,15 @@ def main_loop():
     #    bottom_bot = stat_bot_djokovic.Stat_Bot_Djokovic("Djokovic")
     elif const.MenuVariables.bottom_bot == 3:
         bottom_bot = (simpler_stat_bot_djoko.
-                      Simple_Stat_Bot_Djokovic("Simple_Djoko"))
+                      Simple_Stat_Bot_Djokovic("Djokovic Bot"))
     elif const.MenuVariables.bottom_bot == 4:
-        bottom_bot = mcts_agent.MCTS_Agent("MCTS_Agent")
+        bottom_bot = mcts_agent.MCTS_Agent("MCTS Agent")
     elif const.MenuVariables.bottom_bot == 5:
-        bottom_bot = average_stat_bot.Average_Stat_Bot("Average_Bot")
+        bottom_bot = average_stat_bot.Average_Stat_Bot("Average Bot")
     elif const.MenuVariables.bottom_bot == 6:
-        bottom_bot = mcts_random_agent.MCTS_Random_Agent("MCTS_Random_Agent")
+        bottom_bot = mcts_random_agent.MCTS_Random_Agent("MCTS Random Agent")
     elif const.MenuVariables.bottom_bot == 7:
-        bottom_bot = mcts_greedy_agent.MCTS_Greedy_Agent("MCTS_Greedy_Agent")
+        bottom_bot = mcts_greedy_agent.MCTS_Greedy_Agent("MCTS Greedy Agent")
     else: bottom_bot = bot.Bot("Random")
 
     next_button = button.Button(0.05*WIDTH, 0.05*HEIGHT, WIDTH*0.2, 
@@ -707,13 +745,25 @@ def main_loop():
 
     set_counting_for_tree = 0
     match_count_for_tree = 0
-
+    bottom_player = PlayerRect(WIDTH // 2 - PLAYER_WIDTH // 2,
+                               HEIGHT - PLAYER_HEIGHT - 10, 
+                               PLAYER_WIDTH, 
+                               PLAYER_HEIGHT,
+                               const.Colours.LIGHT_BLUE,
+                               name=bottom_bot.name
+                               )
+    
+    top_player = PlayerRect(WIDTH//2 - PLAYER_WIDTH//2,
+                            10,
+                            PLAYER_WIDTH,
+                            PLAYER_HEIGHT,
+                            const.Colours.LIGHT_GREEN,
+                            name=top_bot.name
+                            )
+    
     while run:
-        draw(WIN, 
-             [bottom_player, top_player], 
-             new_ball 
-             , [next_button, score_text_field]
-             )
+        draw(WIN, [bottom_player, top_player], 
+             new_ball, [next_button, score_text_field])
         
         clock.tick(FPS)
         keys = pygame.key.get_pressed()
@@ -744,8 +794,8 @@ def main_loop():
                 elif (new_score.get_serving_player() == 2 
                       and new_rally.get_shot_count() == 0):
                     top_bot.set_turn(True)
-                #print(new_score.get_serving_player())
-                #print(new_rally.get_shot_count())
+                print(f"serving player: {new_score.get_serving_player()}")
+                print(f"Shot count: {new_rally.get_shot_count()}")
                 # If its not the bots turn, take the ball position as 
                 # shot by the user/by the bottom bot
                 if top_bot.get_turn() == False:
@@ -755,14 +805,15 @@ def main_loop():
                         encode_shot_selection(new_ball, new_rally)
                     else:
                         # The bottom bot adds a shot here
-                        #print("Adding MCTS shot to the rally: " + str(new_rally.get_rally()))
+                        print("Adding MCTS shot to the rally: " + str(new_rally.get_rally()))
                         bottom_bot.add_shot(new_rally, new_score, new_tree)
-                        #print("rally after mcts agents shot: " + str(new_rally.get_rally()))
+                        print("rally after mcts agents shot: " + str(new_rally.get_rally()))
                         tree_update(new_rally, new_tree, "blue")
                         
                         move_ball_to_pos(new_ball, new_rally, WIN, 
                                          TRANSITION_ANIMATION, 
-                                         "bottom", new_score)
+                                         "bottom", new_score, 
+                                         bottom_player, top_player, next_button, score_text_field)
                         if const.MenuVariables.show_tree == 'after_shot':
                             rally_tree.Rally_Tree.show_tree(new_tree)
 
@@ -771,14 +822,15 @@ def main_loop():
                     # If its the bots turn, call function that gets the 
                     # shot from the bot
                 elif top_bot.get_turn() == True:
-                    #print("Adding Bot shot!")
+                    print("Adding Bot shot!")
                     top_bot.add_shot(new_rally, new_score, new_tree)
-
+                    print(f"Rally after bot shot: {new_rally.get_rally()}")
                     tree_update(new_rally, new_tree, "green")
 
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_rally, WIN, 
-                                     TRANSITION_ANIMATION, "top", new_score)
+                                     TRANSITION_ANIMATION, "top", new_score, 
+                                     bottom_player, top_player, next_button, score_text_field)
                     if const.MenuVariables.show_tree == 'after_shot':
                             rally_tree.Rally_Tree.show_tree(new_tree)
                     top_bot.set_turn(False)
@@ -837,7 +889,8 @@ def main_loop():
 
                         move_ball_to_pos(new_ball, new_rally, WIN, 
                                          TRANSITION_ANIMATION, "bottom", 
-                                         new_score)
+                                         new_score, 
+                                         bottom_player, top_player, next_button, score_text_field)
                     top_bot.set_turn(True)
 
                     # If its the bots turn, call function that gets the 
@@ -848,11 +901,13 @@ def main_loop():
 
                     # Ball Movement is an animated transition
                     move_ball_to_pos(new_ball, new_rally, WIN, 
-                                     TRANSITION_ANIMATION, "top", new_score)
+                                     TRANSITION_ANIMATION, "top", new_score, 
+                                     bottom_player, top_player, next_button, score_text_field)
                     top_bot.set_turn(False)
                     
                 # Here the score is updated, depending on the rally and 
                 # the shot count and the turn
+
                 new_rally.score_update(new_score, new_ball)
                 
                 if (const.MenuVariables.show_tree == 'after_match'):
@@ -863,6 +918,11 @@ def main_loop():
                 if const.Changing.rally_terminated:
                     score_text_field.update_text(str(new_score.get_score()), 
                                              WIN, const.Colours.BLACK)
+                    
+
+                    highlight_winning_player(new_ball, WIN, 
+                             bottom_player, top_player, next_button, score_text_field, new_score)
+                    
                     if const.MenuVariables.logging == True:
                         new_log.add_score_to_df(new_score.get_points_A(),
                                                 new_score.get_points_B(),
@@ -873,7 +933,7 @@ def main_loop():
                                                 new_score.get_serving_player(),
                                                 const.Changing.rally)
                     const.Changing.rally_terminated = False
-
+                
                 draw(WIN, [bottom_player, top_player], new_ball, 
                      [next_button, score_text_field])
             #print("Saving Data from Simulation to csv file...")

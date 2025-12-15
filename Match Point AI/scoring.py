@@ -12,6 +12,7 @@ class Scoring:
     point_count_per_game = 0
     sets_to_play = const.MenuVariables.sets_to_play
     matches_played = 0
+    last_point_won_player = -1
 
     def __init__(self, points_A, games_A, sets_A, points_B, games_B, 
                  sets_B, score, serving_player=1):
@@ -132,7 +133,8 @@ class Scoring:
     def give_point(self, player):
         # Point is given so point count per game is updated
         self.update_point_count_per_game(1)
-
+        
+        self.last_point_won_player = player
         # When there is a tiebreak, points are added according to 
         # tiebreak rules
         if self.games_A == 6 and self.games_B == 6:
